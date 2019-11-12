@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="horizontal"
+   >
+
+    <include
+        android:id="@+id/music_include"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        layout="@layout/include_music_item" />
+
+
+    <CheckBox
+        android:id="@+id/chb_select_way_point"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_weight="0.1"
+        android:clickable="false"
+        android:focusable="false"
+        android:visibility="visible" />
+
+
+</LinearLayout>

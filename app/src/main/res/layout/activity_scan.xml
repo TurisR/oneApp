@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/include_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/title_bar"/>
+
+    <ListView
+        android:id="@+id/lv"
+        android:layout_below="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:dividerHeight="3dp"
+        android:layout_above="@+id/ll_edit_bar"></ListView>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:id="@+id/start_scan_btn"
+        android:text="扫描音乐"
+        android:layout_centerHorizontal="true"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_below="@+id/lv"
+        android:background="@color/grey"/>
+
+    <LinearLayout
+        android:id="@+id/ll_edit_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:background="@drawable/style"
+        android:orientation="horizontal"
+        android:translationZ="20dp"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/ll_cancel"
+            style="@style/EditBarItemStyle">
+
+            <ImageView
+                style="@style/EditBarImageViewStyle"
+                android:src="@drawable/sure"/>
+
+            <TextView
+                style="@style/EditBarTextViewStyle"
+                android:text="确定" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_delete"
+            style="@style/EditBarItemStyle">
+
+            <ImageView
+                style="@style/EditBarImageViewStyle"
+                android:src="@drawable/delete" />
+
+            <TextView
+                style="@style/EditBarTextViewStyle"
+                android:text="删除" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_inverse"
+            style="@style/EditBarItemStyle">
+
+            <ImageView
+                style="@style/EditBarImageViewStyle"
+                android:src="@drawable/anti_select_all"/>
+
+            <TextView
+                style="@style/EditBarTextViewStyle"
+                android:text="反选" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_select_all"
+            style="@style/EditBarItemStyle"
+           >
+
+            <ImageView
+                style="@style/EditBarImageViewStyle"
+                android:src="@drawable/select_all" />
+            <TextView
+                style="@style/EditBarTextViewStyle"
+                android:text="全选" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

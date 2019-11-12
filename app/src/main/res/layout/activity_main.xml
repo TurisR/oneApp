@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".View.Activity.MainActivity">
+
+    <include
+        android:id="@+id/tab"
+        layout="@layout/include_top_layout" />
+
+    <include layout="@layout/main_bottom_include"
+        android:id="@+id/music_bottom_bar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_alignBottom="@+id/tab"/>
+</RelativeLayout>
