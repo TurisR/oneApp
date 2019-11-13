@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.music_app.Presenter.AppConstant;
 import com.example.music_app.R;
 import com.example.music_app.mould.Model.bean.Song;
 
@@ -70,10 +71,16 @@ public class LocalMusicListAdapter extends BaseAdapter {
             }
         });
 
-        if(i==mSelect){
+        if(AppConstant.getInstance().getPosotion()==i||i==mSelect){
             holder.v_playing.setVisibility(View.VISIBLE);
-        }else {
+            AppConstant.getInstance().setPlayingSong(list.get(i));
+           holder.song.setTextColor(context.getResources().getColor(R.color.red) );
+           holder.singer.setTextColor(context.getResources().getColor(R.color.red));
+
+        }else{
             holder.v_playing.setVisibility(View.INVISIBLE);
+            holder.song.setTextColor(context.getResources().getColor(R.color.black) );
+            holder.singer.setTextColor(context.getResources().getColor(R.color.grey));
         }
 
         return view;

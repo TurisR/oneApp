@@ -10,6 +10,7 @@ public class MusicApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Model.getInstance().init(this,"user");
+        AppConstant.getInstance().setPlayingState(AppConstant.PlayerMsg.STOP_MSG);
     }
 
 }

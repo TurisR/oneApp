@@ -9,6 +9,27 @@ import java.util.List;
 public class AppConstant {
 
     private int playingState=0;
+    private int posotion=-1;
+
+    public int getMode() {
+        return mode;
+    }
+
+    public void setMode(int mode) {
+        this.mode = mode;
+    }
+
+    private int mode=3;
+
+
+    public int getPosotion() {
+        return posotion;
+    }
+
+    public void setPosotion(int posotion) {
+        this.posotion = posotion;
+    }
+
     private List<Song> mSongList=new ArrayList<>();
     private Song playingSong;
 
@@ -37,9 +58,13 @@ public class AppConstant {
         return mAppConstant;
     }
 
-    public class PlayerMag{
-        public static final int PLAY_MAG=1;//开始播放
-        public static final int PAUSE=2;//暂停播放
-        public static final int NEXT=3;//暂停播放
+    public class PlayerMsg{
+        public static final int PLAY_MSG=1;//开始播放
+        public static final int PAUSE_MSG=2;//暂停播放
+        public static final int STOP_MSG=3;//停止播放
+        public static final int CONTINUE_MSG=4;//继续播放
+        public static final int PREVIOUS_MSG=5;//上一曲播放
+        public static final int NEXT_MSG=6;//下一曲播放
+        public static final int CHANG_MODE = 7 ;//模式改变
     }
 }

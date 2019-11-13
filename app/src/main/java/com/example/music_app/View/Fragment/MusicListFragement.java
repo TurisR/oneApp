@@ -73,12 +73,6 @@ public class MusicListFragement extends Fragment {
 
     private void UpdataUI() {
 
-        if(AppConstant.getInstance().getPlayingState()==AppConstant.PlayerMag.NEXT){
-            adapter.changeSelected(++Position);
-            adapter.notifyDataSetChanged();
-            AppConstant.getInstance().setPlayingState(AppConstant.PlayerMag.PLAY_MAG);
-        }
-        //ListView.setAdapter(adapter);
     }
 
     private void initData() {
@@ -98,7 +92,7 @@ public class MusicListFragement extends Fragment {
                 Position=position;
                 adapter.changeSelected(position);
                 Toast.makeText(getActivity(),"播放"+mSongList.get(position).getTitle(),Toast.LENGTH_LONG);
-                callBackValue.playMusic(AppConstant.PlayerMag.PLAY_MAG,mSongList.get(position));
+                callBackValue.playMusic(position,mSongList.get(position));
             }
 
         });
