@@ -203,7 +203,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tv_play_bar_title.setText(song.getTitle());
         tv_play_bar_artist.setText(song.getSinger());
         mContentVp.setAdapter(contentAdapter);
-
+        if(AppConstant.getInstance().getPlayingState()==AppConstant.PlayerMsg.PAUSE_MSG){
+            v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_pause));
+        }else{
+            v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_play));
+        }
     }
 
 

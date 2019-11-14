@@ -38,15 +38,36 @@ public class MusicService extends Service {
     private String path; 			// 音乐文件路径
     private boolean isNext=true;
     private Intent sendIntent;
-
+    private int currentTime;
     private int status = 3;			//播放状态，默认为顺序播放
     private MyReceiver myReceiver;	//自定义广播接收器
 
     //服务要发送的一些Action
     public static final String UPDATE_ACTION = "com.example.music_app.UPDATE_ACTION";	//更新动作
-   // public static final String CTL_ACTION = "com.action.CTL_ACTION";		//控制动作
     public static final String MUSIC_CURRENT = "com.action.MUSIC_CURRENT";	//当前音乐播放时间更新动作
     public static final String MUSIC_DURATION = "com.action.MUSIC_DURATION";//新音乐长度更新动作
+
+
+    /**
+     * handler用来接收消息，来发送广播更新播放时间
+     */
+    private Handler handler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            if (msg.what == 1) {
+                if(mMediaPlayer != null) {
+                    currentTime = mMediaPlayer.getCurrentPosition(); // 获取当前音乐播放的位置
+                    Intent intent = new Intent();
+                    intent.setAction(MUSIC_CURRENT);
+                    intent.putExtra("currentTime", currentTime);
+                    sendBroadcast(intent); // 给PlayerActivity发送广播
+                    handler.sendEmptyMessageDelayed(1, 1000);//每秒发送更新进度条
+                }
+
+            }
+        };
+    };
+
+
 
     @Override
     public void onCreate() {
@@ -178,7 +199,7 @@ public class MusicService extends Service {
             mMediaPlayer.setDataSource(path);
             mMediaPlayer.prepare(); // 进行缓冲
             mMediaPlayer.setOnPreparedListener(new PreparedListener(currentTime));// 注册一个监听器
-            //handler.sendEmptyMessage(1);
+            handler.sendEmptyMessage(1);
         } catch (Exception e) {
             e.printStackTrace();
         }
