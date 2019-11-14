@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mPlayerUtil.pause();
                 }
 
-                 Log.e("song", "activity_song");
+                 //Log.e("song", "activity_song");
                 break;
         }
 
