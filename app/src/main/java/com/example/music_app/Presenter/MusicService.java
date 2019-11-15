@@ -80,6 +80,13 @@ public class MusicService extends Service {
                     sendBroadcast(sendIntent);
                     break;
 
+                case 4:
+                    sendIntent = new Intent(UPDATE_ACTION);
+                    sendIntent.putExtra("current", position);
+                    sendIntent.putExtra("song",mSongList.get(position));
+                    // 发送广播，将被Activity组件中的BroadcastReurrenceiver接收到
+                    sendBroadcast(sendIntent);
+                    break;
             }
         };
     };
@@ -145,11 +152,7 @@ public class MusicService extends Service {
                 break;
 
         }
-        sendIntent = new Intent(UPDATE_ACTION);
-        sendIntent.putExtra("current", position);
-        sendIntent.putExtra("song",mSongList.get(position));
-        // 发送广播，将被Activity组件中的BroadcastReurrenceiver接收到
-        sendBroadcast(sendIntent);
+       handler.sendEmptyMessage(4);
     }
 
     /**
