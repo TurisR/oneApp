@@ -6,4 +6,140 @@
     android:background="@drawable/activity_play_background"
     tools:context=".View.Activity.PlayViewActivity">
 
+    <RelativeLayout
+        android:id="@+id/activity_play_title"
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+
+        <ImageView
+            android:id="@+id/activity_play_return_main"
+            android:layout_width="35dp"
+            android:layout_height="30dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/title_back"
+            />
+        <TextView
+            android:id="@+id/activity_play_song_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_centerHorizontal="true"
+            android:layout_toRightOf="@id/activity_play_return_main"
+            android:layout_toLeftOf="@id/activity_play_list"
+            android:text="-歌曲名-"
+            android:gravity="center_horizontal"
+            android:textSize="25sp"
+            android:textColor="@color/white_96p"
+            />
+        <TextView
+            android:id="@+id/activity_play_song_singer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/activity_play_song_name"
+            android:layout_marginTop="3dp"
+            android:text="-歌手-"
+            android:gravity="center_horizontal"
+            android:textSize="18sp"
+            android:textColor="@color/white"/>
+        <ImageView
+            android:id="@+id/activity_play_list"
+            android:layout_width="35dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/ic_music_list_icon_more"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/activity_play_title"
+        android:layout_above="@id/activity_play_whole_seekbar"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        >
+
+        <TextView
+            android:id="@+id/activity_play_lyric"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="-歌词-"
+            android:textSize="20sp"
+            android:textColor="@color/white"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/activity_play_whole_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_above="@+id/activity_play_operation"
+        >
+
+        <TextView
+            android:id="@+id/activity_play_progress_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="00:00"
+            android:textSize="18sp"
+            android:textColor="@color/white"/>
+        <TextView
+            android:id="@+id/activity_play_song_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="00:00"
+            android:textSize="18sp"
+            android:textColor="@color/white"/>
+        <SeekBar
+            android:id="@+id/activity_play_seekBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:max="255"
+            android:layout_toRightOf="@id/activity_play_progress_time"
+            android:layout_toLeftOf="@id/activity_play_song_time" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/activity_play_operation"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_alignParentBottom="true">
+
+        <ImageView
+            android:id="@+id/activity_play_start"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/play_btn_play_selector"/>
+
+        <ImageView
+            android:id="@+id/activity_play_next"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_toRightOf="@id/activity_play_start"
+            android:layout_centerVertical="true"
+            android:src="@drawable/play_btn_next_selector"/>
+
+        <ImageView
+            android:id="@+id/activity_play_last"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_toLeftOf="@id/activity_play_start"
+            android:layout_centerVertical="true"
+            android:src="@drawable/play_btn_last_selector"/>
+    </RelativeLayout>
 </RelativeLayout>

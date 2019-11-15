@@ -239,16 +239,19 @@ public class MusicService extends Service {
     }
 
    /**
-     * 上一首*/
+    *  上一首
+    */
     private void previous() {
-        if(position>0){
+        if (position > 0) {
             position--;
-            path=mSongList.get(position).getFileUrl();
+        } else {
+            position = mSongList.size() - 1;
         }
+        path=mSongList.get(position).getFileUrl();
         play(0);
-        sendIntent = new Intent(UPDATE_ACTION);
-        sendIntent.putExtra("current", position);
-        sendIntent.putExtra("song",mSongList.get(position));
+//        sendIntent = new Intent(UPDATE_ACTION);
+//        sendIntent.putExtra("current", position);
+//        sendIntent.putExtra("song",mSongList.get(position));
         // 发送广播，将被Activity组件中的BroadcastReurrenceiver接收到
         sendBroadcast(sendIntent);
     }
@@ -258,8 +261,10 @@ public class MusicService extends Service {
      */
     private void next() {
 
-        if(position<mSongList.size()-1){
+        if (position < mSongList.size()-1){
             position++;
+        } else {
+            position = 0;
         }
         path=mSongList.get(position).getFileUrl();
         play(0);

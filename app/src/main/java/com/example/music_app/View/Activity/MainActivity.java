@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         audioSeekBar = findViewById(R.id.pb_play_bar);
         findViewById(R.id.iv_play_bar_next).setOnClickListener(this);
         findViewById(R.id.v_play_bar_playlist).setOnClickListener(this);
+        findViewById(R.id.main_to_play_bottom).setOnClickListener(this);
         if(song==null&&AppConstant.getInstance().getPlayingSong()!=null){
             song=AppConstant.getInstance().getPlayingSong();
             tv_play_bar_title.setText(song.getTitle());
@@ -173,6 +174,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //Intent intent = new Intent(this,MusicService.class);
                 //UpdataUI();
                 break;
+
             case R.id.iv_play_bar_play:
                 if(AppConstant.getInstance().getPlayingState()==AppConstant.PlayerMsg.PAUSE_MSG){
                     v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_play));
@@ -184,10 +186,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                  //Log.e("song", "activity_song");
                 break;
-                case R.id.v_play_bar_playlist:
-                    startActivity(new Intent(MainActivity.this,PlayinglistActivity.class));
-                    break;
 
+            case R.id.v_play_bar_playlist:
+                startActivity(new Intent(MainActivity.this,PlayinglistActivity.class));
+                break;
+
+            case R.id.main_to_play_bottom:
+                Intent mintent = new Intent(MainActivity.this, PlayViewActivity.class);
+                startActivity(mintent);
+                break;
         }
 
     }
@@ -269,12 +276,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     //Log.e("send 1", "2 " + duration + " " + song.getDuration());
                     break;
                 case MUSIC_STATE:
+                    System.out.println("———MUSIC_STATE———");
                     int state = intent.getIntExtra("state", AppConstant.PlayerMsg.PAUSE_MSG);
                     AppConstant.getInstance().setPlayingState(state);
                     UpdateUI();
                     break;
 
                 case UPDATE_ACTION://更新操作
+                    System.out.println("———接受到更新广播———");
                     position = intent.getIntExtra("current", -1);
                     //Log.e("send 1", "3 " + position + " " + song.getTitle() + " " + size);
                     AppConstant.getInstance().setPosotion(position);
