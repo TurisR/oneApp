@@ -39,7 +39,7 @@ public class MusicService extends Service {
     private boolean isNext=true;
     private Intent sendIntent;
     private int currentTime;
-    private int status = 3;			//播放状态，默认为顺序播放
+    private int status = 2;			//播放状态，默认为顺序播放
 
     //服务要发送的一些Action
     public static final String UPDATE_ACTION = "com.example.music_app.UPDATE_ACTION";	//更新动作
@@ -114,9 +114,9 @@ public class MusicService extends Service {
 
     private void next_mode_play(boolean state) {//state判断是下一曲还是上一曲
         switch (status){
-            case 1: mMediaPlayer.start();//单曲播放
+            case 0: mMediaPlayer.start();//单曲播放
                     break;
-            case 2: //循环播放
+            case 1: //循环播放
                 if(state){
                     position++;
                     if(position > mSongList.size() - 1) {	//变为第一首的位置继续播放
@@ -131,14 +131,14 @@ public class MusicService extends Service {
                 path = mSongList.get(position).getFileUrl();
                 play(0);
                 break;
-            case 3://循序播放
+            case 2://循序播放
                 if(state){
                     next();
                 }else{
                     previous();
                 }
                 break;
-            case 4://随机播放
+            case 3://随机播放
                 position = getRandomIndex(mSongList.size() - 1);
                 path = mSongList.get(position).getFileUrl();
                 play(0);
@@ -309,17 +309,17 @@ public class MusicService extends Service {
     private void ChangeMode(Intent intent) {
         int control = intent.getIntExtra("Mode", 3);
         switch (control) {
+            case 0:
+                status = 0; // 将播放状态置为1表示：单曲循环
+                break;
             case 1:
-                status = 1; // 将播放状态置为1表示：单曲循环
+                status = 1;	//将播放状态置为2表示：全部循环
                 break;
             case 2:
-                status = 2;	//将播放状态置为2表示：全部循环
+                status = 2;	//将播放状态置为3表示：顺序播放
                 break;
             case 3:
-                status = 3;	//将播放状态置为3表示：顺序播放
-                break;
-            case 4:
-                status = 4;	//将播放状态置为4表示：随机播放
+                status = 3;	//将播放状态置为4表示：随机播放
                 break;
         }
     }
