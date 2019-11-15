@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:gravity="center_horizontal"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/style_list"
+        android:id="@+id/pop_layout"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:textColor="@color/black"
+                android:text="text"
+                android:textSize="13sp"
+                android:id="@+id/music_sum"/>
+
+            <View
+                android:id="@+id/v_playing"
+                android:layout_margin="5dp"
+                android:layout_width="3dp"
+                android:layout_height="15dp"
+                android:layout_centerVertical="true"
+                android:background="@color/grey"
+                android:contentDescription="@null"
+                android:layout_toLeftOf="@+id/delete_music"
+                 />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="10dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:textColor="@color/black"
+                android:text="移除"
+                android:textSize="16sp"
+                android:id="@+id/delete_music"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/grey"
+                android:contentDescription="@null"
+                android:layout_marginTop="15dp"
+               android:layout_below="@+id/delete_music"
+                />
+
+        </RelativeLayout>
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="350dp"
+            android:dividerHeight="1dp"
+            android:divider="@drawable/list_divider"
+            android:id="@+id/list_playing"/>
+
+
+
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>

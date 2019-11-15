@@ -28,6 +28,7 @@ public class AppConstant {
 
     public void setPosotion(int posotion) {
         this.posotion = posotion;
+        setPlayingSong(getSongList().get(posotion));
     }
 
     private List<Song> mSongList=new ArrayList<>();
@@ -66,5 +67,12 @@ public class AppConstant {
         public static final int PREVIOUS_MSG=5;//上一曲播放
         public static final int NEXT_MSG=6;//下一曲播放
         public static final int CHANG_MODE = 7 ;//模式改变
+    }
+
+    public class Mode{
+        public static final int SINGLE_LOOP=1;//单曲循环播放
+        public static final int LOOP=2;//循环播放
+        public static final int ORDER=3;//循序播放
+        public static final int RANDOM=4;//随机播放
     }
 }

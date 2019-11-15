@@ -11,9 +11,11 @@
         android:id="@+id/tab"
         layout="@layout/include_top_layout" />
 
-    <include layout="@layout/main_bottom_include"
-        android:id="@+id/music_bottom_bar"
+    <include layout="@layout/include_play_bar"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_alignBottom="@+id/tab"/>
+        android:layout_alignBottom="@+id/tab"
+        />
+
+
 </RelativeLayout>

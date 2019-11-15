@@ -30,6 +30,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".View.Activity.ScanActivity" />
+        <activity android:name=".View.Activity.PlayinglistActivity" android:theme="@style/MyDialogStyleBottom"/>
     </application>
 
 </manifest>

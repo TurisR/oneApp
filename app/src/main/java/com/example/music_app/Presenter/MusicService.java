@@ -40,28 +40,45 @@ public class MusicService extends Service {
     private Intent sendIntent;
     private int currentTime;
     private int status = 3;			//播放状态，默认为顺序播放
-    private MyReceiver myReceiver;	//自定义广播接收器
 
     //服务要发送的一些Action
     public static final String UPDATE_ACTION = "com.example.music_app.UPDATE_ACTION";	//更新动作
     public static final String MUSIC_CURRENT = "com.action.MUSIC_CURRENT";	//当前音乐播放时间更新动作
     public static final String MUSIC_DURATION = "com.action.MUSIC_DURATION";//新音乐长度更新动作
-
+    public static final String MUSIC_STATE = "com.example.music_app.MUSIC_STATE";			//播放器状态 播放|暂停
 
     /**
      * handler用来接收消息，来发送广播更新播放时间
      */
     private Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
-            if (msg.what == 1) {
-                if(mMediaPlayer != null) {
-                    currentTime = mMediaPlayer.getCurrentPosition(); // 获取当前音乐播放的位置
-                    Intent intent = new Intent();
-                    intent.setAction(MUSIC_CURRENT);
-                    intent.putExtra("currentTime", currentTime);
-                    sendBroadcast(intent); // 给PlayerActivity发送广播
-                    handler.sendEmptyMessageDelayed(1, 1000);//每秒发送更新进度条
-                }
+
+            switch (msg.what){
+                case 1:
+                    if(mMediaPlayer != null) {
+                        currentTime = mMediaPlayer.getCurrentPosition(); // 获取当前音乐播放的位置
+                        Intent intent = new Intent();
+                        intent.setAction(MUSIC_CURRENT);
+                        intent.putExtra("currentTime", currentTime);
+                        sendBroadcast(intent); // 给PlayerActivity发送广播
+                        handler.sendEmptyMessageDelayed(1, 1000);//每秒发送更新进度条
+                    }
+                    break;
+                case 2:
+                    sendIntent = new Intent(MUSIC_STATE);
+                    sendIntent.putExtra("current", position);
+                    sendIntent.putExtra("state",AppConstant.PlayerMsg.PLAY_MSG);
+                    // 发送广播，将被Activity组件中的BroadcastReurrenceiver接收到
+                    sendBroadcast(sendIntent);
+                    break;
+
+                case 3:
+                    sendIntent = new Intent(MUSIC_STATE);
+                    sendIntent.putExtra("current", position);
+                    sendIntent.putExtra("state",AppConstant.PlayerMsg.PAUSE_MSG);
+                    // 发送广播，将被Activity组件中的BroadcastReurrenceiver接收到
+                    sendBroadcast(sendIntent);
+                    break;
 
             }
         };
@@ -91,10 +108,7 @@ public class MusicService extends Service {
             }
         });
 
-        myReceiver = new MyReceiver();
-        IntentFilter filter = new IntentFilter();
-         filter.addAction(MainActivity.CTL_ACTION);
-        registerReceiver(myReceiver, filter);
+
 
     }
 
@@ -156,7 +170,6 @@ public class MusicService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        //position=AppConstant.getInstance().getPosotion();
         msg = intent.getIntExtra("MSG", AppConstant.PlayerMsg.STOP_MSG);			//播放信息
         switch (msg){
             case AppConstant.PlayerMsg.PLAY_MSG:
@@ -200,6 +213,7 @@ public class MusicService extends Service {
             mMediaPlayer.prepare(); // 进行缓冲
             mMediaPlayer.setOnPreparedListener(new PreparedListener(currentTime));// 注册一个监听器
             handler.sendEmptyMessage(1);
+            handler.sendEmptyMessage(2);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -211,7 +225,7 @@ public class MusicService extends Service {
     private void pause() {
         if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
             mMediaPlayer.pause();
-            AppConstant.getInstance().setPlayingState(AppConstant.PlayerMsg.PAUSE_MSG);
+            handler.sendEmptyMessage(3);
             isPause = true;
         }
     }
@@ -219,7 +233,7 @@ public class MusicService extends Service {
     private void resume() {
         if (isPause) {
             mMediaPlayer.start();
-            AppConstant.getInstance().setPlayingState(AppConstant.PlayerMsg.PLAY_MSG);
+            handler.sendEmptyMessage(2);
             isPause = false;
         }
     }
@@ -291,13 +305,6 @@ public class MusicService extends Service {
         }
     }
 
-    public class MyReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            ChangeMode(intent);
-        }
-    }
 
     private void ChangeMode(Intent intent) {
         int control = intent.getIntExtra("Mode", 3);

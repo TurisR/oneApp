@@ -50,13 +50,14 @@ public class ScanListAdapter extends BaseAdapter {
             holder = new ViewHolder();
             convertView = View.inflate(mContext, R.layout.item_scan_list, null);
             convertView.setTag(holder);
+            holder.checkBox = (CheckBox) convertView.findViewById(R.id.chb_select_way_point);
+            holder.mTitle = convertView.findViewById(R.id.tv_title);
+            holder.mSinger = convertView.findViewById(R.id.tv_artist);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.checkBox = (CheckBox) convertView.findViewById(R.id.chb_select_way_point);
-        holder.mTitle = convertView.findViewById(R.id.tv_title);
-        holder.mSinger = convertView.findViewById(R.id.tv_artist);
+
        // showAndHideCheckBox();//控制CheckBox的那个的框显示与隐藏
 
         holder.mTitle.setText(data.get(position).getTitle());

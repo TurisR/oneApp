@@ -1,38 +1,30 @@
 package com.example.music_app.View.Activity;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.music_app.Presenter.AppConstant;
-import com.example.music_app.Presenter.MusicService;
 import com.example.music_app.Presenter.PlayerUtil;
 import com.example.music_app.R;
+import com.example.music_app.View.Fragment.ContentPagerManager;
 import com.example.music_app.View.Fragment.MusicListFragement;
 import com.example.music_app.View.Fragment.SettingFragement;
 import com.example.music_app.View.Fragment.TabContentFragment;
 import com.example.music_app.mould.Model.bean.Song;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,31 +32,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TabLayout mTabTl;
     private ViewPager mContentVp;
     private List<Fragment> tabFragments;
-    private int FragmentPosition=-1;
-
     private TextView tv_play_bar_title;
-    private String st;
+    private int duration;
+    private Boolean first=true;
+
     private TextView tv_play_bar_artist;
     public ImageView v_play_bar_play;
-    private ContentPagerAdapter contentAdapter;
+    private ContentPagerManager mContentPagerManager;
     public static SeekBar audioSeekBar = null;
     private String tabIndicators[] = {
             "本地歌曲", "个人歌单", "搜索", "设置",
             };
     private Song song;
     private int position;
-    Intent MediaServiceIntent;
-    private Handler mHandler = new Handler();
     private PlayerUtil mPlayerUtil;
     //一系列动作
     public static final String UPDATE_ACTION= "com.example.music_app.UPDATE_ACTION";		//更新动作
-    public static final String CTL_ACTION = "com.action.CTL_ACTION";			//控制动作
+    public static final String MUSIC_STATE = "com.example.music_app.MUSIC_STATE";			//播放器状态 播放|暂停
     public static final String MUSIC_CURRENT = "com.action.MUSIC_CURRENT";		//当前音乐改变动作
     public static final String MUSIC_DURATION = "com.action.MUSIC_DURATION";	//音乐时长改变动作
     public static final String REPEAT_ACTION = "com.action.REPEAT_ACTION";		//音乐重复改变动作
     public static final String SHUFFLE_ACTION = "com.action.SHUFFLE_ACTION";	//音乐随机播放动作
     private HomeReceiver homeReceiver;	//自定义的广播接收器
-    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,8 +160,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             tabFragments.add(TabContentFragment.newInstance(tabIndicators[i]));
         }
         tabFragments.add(new SettingFragement());
-        contentAdapter = new ContentPagerAdapter(getSupportFragmentManager());
-        mContentVp.setAdapter(contentAdapter);
+        mContentPagerManager=new ContentPagerManager(getSupportFragmentManager(),tabFragments);
+       // contentAdapter = new ContentPagerAdapter(getSupportFragmentManager());
+        mContentVp.setAdapter(mContentPagerManager);
     }
 
     @Override
@@ -185,24 +175,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.iv_play_bar_play:
                 if(AppConstant.getInstance().getPlayingState()==AppConstant.PlayerMsg.PAUSE_MSG){
-                    v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_pause));
+                    v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_play));
                     mPlayerUtil.resume();
                 }else{
-                    v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_play));
+                    v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_pause));
                     mPlayerUtil.pause();
                 }
 
                  //Log.e("song", "activity_song");
                 break;
+                case R.id.v_play_bar_playlist:
+                    startActivity(new Intent(MainActivity.this,PlayinglistActivity.class));
+                    break;
+
         }
 
     }
 
     private void UpdateUI() {//更新UI
         song=AppConstant.getInstance().getPlayingSong();
-        tv_play_bar_title.setText(song.getTitle());
-        tv_play_bar_artist.setText(song.getSinger());
-        mContentVp.setAdapter(contentAdapter);
+        if(song!=null){
+            tv_play_bar_title.setText(song.getTitle());
+            tv_play_bar_artist.setText(song.getSinger());
+        }
+        mContentVp.setAdapter(mContentPagerManager);
         if(AppConstant.getInstance().getPlayingState()==AppConstant.PlayerMsg.PAUSE_MSG){
             v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_pause));
         }else{
@@ -213,6 +209,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void playMusic(int pos,Song song) {
         mPlayerUtil.play(pos);
+        v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_play));
         Log.e("sss 11",pos+"");
     }
 
@@ -226,30 +223,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.position=position;
     }
 
-    class ContentPagerAdapter extends FragmentPagerAdapter {
 
-        public ContentPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
 
-        @Override
-        public Fragment getItem(int position) {
-            FragmentPosition=position;
-            return tabFragments.get(position);
-        }
 
-        @Override
-        public int getCount() {
-            return 4;
-        }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e("resume","11111111");
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return tabIndicators[position];
-        }
 
+
+        UpdateUI();
+
+        //
+        /*song=AppConstant.getInstance().getPlayingSong();
+        tv_play_bar_title.setText(song.getTitle());
+        tv_play_bar_artist.setText(song.getSinger());
+        if(AppConstant.getInstance().getPlayingState()==AppConstant.PlayerMsg.PAUSE_MSG){
+            v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_pause));
+        }else{
+            v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_play));
+        }*/
     }
-
 
     @Override
     protected void onDestroy() {
@@ -264,24 +259,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
 
+
             switch (action) {
                 case MUSIC_CURRENT://音乐状态，进度条监听
                     int currentTime = intent.getIntExtra("currentTime", -1);
                     //Log.e("send 1","1111 "+currentTime);
-                    audioSeekBar.setMax(song.getDuration());
+                    audioSeekBar.setMax(duration);
                     audioSeekBar.setProgress(currentTime);
                     break;
                 case MUSIC_DURATION://音乐时长，并入song
-                    //int duration = intent.getIntExtra("duration", -1);
+                    duration = intent.getIntExtra("duration", -1);
                     //Log.e("send 1", "2 " + duration + " " + song.getDuration());
                     break;
+                case MUSIC_STATE:
+                    int state = intent.getIntExtra("state", AppConstant.PlayerMsg.PAUSE_MSG);
+                    AppConstant.getInstance().setPlayingState(state);
+                    UpdateUI();
+                    break;
+
                 case UPDATE_ACTION://更新操作
                     position = intent.getIntExtra("current", -1);
-                    int size = intent.getIntExtra("size", 0);
-                    song = (Song) intent.getSerializableExtra("song");
-                    Log.e("send 1", "3 " + position + " " + song.getTitle() + " " + size);
+                    //Log.e("send 1", "3 " + position + " " + song.getTitle() + " " + size);
                     AppConstant.getInstance().setPosotion(position);
-                    AppConstant.getInstance().setPlayingSong(song);
                     UpdateUI();
                     break;
             }
