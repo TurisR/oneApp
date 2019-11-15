@@ -230,9 +230,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
         Log.e("resume","11111111");
-
-
-
         UpdateUI();
 
         //

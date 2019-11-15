@@ -19,7 +19,7 @@ public class AppConstant {
         this.mode = mode;
     }
 
-    private int mode=3;
+    private int mode=2;
 
 
     public int getPosotion() {
@@ -70,9 +70,9 @@ public class AppConstant {
     }
 
     public class Mode{
-        public static final int SINGLE_LOOP=1;//单曲循环播放
-        public static final int LOOP=2;//循环播放
-        public static final int ORDER=3;//循序播放
-        public static final int RANDOM=4;//随机播放
+        public static final int SINGLE_LOOP=0;//单曲循环播放
+        public static final int LOOP=1;//循环播放
+        public static final int ORDER=2;//循序播放
+        public static final int RANDOM=3;//随机播放
     }
 }
