@@ -87,11 +87,7 @@
             android:divider="@drawable/list_divider"
             android:id="@+id/list_playing"/>
 
-
-
     </LinearLayout>
-
-
 
 
 </RelativeLayout>
