@@ -13,10 +13,10 @@
 
         <ImageView
             android:id="@+id/activity_play_return_main"
-            android:layout_width="35dp"
-            android:layout_height="30dp"
+            android:layout_width="30dp"
+            android:layout_height="23dp"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
             android:src="@drawable/title_back"
             />
@@ -24,13 +24,15 @@
             android:id="@+id/activity_play_song_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_centerHorizontal="true"
             android:layout_toRightOf="@id/activity_play_return_main"
             android:layout_toLeftOf="@id/activity_play_list"
             android:text="-歌曲名-"
             android:gravity="center_horizontal"
-            android:textSize="25sp"
+            android:textSize="22sp"
             android:textColor="@color/white_96p"
 
             android:singleLine="true"
@@ -49,14 +51,14 @@
             android:layout_marginTop="3dp"
             android:text="-歌手-"
             android:gravity="center_horizontal"
-            android:textSize="18sp"
+            android:textSize="15sp"
             android:textColor="@color/white"/>
         <ImageView
             android:id="@+id/activity_play_list"
-            android:layout_width="35dp"
-            android:layout_height="30dp"
+            android:layout_width="30dp"
+            android:layout_height="25dp"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="15dp"
             android:layout_marginTop="15dp"
             android:src="@drawable/ic_music_list_icon_more"
             />
@@ -85,9 +87,9 @@
     <RelativeLayout
         android:id="@+id/activity_play_whole_seekbar"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         android:layout_above="@+id/activity_play_operation"
         >
 
@@ -98,7 +100,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:text="00:00"
-            android:textSize="18sp"
+            android:textSize="15sp"
             android:textColor="@color/white"/>
         <TextView
             android:id="@+id/activity_play_song_time"
@@ -107,7 +109,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:text="00:00"
-            android:textSize="18sp"
+            android:textSize="15sp"
             android:textColor="@color/white"/>
         <SeekBar
             android:id="@+id/activity_play_seekBar"
@@ -122,7 +124,7 @@
     <RelativeLayout
         android:id="@+id/activity_play_operation"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
+        android:layout_height="150dp"
         android:layout_alignParentBottom="true">
 
         <ImageView

@@ -84,7 +84,7 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
             song = AppConstant.getInstance().getPlayingSong();
             //显示歌名、歌手。
             songNameText.setText(song.getTitle());
-            singerText.setText(song.getSinger());
+            singerText.setText("- " + song.getSinger() + " -");
             //显示歌曲总时长
             wholeTime.setText(transformTime(song.getDuration()));
         }
@@ -160,9 +160,9 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 //拖动进度条时，歌曲进度时间 同步显示进度条所指向的时间
-                int seekBarMax = seekBar.getMax();
-                int songMax = song.getDuration();
-                prgTime.setText(transformTime(songMax * progress / seekBarMax));
+                    int seekBarMax = seekBar.getMax();
+                    int songMax = song.getDuration();
+                    prgTime.setText(transformTime(songMax * progress / seekBarMax));
             }
 
             @Override
@@ -172,10 +172,10 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                int progress = seekBar.getProgress();   //拖动条停止位置
-                int seekBarMax = seekBar.getMax();      //拖动条最大数值
-                int songMax = song.getDuration();       //歌曲总时长
-                mPlayerUtil.updateMusicPrg(songMax * progress / seekBarMax);      //更新播放进度
+                    int progress = seekBar.getProgress();   //拖动条停止位置
+                    int seekBarMax = seekBar.getMax();      //拖动条最大数值
+                    int songMax = song.getDuration();       //歌曲总时长
+                    mPlayerUtil.updateMusicPrg(songMax * progress / seekBarMax);      //更新播放进度
                 isPressSeekBar = false;     //拖动进度条结束时，开始自动更新进度条
             }
         });
@@ -230,7 +230,7 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
         song = AppConstant.getInstance().getPlayingSong();
         if (song != null) {
             songNameText.setText(song.getTitle());      //更新歌名
-            singerText.setText(song.getSinger());       //更新歌手
+            singerText.setText("- " + song.getSinger() + " -");       //更新歌手
             wholeTime.setText(transformTime(song.getDuration()));   //更新歌曲总时长
         }
 
