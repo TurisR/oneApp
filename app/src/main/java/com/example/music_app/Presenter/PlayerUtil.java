@@ -49,6 +49,15 @@ public class PlayerUtil {
         mContext.startService(intent);
     }
 
+    /**
+     *  更新歌曲播放进度
+     *  by:yxy
+     */
+    public void updateMusicPrg(int newCurrentTime) {
+        intent.putExtra("NewMusicTime", newCurrentTime);
+        intent.putExtra("MSG", AppConstant.PlayerMsg.CHANGE_PRG);
+        mContext.startService(intent);
+    }
 
 
 }

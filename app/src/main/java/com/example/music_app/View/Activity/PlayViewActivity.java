@@ -39,12 +39,11 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
     private ImageView playBtn;      //播放、暂停按键
 
     private SeekBar seekBar;        //拖动条
+    private boolean isPressSeekBar = false; //判断是否在拖动拖动条
 
     //一系列动作
     public static final String UPDATE_ACTION= "com.example.music_app.UPDATE_ACTION";		//更新动作
-    public static final String MUSIC_STATE = "com.example.music_app.MUSIC_STATE";			//播放器状态 播放|暂停
     public static final String MUSIC_CURRENT = "com.action.MUSIC_CURRENT";		//当前音乐改变动作
-    public static final String MUSIC_DURATION = "com.action.MUSIC_DURATION";	//音乐时长改变动作
     public static final String REPEAT_ACTION = "com.action.REPEAT_ACTION";		//音乐重复改变动作
     public static final String SHUFFLE_ACTION = "com.action.SHUFFLE_ACTION";	//音乐随机播放动作
     private ServiceReceiver serviceReceiver;
@@ -160,12 +159,15 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+                //拖动进度条时，歌曲进度时间 同步显示进度条所指向的时间
+                int seekBarMax = seekBar.getMax();
+                int songMax = song.getDuration();
+                prgTime.setText(transformTime(songMax * progress / seekBarMax));
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
+                isPressSeekBar = true;      //当拖动进度条时，进度条停止自动更新
             }
 
             @Override
@@ -173,6 +175,8 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
                 int progress = seekBar.getProgress();   //拖动条停止位置
                 int seekBarMax = seekBar.getMax();      //拖动条最大数值
                 int songMax = song.getDuration();       //歌曲总时长
+                mPlayerUtil.updateMusicPrg(songMax * progress / seekBarMax);      //更新播放进度
+                isPressSeekBar = false;     //拖动进度条结束时，开始自动更新进度条
             }
         });
     }
@@ -199,17 +203,20 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
             switch (action) {
                 case MUSIC_CURRENT :
                     //音乐状态，进度条监听
-                    int currentTime = intent.getIntExtra("currentTime", -1);
-                    prgTime.setText(transformTime(currentTime));
-                    seekBar.setProgress(seekBar.getMax() * currentTime / song.getDuration());
+                    int currentTime = intent.getIntExtra("currentTime", -1);   //获取从MusicService传来的歌曲进度时间
+                    if (!isPressSeekBar) {
+                        //当进度条未被拖动时，自动更新进度条进度
+                        seekBar.setProgress(seekBar.getMax() * currentTime / song.getDuration());    //更新进度条
+                    }
                     break;
 
                 case UPDATE_ACTION :
-                    int position = intent.getIntExtra("current", -1);
+                    //当切歌时，更新UI
+                    int position = intent.getIntExtra("current", -1);    //获取当前正在播放的歌曲
                     System.out.println("---播放界面收到广播---");
                     if (position != -1) {
                         AppConstant.getInstance().setPosotion(position);
-                        UpdateUI();
+                        UpdateUI();       //更新UI界面的歌曲信息
                     }
                     break;
             }

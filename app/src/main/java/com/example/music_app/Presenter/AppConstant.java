@@ -67,6 +67,8 @@ public class AppConstant {
         public static final int PREVIOUS_MSG=5;//上一曲播放
         public static final int NEXT_MSG=6;//下一曲播放
         public static final int CHANG_MODE = 7 ;//模式改变
+
+        public static final int CHANGE_PRG = 8; //歌曲进度改变 /by：yxy
     }
 
     public class Mode{

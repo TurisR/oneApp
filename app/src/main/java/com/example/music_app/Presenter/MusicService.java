@@ -11,6 +11,7 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.text.style.UpdateAppearance;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -197,6 +198,13 @@ public class MusicService extends Service {
             case AppConstant.PlayerMsg.CHANG_MODE:
                 ChangeMode(intent);
                 break;
+
+            case AppConstant.PlayerMsg.CHANGE_PRG :
+                //改变歌曲的播放进度 /by:yxy
+                int newMusicPrg = intent.getIntExtra("NewMusicTime", -1);
+                if (newMusicPrg != -1)
+                    updateMusicPrg(newMusicPrg);
+                break;
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -332,6 +340,15 @@ public class MusicService extends Service {
         }
     }
 
+    /**
+     *  改变歌曲当前的播放进度  /by：yxy
+     */
+    private void updateMusicPrg(int newCurrentTime) {
+        if (mMediaPlayer != null) {
+            mMediaPlayer.seekTo(newCurrentTime);
+            currentTime = newCurrentTime;
+        }
+    }
 
     @Override
     public void onDestroy() {
@@ -344,7 +361,5 @@ public class MusicService extends Service {
 
         System.out.println("service onDestroy");
     }
-
-
 
 }
