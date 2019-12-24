@@ -17,6 +17,7 @@
             app:tabMode="scrollable"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:tabTextColor="@android:color/white"
             app:tabTextAppearance="@style/TabLayoutTextStyle"
             app:tabIndicatorHeight="0dp"
             >

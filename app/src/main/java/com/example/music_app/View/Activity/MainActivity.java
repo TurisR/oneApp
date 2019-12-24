@@ -31,11 +31,10 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, MusicListFragement.CallBackValue {
     private TabLayout mTabTl;
     private ViewPager mContentVp;
-    private List<Fragment> tabFragments;
+    private ArrayList<Fragment> tabFragments;
     private TextView tv_play_bar_title;
     private int duration;
-    private Boolean first=true;
-
+    private int NowFg=0;
     private TextView tv_play_bar_artist;
     public ImageView v_play_bar_play;
     private ContentPagerManager mContentPagerManager;
@@ -59,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         initData();
         initView();
         initEvent();
@@ -70,10 +68,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initData() {
         //song = (Song) getIntent().getSerializableExtra("songInfo");//获得歌曲信息
-        Log.e("song", "activity_song");
+       System.out.print("iiiiiii");
     }
-
-
 
 
     private void initEvent() {
@@ -147,7 +143,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
+                View view = tab.getCustomView();
+                if (null == view) {
+                    tab.setCustomView(R.layout.tab_item);
+                }
+                TextView textView = tab.getCustomView().findViewById(android.R.id.text1);
+                textView.setTextAppearance(MainActivity.this, R.style.TabLayoutTextSize_two);
             }
         });
 
@@ -162,7 +163,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         tabFragments.add(new SettingFragement());
         mContentPagerManager=new ContentPagerManager(getSupportFragmentManager(),tabFragments);
-       // contentAdapter = new ContentPagerAdapter(getSupportFragmentManager());
         mContentVp.setAdapter(mContentPagerManager);
     }
 
@@ -171,8 +171,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()){
             case R.id.iv_play_bar_next:
                 mPlayerUtil.next();
-                //Intent intent = new Intent(this,MusicService.class);
-                //UpdataUI();
                 break;
 
             case R.id.iv_play_bar_play:
@@ -205,7 +203,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             tv_play_bar_title.setText(song.getTitle());
             tv_play_bar_artist.setText(song.getSinger());
         }
+        NowFg=mTabTl.getSelectedTabPosition();
+        Log.e("Tab position",""+mTabTl.getSelectedTabPosition());
+        //mContentPagerManager.setFragments(tabFragments);
         mContentVp.setAdapter(mContentPagerManager);
+        mContentVp.setCurrentItem(NowFg);
+        //mContentVp.notify();
+
         if(AppConstant.getInstance().getPlayingState()==AppConstant.PlayerMsg.PAUSE_MSG){
             v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_pause));
         }else{
@@ -231,23 +235,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
-
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e("resume","11111111");
+        Log.e("resume","111111");
         UpdateUI();
-
-        //
-        /*song=AppConstant.getInstance().getPlayingSong();
-        tv_play_bar_title.setText(song.getTitle());
-        tv_play_bar_artist.setText(song.getSinger());
-        if(AppConstant.getInstance().getPlayingState()==AppConstant.PlayerMsg.PAUSE_MSG){
-            v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_pause));
-        }else{
-            v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_play));
-        }*/
     }
 
     @Override
@@ -267,13 +259,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             switch (action) {
                 case MUSIC_CURRENT://音乐状态，进度条监听
                     int currentTime = intent.getIntExtra("currentTime", -1);
-                    //Log.e("send 1","1111 "+currentTime);
                     audioSeekBar.setMax(duration);
                     audioSeekBar.setProgress(currentTime);
                     break;
                 case MUSIC_DURATION://音乐时长，并入song
                     duration = intent.getIntExtra("duration", -1);
-                    //Log.e("send 1", "2 " + duration + " " + song.getDuration());
                     break;
                 case MUSIC_STATE:
                     System.out.println("———MUSIC_STATE———");
@@ -285,7 +275,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case UPDATE_ACTION://更新操作
                     System.out.println("———接受到更新广播———");
                     position = intent.getIntExtra("current", -1);
-                    //Log.e("send 1", "3 " + position + " " + song.getTitle() + " " + size);
                     AppConstant.getInstance().setPosotion(position);
                     UpdateUI();
                     break;
