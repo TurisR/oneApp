@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String REPEAT_ACTION = "com.action.REPEAT_ACTION";		//音乐重复改变动作
     public static final String SHUFFLE_ACTION = "com.action.SHUFFLE_ACTION";	//音乐随机播放动作
     private HomeReceiver homeReceiver;	//自定义的广播接收器
+    private ImageView iv_play_bar_cover;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,9 +106,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         v_play_bar_play = findViewById(R.id.iv_play_bar_play);
         v_play_bar_play.setOnClickListener(this);
         audioSeekBar = findViewById(R.id.pb_play_bar);
+        iv_play_bar_cover=findViewById(R.id.iv_play_bar_cover);
         findViewById(R.id.iv_play_bar_next).setOnClickListener(this);
         findViewById(R.id.v_play_bar_playlist).setOnClickListener(this);
         findViewById(R.id.main_to_play_bottom).setOnClickListener(this);
+        iv_play_bar_cover.setOnClickListener(this);
         if(song==null&&AppConstant.getInstance().getPlayingSong()!=null){
             song=AppConstant.getInstance().getPlayingSong();
             tv_play_bar_title.setText(song.getTitle());
@@ -195,8 +198,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.main_to_play_bottom:
-                Intent mintent = new Intent(MainActivity.this, PlayViewActivity.class);
-                startActivity(mintent);
+                startActivity(new Intent(MainActivity.this, PlayViewActivity.class));
+                break;
+
+            case R.id.iv_play_bar_cover:
+                startActivity(new Intent(MainActivity.this, PlayViewActivity.class));
                 break;
         }
 
