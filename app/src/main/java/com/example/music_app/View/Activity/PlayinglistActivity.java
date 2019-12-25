@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,13 +34,15 @@ public class PlayinglistActivity extends Activity implements View.OnClickListene
     private TextView mode_music;
     private ImageView play_mode;
     private int mMode;
+    private TextView text_none_song;
+    private View divider;
 
     @Override
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_list);
-        getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
+        getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        getWindow().getAttributes().gravity= Gravity.BOTTOM;
         initView();
         initEvent();
 
@@ -47,8 +50,7 @@ public class PlayinglistActivity extends Activity implements View.OnClickListene
 
     private void initEvent() {
         mPlayerUtil=new PlayerUtil(this);
-        adapter=new PlayingListAdapter(this,isSelectedAll);
-        list_playing.setAdapter(adapter);
+
         setOnListViewItemClickListener();
     }
 
@@ -56,9 +58,8 @@ public class PlayinglistActivity extends Activity implements View.OnClickListene
         list_playing.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-               mPlayerUtil.play(position);
+                mPlayerUtil.play(position);
                 adapter.notifyDataSetChanged();
-
             }
         });
     }
@@ -67,11 +68,24 @@ public class PlayinglistActivity extends Activity implements View.OnClickListene
         mode_music = findViewById(R.id.mode_music);
         play_mode=findViewById(R.id.play_mode);
         list_playing=findViewById(R.id.list_playing);
+        text_none_song=findViewById(R.id.text_none_song);
+        divider=findViewById(R.id.divider);
         layout=(LinearLayout)findViewById(R.id.pop_layout);
         layout.setOnClickListener(this);
         findViewById(R.id.mode).setOnClickListener(this);
         music_text_sum.setText("共用"+ AppConstant.getInstance().getSongList().size() +"首音乐");
+        if(AppConstant.getInstance().getSongList().size()==0){
+            list_playing.setVisibility(View.GONE);
+            text_none_song.setVisibility(View.VISIBLE);
+            divider.setVisibility(View.GONE);
 
+        }else {
+            list_playing.setVisibility(View.VISIBLE);
+            text_none_song.setVisibility(View.GONE);
+            divider.setVisibility(View.VISIBLE);
+            adapter=new PlayingListAdapter(this,isSelectedAll);
+            list_playing.setAdapter(adapter);
+        }
         mode_select(AppConstant.getInstance().getMode());
     }
 
@@ -121,5 +135,11 @@ public class PlayinglistActivity extends Activity implements View.OnClickListene
         //startActivity(new Intent(this,MainActivity.class));
         finish();
         return true;
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
     }
 }

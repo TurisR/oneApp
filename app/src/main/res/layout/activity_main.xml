@@ -12,7 +12,7 @@
         layout="@layout/include_top_layout" />
 
     <include layout="@layout/include_play_bar"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         android:layout_width="match_parent"
         android:layout_alignBottom="@+id/tab"
         />

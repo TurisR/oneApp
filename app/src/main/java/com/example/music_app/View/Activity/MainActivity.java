@@ -10,6 +10,8 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.ScrollingMovementMethod;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ViewPager mContentVp;
     private ArrayList<Fragment> tabFragments;
     private TextView tv_play_bar_title;
+    private boolean isPressSeekBar = false; //判断是否在拖动拖动条
     private int duration;
     private int NowFg=0;
     private TextView tv_play_bar_artist;
@@ -48,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //一系列动作
     public static final String UPDATE_ACTION= "com.example.music_app.UPDATE_ACTION";		//更新动作
     public static final String MUSIC_STATE = "com.example.music_app.MUSIC_STATE";			//播放器状态 播放|暂停
-    public static final String MUSIC_CURRENT = "com.action.MUSIC_CURRENT";		//当前音乐改变动作
+    public static final String MUSIC_CURRENT = "com.example.music_app.MUSIC_CURRENT";		//当前音乐改变动作
     public static final String MUSIC_DURATION = "com.action.MUSIC_DURATION";	//音乐时长改变动作
     public static final String REPEAT_ACTION = "com.action.REPEAT_ACTION";		//音乐重复改变动作
     public static final String SHUFFLE_ACTION = "com.action.SHUFFLE_ACTION";	//音乐随机播放动作
@@ -90,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         /*绑定service*/
         mPlayerUtil=new PlayerUtil(this);
       // bindService(MediaServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+        initSeekBar();
     }
 
 
@@ -109,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             tv_play_bar_title.setText(song.getTitle());
             tv_play_bar_artist.setText(song.getSinger());
         }
-
+        tv_play_bar_title.setSelected(true);
        if(AppConstant.getInstance().getPlayingState()==AppConstant.PlayerMsg.PAUSE_MSG){
             v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_pause));
         }else {
@@ -175,18 +179,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.iv_play_bar_play:
                 if(AppConstant.getInstance().getPlayingState()==AppConstant.PlayerMsg.PAUSE_MSG){
-                    v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_play));
-                    mPlayerUtil.resume();
+                  v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_play));
+                  mPlayerUtil.resume();
+                  tv_play_bar_title.setSelected(true);
                 }else{
-                    v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_pause));
+                   v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_pause));
                     mPlayerUtil.pause();
+                   tv_play_bar_title.setSelected(false);
                 }
-
-                 //Log.e("song", "activity_song");
                 break;
 
             case R.id.v_play_bar_playlist:
                 startActivity(new Intent(MainActivity.this,PlayinglistActivity.class));
+                overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
                 break;
 
             case R.id.main_to_play_bottom:
@@ -208,12 +213,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //mContentPagerManager.setFragments(tabFragments);
         mContentVp.setAdapter(mContentPagerManager);
         mContentVp.setCurrentItem(NowFg);
-        //mContentVp.notify();
 
         if(AppConstant.getInstance().getPlayingState()==AppConstant.PlayerMsg.PAUSE_MSG){
             v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_pause));
+            tv_play_bar_title.setSelected(false);
         }else{
             v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_play));
+            tv_play_bar_title.setSelected(true);
         }
     }
 
@@ -254,21 +260,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-
-
             switch (action) {
                 case MUSIC_CURRENT://音乐状态，进度条监听
                     int currentTime = intent.getIntExtra("currentTime", -1);
-                    audioSeekBar.setMax(duration);
-                    audioSeekBar.setProgress(currentTime);
+                    //Log.e("time","  "+currentTime);
+                    if (!isPressSeekBar) {
+                        //当进度条未被拖动时，自动更新进度条进度
+                        audioSeekBar.setProgress(audioSeekBar.getMax() * currentTime / song.getDuration());    //更新进度条
+                    }
                     break;
                 case MUSIC_DURATION://音乐时长，并入song
                     duration = intent.getIntExtra("duration", -1);
+                    Log.e("duration","0"+duration);
                     break;
                 case MUSIC_STATE:
                     System.out.println("———MUSIC_STATE———");
                     int state = intent.getIntExtra("state", AppConstant.PlayerMsg.PAUSE_MSG);
+                    position = intent.getIntExtra("current", -1);
                     AppConstant.getInstance().setPlayingState(state);
+                    Log.e("state","00000"+state+" "+position);
                     UpdateUI();
                     break;
 
@@ -276,6 +286,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     System.out.println("———接受到更新广播———");
                     position = intent.getIntExtra("current", -1);
                     AppConstant.getInstance().setPosotion(position);
+                    Log.e("time","  "+ position);
                     UpdateUI();
                     break;
             }
@@ -284,5 +295,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+
+    /**
+     *  初始化拖动条
+     */
+    private void initSeekBar() {
+        //设置拖动监听
+        audioSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                isPressSeekBar = true;      //当拖动进度条时，进度条停止自动更新
+                mPlayerUtil.pause();
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                int progress = seekBar.getProgress();   //拖动条停止位置
+                int seekBarMax = seekBar.getMax();      //拖动条最大数值
+                int songMax = song.getDuration();       //歌曲总时长
+                mPlayerUtil.updateMusicPrg(songMax * progress / seekBarMax);      //更新播放进度
+                isPressSeekBar = false;     //拖动进度条结束时，开始自动更新进度条
+            }
+        });
+    }
 
 }

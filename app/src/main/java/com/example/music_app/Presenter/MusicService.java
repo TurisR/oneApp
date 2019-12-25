@@ -44,16 +44,15 @@ public class MusicService extends Service {
 
     //服务要发送的一些Action
     public static final String UPDATE_ACTION = "com.example.music_app.UPDATE_ACTION";	//更新动作
-    public static final String MUSIC_CURRENT = "com.action.MUSIC_CURRENT";	//当前音乐播放时间更新动作
+    public static final String MUSIC_CURRENT = "com.example.music_app.MUSIC_CURRENT";	//当前音乐播放时间更新动作
     public static final String MUSIC_DURATION = "com.action.MUSIC_DURATION";//新音乐长度更新动作
-    public static final String MUSIC_STATE = "com.example.music_app.MUSIC_STATE";			//播放器状态 播放|暂停
+    public static final String MUSIC_STATE = "com.example.music_app.MUSIC_STATE";	//播放器状态 播放|暂停
 
     /**
      * handler用来接收消息，来发送广播更新播放时间
      */
     private Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
-
             switch (msg.what){
                 case 1:
                     if(mMediaPlayer != null) {
@@ -225,6 +224,7 @@ public class MusicService extends Service {
             mMediaPlayer.setOnPreparedListener(new PreparedListener(currentTime));// 注册一个监听器
             handler.sendEmptyMessage(1);
             handler.sendEmptyMessage(2);
+            handler.sendEmptyMessage(4);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -244,7 +244,7 @@ public class MusicService extends Service {
     private void resume() {
         if (isPause) {
             mMediaPlayer.start();
-            handler.sendEmptyMessage(2);
+             handler.sendEmptyMessage(2);
             isPause = false;
         }
     }
@@ -260,10 +260,6 @@ public class MusicService extends Service {
         }
         path=mSongList.get(position).getFileUrl();
         play(0);
-//        sendIntent = new Intent(UPDATE_ACTION);
-//        sendIntent.putExtra("current", position);
-//        sendIntent.putExtra("song",mSongList.get(position));
-        // 发送广播，将被Activity组件中的BroadcastReurrenceiver接收到
         sendBroadcast(sendIntent);
     }
 
@@ -348,6 +344,14 @@ public class MusicService extends Service {
             mMediaPlayer.seekTo(newCurrentTime);
             currentTime = newCurrentTime;
         }
+        if (isPause) {
+            mMediaPlayer.start();
+            handler.sendEmptyMessage(2);
+            isPause = false;
+        }
+
+
+
     }
 
     @Override

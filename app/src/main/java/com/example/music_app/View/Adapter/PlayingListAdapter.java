@@ -64,7 +64,7 @@ public class PlayingListAdapter extends BaseAdapter {
         }
 
         if(AppConstant.getInstance().getPosotion()==position){
-            holder.mTitle.setTextColor(mContext.getResources().getColor(R.color.red));
+            holder.mTitle.setTextColor(mContext.getResources().getColor(R.color.blue));
         }else{
             holder.mTitle.setTextColor(mContext.getResources().getColor(R.color.black));
         }
@@ -88,12 +88,5 @@ public class PlayingListAdapter extends BaseAdapter {
         } else {
             holder.checkBox.setVisibility(View.GONE);
         }
-    }
-    public boolean isShowCheckBox() {
-        return isShowCheckBox;
-    }
-
-    public void setShowCheckBox(boolean showCheckBox) {
-        isShowCheckBox = showCheckBox;
     }
 }

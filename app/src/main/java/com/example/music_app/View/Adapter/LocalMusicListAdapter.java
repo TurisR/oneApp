@@ -74,8 +74,8 @@ public class LocalMusicListAdapter extends BaseAdapter {
         if(AppConstant.getInstance().getPosotion()==i||i==mSelect){
             holder.v_playing.setVisibility(View.VISIBLE);
             AppConstant.getInstance().setPlayingSong(list.get(i));
-           holder.song.setTextColor(context.getResources().getColor(R.color.red) );
-           holder.singer.setTextColor(context.getResources().getColor(R.color.red));
+           holder.song.setTextColor(context.getResources().getColor(R.color.blue) );
+           holder.singer.setTextColor(context.getResources().getColor(R.color.blue));
 
         }else{
             holder.v_playing.setVisibility(View.INVISIBLE);
