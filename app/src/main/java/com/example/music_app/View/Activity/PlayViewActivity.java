@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -41,11 +42,6 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
     private SeekBar seekBar;        //拖动条
     private boolean isPressSeekBar = false; //判断是否在拖动拖动条
 
-    //一系列动作
-    public static final String UPDATE_ACTION= "com.example.music_app.UPDATE_ACTION";		//更新动作
-    public static final String MUSIC_CURRENT = "com.action.MUSIC_CURRENT";		//当前音乐改变动作
-    public static final String REPEAT_ACTION = "com.action.REPEAT_ACTION";		//音乐重复改变动作
-    public static final String SHUFFLE_ACTION = "com.action.SHUFFLE_ACTION";	//音乐随机播放动作
     private ServiceReceiver serviceReceiver;
 
     @Override
@@ -176,7 +172,7 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
                     int seekBarMax = seekBar.getMax();      //拖动条最大数值
                     int songMax = song.getDuration();       //歌曲总时长
                     mPlayerUtil.updateMusicPrg(songMax * progress / seekBarMax);      //更新播放进度
-                isPressSeekBar = false;     //拖动进度条结束时，开始自动更新进度条
+                    isPressSeekBar = false;     //拖动进度条结束时，开始自动更新进度条
             }
         });
     }
@@ -187,8 +183,8 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
     private void initReceiver() {
         serviceReceiver = new ServiceReceiver();
         IntentFilter filter = new IntentFilter();
-        filter.addAction(MUSIC_CURRENT);
-        filter.addAction(UPDATE_ACTION);
+        filter.addAction(AppConstant.MessageType.MUSIC_CURRENT);
+        filter.addAction(AppConstant.MessageType.UPDATE_ACTION);
         registerReceiver(serviceReceiver, filter);
     }
 
@@ -201,16 +197,17 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
             String action = intent.getAction();
 
             switch (action) {
-                case MUSIC_CURRENT :
+                case AppConstant.MessageType.MUSIC_CURRENT :
                     //音乐状态，进度条监听
                     int currentTime = intent.getIntExtra("currentTime", -1);   //获取从MusicService传来的歌曲进度时间
+                   // Log.e("time",currentTime+"");
                     if (!isPressSeekBar) {
                         //当进度条未被拖动时，自动更新进度条进度
                         seekBar.setProgress(seekBar.getMax() * currentTime / song.getDuration());    //更新进度条
                     }
                     break;
 
-                case UPDATE_ACTION :
+                case AppConstant.MessageType.UPDATE_ACTION :
                     //当切歌时，更新UI
                     int position = intent.getIntExtra("current", -1);    //获取当前正在播放的歌曲
                     System.out.println("---播放界面收到广播---");

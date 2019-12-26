@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.music_app.R;
@@ -16,17 +17,17 @@ import com.example.music_app.View.Activity.ScanActivity;
 
 import java.util.zip.Inflater;
 
-public class SettingFragement extends Fragment {
+public class SettingFragment extends Fragment {
 
     private View view;
-    private Button btn;
+    private RelativeLayout btn;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragement_setting, null);
-        btn=(Button) view.findViewById(R.id.scan_btn);
+        btn=(RelativeLayout) view.findViewById(R.id.scan_btn);
         return view;
     }
 
@@ -40,7 +41,7 @@ public class SettingFragement extends Fragment {
                 // TODO Auto-generated method stub
                 Intent intent=new Intent(getActivity(), ScanActivity.class);
                 startActivity(intent);
-                Toast.makeText(getActivity(), "success2", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getActivity(), "success", Toast.LENGTH_LONG).show();
             }
         });
 

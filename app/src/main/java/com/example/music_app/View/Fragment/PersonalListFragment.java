@@ -15,23 +15,23 @@ import com.example.music_app.R;
  * Created by yifeng on 16/8/3.
  *
  */
-public class TabContentFragment extends Fragment {
+public class PersonalListFragment extends Fragment {
 
     private static final String EXTRA_CONTENT = "content";
 
-    public static TabContentFragment newInstance(String content){
+    public static PersonalListFragment newInstance(String content){
         Bundle arguments = new Bundle();
         arguments.putString(EXTRA_CONTENT, content);
-        TabContentFragment tabContentFragment = new TabContentFragment();
-        tabContentFragment.setArguments(arguments);
-        return tabContentFragment;
+        PersonalListFragment personalListFragment = new PersonalListFragment();
+        personalListFragment.setArguments(arguments);
+        return personalListFragment;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View contentView = inflater.inflate(R.layout.fragment_tab_content, null);
-        ((TextView)contentView.findViewById(R.id.tv_content)).setText(getArguments().getString(EXTRA_CONTENT));
+        View contentView = inflater.inflate(R.layout.fragment_personal_list, null);
+        ((TextView)contentView.findViewById(R.id.tv_content)).setText("个人歌单");
         return contentView;
     }
 }

@@ -26,7 +26,7 @@ import java.util.List;
 
 
 
-public class MusicListFragement extends Fragment {
+public class MusicListFragment extends Fragment {
 
     private LocalMusicListAdapter adapter = null;
 
