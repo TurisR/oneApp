@@ -8,6 +8,8 @@ import java.util.List;
 
 public class AppConstant {
 
+
+
     private int playingState=0;
     private int posotion=-1;
 
@@ -76,5 +78,16 @@ public class AppConstant {
         public static final int LOOP=1;//循环播放
         public static final int ORDER=2;//循序播放
         public static final int RANDOM=3;//随机播放
+    }
+
+
+    public class MessageType{
+        //一系列动作
+        public static final String UPDATE_ACTION= "com.example.music_app.UPDATE_ACTION";		//更新动作
+        public static final String MUSIC_STATE = "com.example.music_app.MUSIC_STATE";			//播放器状态 播放|暂停
+        public static final String MUSIC_CURRENT = "com.example.music_app.MUSIC_CURRENT";		//当前音乐改变动作
+        public static final String MUSIC_DURATION = "com.action.MUSIC_DURATION";	//音乐时长改变动作
+        public static final String REPEAT_ACTION = "com.action.REPEAT_ACTION";		//音乐重复改变动作
+        public static final String SHUFFLE_ACTION = "com.action.SHUFFLE_ACTION";	//音乐随机播放动作
     }
 }

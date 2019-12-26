@@ -23,6 +23,7 @@
         android:layout_gravity="center_vertical"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:layout_marginTop="5dp"
         android:layout_below="@+id/bar_seek"
         android:layout_toRightOf="@+id/iv_play_bar_cover"
         >

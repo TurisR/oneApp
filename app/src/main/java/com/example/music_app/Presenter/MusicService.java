@@ -42,12 +42,6 @@ public class MusicService extends Service {
     private int currentTime;
     private int status = 2;			//播放状态，默认为顺序播放
 
-    //服务要发送的一些Action
-    public static final String UPDATE_ACTION = "com.example.music_app.UPDATE_ACTION";	//更新动作
-    public static final String MUSIC_CURRENT = "com.example.music_app.MUSIC_CURRENT";	//当前音乐播放时间更新动作
-    public static final String MUSIC_DURATION = "com.action.MUSIC_DURATION";//新音乐长度更新动作
-    public static final String MUSIC_STATE = "com.example.music_app.MUSIC_STATE";	//播放器状态 播放|暂停
-
     /**
      * handler用来接收消息，来发送广播更新播放时间
      */
@@ -58,14 +52,14 @@ public class MusicService extends Service {
                     if(mMediaPlayer != null) {
                         currentTime = mMediaPlayer.getCurrentPosition(); // 获取当前音乐播放的位置
                         Intent intent = new Intent();
-                        intent.setAction(MUSIC_CURRENT);
+                        intent.setAction(AppConstant.MessageType.MUSIC_CURRENT);
                         intent.putExtra("currentTime", currentTime);
                         sendBroadcast(intent); // 给PlayerActivity发送广播
                         handler.sendEmptyMessageDelayed(1, 1000);//每秒发送更新进度条
                     }
                     break;
                 case 2:
-                    sendIntent = new Intent(MUSIC_STATE);
+                    sendIntent = new Intent(AppConstant.MessageType.MUSIC_STATE);
                     sendIntent.putExtra("current", position);
                     sendIntent.putExtra("state",AppConstant.PlayerMsg.PLAY_MSG);
                     // 发送广播，将被Activity组件中的BroadcastReurrenceiver接收到
@@ -73,7 +67,7 @@ public class MusicService extends Service {
                     break;
 
                 case 3:
-                    sendIntent = new Intent(MUSIC_STATE);
+                    sendIntent = new Intent(AppConstant.MessageType.MUSIC_STATE);
                     sendIntent.putExtra("current", position);
                     sendIntent.putExtra("state",AppConstant.PlayerMsg.PAUSE_MSG);
                     // 发送广播，将被Activity组件中的BroadcastReurrenceiver接收到
@@ -81,7 +75,7 @@ public class MusicService extends Service {
                     break;
 
                 case 4:
-                    sendIntent = new Intent(UPDATE_ACTION);
+                    sendIntent = new Intent(AppConstant.MessageType.UPDATE_ACTION);
                     sendIntent.putExtra("current", position);
                     sendIntent.putExtra("song",mSongList.get(position));
                     // 发送广播，将被Activity组件中的BroadcastReurrenceiver接收到
@@ -310,7 +304,7 @@ public class MusicService extends Service {
                 mMediaPlayer.seekTo(currentTime);
             }
             Intent intent = new Intent();
-            intent.setAction(MUSIC_DURATION);
+            intent.setAction(AppConstant.MessageType.MUSIC_DURATION);
             duration = mMediaPlayer.getDuration();
             intent.putExtra("duration", duration);	//通过Intent来传递歌曲的总长度
             sendBroadcast(intent);
