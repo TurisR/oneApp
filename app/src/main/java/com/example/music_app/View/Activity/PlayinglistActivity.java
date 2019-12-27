@@ -71,8 +71,8 @@ public class PlayinglistActivity extends Activity implements View.OnClickListene
         layout=(LinearLayout)findViewById(R.id.pop_layout);
         layout.setOnClickListener(this);
         findViewById(R.id.mode).setOnClickListener(this);
-        music_text_sum.setText("共用"+ AppConstant.getInstance().getSongList().size() +"首音乐");
-        if(AppConstant.getInstance().getSongList().size()==0){
+        music_text_sum.setText("共用"+ AppConstant.getInstance().getCurrentSongList().size() +"首音乐");
+        if(AppConstant.getInstance().getCurrentSongList().size()==0){
             list_playing.setVisibility(View.GONE);
             text_none_song.setVisibility(View.VISIBLE);
             divider.setVisibility(View.GONE);
@@ -80,7 +80,7 @@ public class PlayinglistActivity extends Activity implements View.OnClickListene
             list_playing.setVisibility(View.VISIBLE);
             text_none_song.setVisibility(View.GONE);
             divider.setVisibility(View.VISIBLE);
-            adapter=new PlayingListAdapter(this);
+            adapter=new PlayingListAdapter(this,AppConstant.getInstance().getCurrentSongList());
             list_playing.setAdapter(adapter);
         }
         mode_select(AppConstant.getInstance().getMode());

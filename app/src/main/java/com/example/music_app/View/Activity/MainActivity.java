@@ -24,7 +24,7 @@ import com.example.music_app.mould.Model.bean.Song;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, MusicListFragment.CallBackValue {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private TabLayout mTabTl;
     private ViewPager mContentVp;
     private ArrayList<Fragment> tabFragments;
@@ -206,16 +206,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    //与fragment交换数据
-    @Override
-    public void SendMessageValue(Song song,int position) {
-        tv_play_bar_title.setText(song.getTitle());
-        tv_play_bar_artist.setText(song.getSinger());
-        this.song=song;
-        this.position=position;
-    }
-
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -258,8 +248,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case AppConstant.MessageType.UPDATE_ACTION://更新操作换歌
                     System.out.println("———接受到更新广播———");
                     position = intent.getIntExtra("current", -1);
-                    AppConstant.getInstance().setPosotion(position);
-                    Log.e("time","  "+ position);
+                    AppConstant.getInstance().setPosition(position);
+                    AppConstant.getInstance().setRecentSongList(AppConstant.getInstance().getCurrentSongList().get(position));
+                    Log.e("time","  "+AppConstant.getInstance().getRecentSongList().size());
                     UpdateUI();
                     break;
             }

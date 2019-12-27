@@ -86,19 +86,16 @@ public class widgetLayout extends LinearLayout {
         if(bl){
             set_list.setVisibility(VISIBLE);
             set_more.setVisibility(VISIBLE);
+            set_image.animate().rotation(45).setDuration(200).start();
         }else{
             set_list.setVisibility(GONE);
             set_more.setVisibility(GONE);
-        }
-    }
-
-    public void setRotate(Boolean bl){
-        if(bl){
-            set_image.animate().rotation(45).setDuration(200).start();
-        }else {
             set_image.animate().rotation(-45).setDuration(200).start();
         }
     }
+
+
+
 
 
     public void setListVisible(boolean bl){

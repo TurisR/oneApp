@@ -21,25 +21,13 @@ import java.util.List;
 public class PlayingListAdapter extends BaseAdapter {
 
     private final Context mContext;
-    private ArrayList<Song> mSongList=new ArrayList<>();
-    private ArrayList<String> albumName=new ArrayList<>();
+    private List<Song> mSongList=new ArrayList<>();
+    private List<String> albumName=new ArrayList<>();
     private ViewHolder holder;
     private boolean isTitle=false;
-    private boolean isShowCheckBox = false;//表示当前是否是多选状态
-
-    public PlayingListAdapter(Context context) {
-        mContext=context;
-        //isShowCheckBox=isSelectedAll;
-        if(!mSongList.isEmpty()){
-            mSongList.clear();
-        }
-        mSongList.addAll(AppConstant.getInstance().getSongList());
-
-    }
 
 
-
-    public PlayingListAdapter(Context context,ArrayList<Song> songList) {
+    public PlayingListAdapter(Context context,List<Song> songList) {
         mContext=context;
         //isShowCheckBox=isSelectedAll;
         if(!mSongList.isEmpty()){
@@ -49,12 +37,12 @@ public class PlayingListAdapter extends BaseAdapter {
 
     }
 
-    public PlayingListAdapter(Context context,ArrayList<String> strings,boolean isTitle) {
+    public PlayingListAdapter(Context context,List<String> strings,boolean isTitle) {
         mContext=context;
         this.isTitle=isTitle;
         //isShowCheckBox=isSelectedAll;
-        if(!mSongList.isEmpty()){
-            mSongList.clear();
+        if(!albumName.isEmpty()){
+            albumName.clear();
         }
         albumName.addAll(strings);
 
@@ -64,12 +52,12 @@ public class PlayingListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mSongList.size();
+        return isTitle ? albumName.size():mSongList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mSongList.get(position);
+        return isTitle ? albumName.get(position):mSongList.get(position);
     }
 
     @Override
@@ -91,7 +79,7 @@ public class PlayingListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        if(AppConstant.getInstance().getPosotion()==position){
+        if(AppConstant.getInstance().getPosition()==position){
             holder.mTitle.setTextColor(mContext.getResources().getColor(R.color.blue));
             holder.mTitle.setSelected(true);
         }else{

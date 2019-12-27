@@ -1,5 +1,9 @@
 package com.example.music_app.View.Fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -64,46 +68,35 @@ public class PersonalListFragment extends Fragment  {
         set_recent = contentView.findViewById(R.id.recent);
         personal_love = contentView.findViewById(R.id.personal_love);
         personal_songList = contentView.findViewById(R.id.personal_songList);
-
         set_recent.setTitle("最近播放");
-
-        set_recent.setNum("最近播放"+AppConstant.getInstance().getSongList().size()+"首歌");
+        set_recent.setNum("最近播放"+AppConstant.getInstance().getRecentSongList().size()+"首歌");
         personal_love.setTitle("个人收藏");
         personal_love.setNumVisible(true);
         personal_songList.setTitle("个人歌单");
         personal_songList.setNumVisible(true);
-
-        mPlayingListAdapter = new PlayingListAdapter(getActivity());
+        mPlayingListAdapter = new PlayingListAdapter(getActivity(),AppConstant.getInstance().getRecentSongList());
 
     }
 
     private void initEvent() {
-        if(AppConstant.getInstance().getPersonListState(0)){
-            set_recent.setVisible(true);
-            set_recent.setListView(mPlayingListAdapter);
-            set_recent.setNumVisible(true);
-            set_recent.setRotate(true);
-            set_recent.setMoreText("最近播放"+AppConstant.getInstance().getSongList().size()+"首歌");
 
-        }
 
         set_recent.setOnWidgetListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // Toast.makeText(getActivity(), "最近播放", Toast.LENGTH_SHORT).show();
-               // isShow = set_recent.getVisible();
                 set_recent.setVisible(!set_recent.getVisible());
                 if (set_recent.getVisible()) {
-                    set_recent.setListView(mPlayingListAdapter);
+                    if(AppConstant.getInstance().getRecentSongList().size()==0){
+                        set_recent.setListVisible(true);
+                    }else {
+                        set_recent.setListVisible(false);
+                        set_recent.setListView(mPlayingListAdapter);
+                    }
                     set_recent.setNumVisible(true);
-                    set_recent.setRotate(true);
-                    set_recent.setMoreText("最近播放"+AppConstant.getInstance().getSongList().size()+"首歌");
-                    AppConstant.getInstance().setPersonListState(true,0);
+                    set_recent.setMoreText("最近播放"+AppConstant.getInstance().getRecentSongList().size()+"首歌");
                 }else {
                     set_recent.setNumVisible(false);
-                    set_recent.setRotate(false);
-                    set_recent.setNum("最近播放"+AppConstant.getInstance().getSongList().size()+"首歌");
-                    AppConstant.getInstance().setPersonListState(false,0);
+                    set_recent.setNum("最近播放"+AppConstant.getInstance().getRecentSongList().size()+"首歌");
                 }
 
 
@@ -114,8 +107,10 @@ public class PersonalListFragment extends Fragment  {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getActivity(), "最近播放"+position, Toast.LENGTH_SHORT).show();
+                AppConstant.getInstance().setCurrentSongList(AppConstant.getInstance().getRecentSongList());
                 (new PlayerUtil(getActivity())).play(position);
-                mPlayingListAdapter.notifyDataSetChanged();
+                 mPlayingListAdapter.notifyDataSetChanged();
+                 AppConstant.getInstance().getPlayerUtil(getActivity()).setPlayList();
             }
         });
 
@@ -165,6 +160,42 @@ public class PersonalListFragment extends Fragment  {
         });
 
 
+    }
+
+
+
+    BroadcastReceiver mAdDownLoadReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch (intent.getAction()){
+                case AppConstant.MessageType.UPDATE_ACTION:
+                    mPlayingListAdapter = new PlayingListAdapter(getActivity(),AppConstant.getInstance().getRecentSongList());
+                    set_recent.setListView(mPlayingListAdapter);
+                    mPlayingListAdapter.notifyDataSetChanged();
+                    personal_songList.setNum("共有"+AppConstant.getInstance().getPersonalSongAlbum().size()+"个歌单");
+                    //Toast.makeText(getActivity(),"this++++",Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    };
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        receiveAdDownload();
+    }
+    /**
+     * 注册广播接收器
+     */
+    private void receiveAdDownload() {
+        getActivity().registerReceiver(mAdDownLoadReceiver, new IntentFilter(AppConstant.MessageType.UPDATE_ACTION));
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        //broadcastManager.unregisterReceiver(mAdDownLoadReceiver);
+        getActivity().unregisterReceiver(mAdDownLoadReceiver);
     }
 
 

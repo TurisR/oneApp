@@ -3,6 +3,8 @@ package com.example.music_app.Presenter;
 import android.content.Context;
 import android.content.Intent;
 
+import java.io.Serializable;
+
 public class PlayerUtil {
 
     private Context mContext;
@@ -11,15 +13,12 @@ public class PlayerUtil {
         mContext=context;
         intent = new Intent(mContext,MusicService.class);
     }
-
-
     public void play(int pos){
         intent.putExtra("listPosition", pos);
         intent.putExtra("MSG", AppConstant.PlayerMsg.PLAY_MSG);//播放
         mContext.startService(intent);
-        AppConstant.getInstance().setPosotion(pos);
+        AppConstant.getInstance().setPosition(pos);
         AppConstant.getInstance().setPlayingState(AppConstant.PlayerMsg.PLAY_MSG);
-      //  AppConstant.getInstance().setRecentSongList(AppConstant.getInstance().getCurrrentSongList().get(pos));
     }
     public void pause(){
         intent.putExtra("MSG", AppConstant.PlayerMsg.PAUSE_MSG);//停止播放
@@ -47,6 +46,12 @@ public class PlayerUtil {
         intent.putExtra("Mode",mode);
         intent.putExtra("MSG", AppConstant.PlayerMsg.CHANG_MODE);//下一曲
         AppConstant.getInstance().setMode(mode);
+        mContext.startService(intent);
+    }
+
+    public void setPlayList(){
+        intent.putExtra("MSG", AppConstant.PlayerMsg.CHANG_LIST);//换歌单
+        intent.putExtra("List", (Serializable)AppConstant.getInstance().getCurrentSongList());
         mContext.startService(intent);
     }
 

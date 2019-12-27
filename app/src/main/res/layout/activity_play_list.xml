@@ -106,16 +106,18 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="0dp"
             android:layout_marginRight="10dp"
+            android:visibility="gone"
             android:background="#33000000"
             android:contentDescription="@null" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
             android:id="@+id/text_none_song"
             android:gravity="center"
-            android:textSize="18sp"
-            android:text="暂无歌曲 点击添加"
+            android:textSize="16sp"
+            android:text="暂无歌曲"
             />
     </LinearLayout>
 

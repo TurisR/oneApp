@@ -13,7 +13,7 @@ public class AppConstant {
 
 
     private int playingState=0;
-    private int posotion=-1;
+    private int position=-1;
     private int mode=2;
 
     private List<Song> RecentSongList=new ArrayList<>();
@@ -21,16 +21,16 @@ public class AppConstant {
     private List<Song> CurrentSongList=new ArrayList<>();
     private List<Song> LocalSongList=new ArrayList<>();
 
-    public List<Song> getCurrrentSongList() {
+    public List<Song> getCurrentSongList() {
         return CurrentSongList;
     }
 
-    public void setCurrrentSongList(List<Song> currentSongList) {
-        CurrentSongList = currentSongList;
+    public void setCurrentSongList(List<Song> currentSongList) {
+        CurrentSongList =currentSongList;
     }
 
     public List<Song> getLocalSongList() {
-        return LocalSongList;
+        return Model.getInstance().getDBMananger().getSongDao().getSonglist();
     }
 
     public void setLocalSongList(List<Song> localSongList) {
@@ -52,7 +52,17 @@ public class AppConstant {
     }
 
     public void setRecentSongList(Song song) {
-        RecentSongList.add(song);
+        int i=0;
+        for(Song song1:RecentSongList){
+            if(song1.Equals(song)){
+                i=1;
+                break;
+            }
+        }
+        if(i==0){
+            RecentSongList.add(song);
+        }
+
     }
 
     public List<String> getPersonalSongAlbum() {
@@ -72,13 +82,13 @@ public class AppConstant {
     }
 
 
-    public int getPosotion() {
-        return posotion;
+    public int getPosition() {
+        return position;
     }
 
-    public void setPosotion(int posotion) {
-        this.posotion = posotion;
-        setPlayingSong(getSongList().get(posotion));
+    public void setPosition(int position) {
+        this.position = position;
+        setPlayingSong(getCurrentSongList().get(position));
     }
 
 
@@ -121,6 +131,7 @@ public class AppConstant {
         public static final int CHANG_MODE = 7 ;//模式改变
 
         public static final int CHANGE_PRG = 8; //歌曲进度改变 /by：yxy
+        public static final int CHANG_LIST = 9 ;//模式改变
     }
 
     public class Mode{

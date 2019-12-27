@@ -212,7 +212,7 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
                     int position = intent.getIntExtra("current", -1);    //获取当前正在播放的歌曲
                     System.out.println("---播放界面收到广播---");
                     if (position != -1) {
-                        AppConstant.getInstance().setPosotion(position);
+                        AppConstant.getInstance().setPosition(position);
                         UpdateUI();       //更新UI界面的歌曲信息
                     }
                     break;

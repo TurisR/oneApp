@@ -44,8 +44,7 @@ public class MusicListFragment extends Fragment {
     private TextView music_text_sum;
 
 
-    //接口
-    CallBackValue callBackValue;
+
     /**
      * fragment与activity产生关联是  回调这个方法
      */
@@ -54,7 +53,6 @@ public class MusicListFragment extends Fragment {
         // TODO Auto-generated method stub
         super.onAttach(context );
         //当前fragment从activity重写了回调接口  得到接口的实例化对象
-        callBackValue =(CallBackValue) getActivity();
     }
 
 
@@ -76,7 +74,6 @@ public class MusicListFragment extends Fragment {
         initData();
         initView(v);
         ListViewEvent();
-
         return v;
     }
 
@@ -102,9 +99,10 @@ public class MusicListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 View mView=view.findViewById(R.id.v_playing);
                 Position=position;
+                AppConstant.getInstance().setCurrentSongList(AppConstant.getInstance().getLocalSongList());
                 Toast.makeText(getActivity(),"播放"+mSongList.get(position).getTitle(),Toast.LENGTH_LONG);
                 AppConstant.getInstance().getPlayerUtil(getActivity()).play(position);
-               //AppConstant.getInstance().setCurrrentSongList(AppConstant.getInstance().getLocalSongList());
+                AppConstant.getInstance().getPlayerUtil(getActivity()).setPlayList();
 
             }
 
@@ -119,11 +117,6 @@ public class MusicListFragment extends Fragment {
     }
 
 
-    //定义一个回调接口
-    public interface CallBackValue{
-        public void SendMessageValue(Song song,int position);
-        public void playMusic(int action,Song song);
-    }
 
 
     BroadcastReceiver mAdDownLoadReceiver = new BroadcastReceiver() {

@@ -27,15 +27,19 @@ import java.util.TimerTask;
 
 public class MusicService extends Service {
 
-
     /* 定于一个多媒体对象 */
     public static MediaPlayer mMediaPlayer = null;
     // 用户操作
     private int msg;             //操作信息
-    private static List<Song> mSongList=new ArrayList<>();
+    private List<Song> mSongList=new ArrayList<>();
     private int position = -1;
     private boolean isPause; 		// 暂停状态
     private int duration;			//播放长度
+
+    public void setSongList(List<Song> songList) {
+        mSongList = songList;
+    }
+
     private String path; 			// 音乐文件路径
     private boolean isNext=true;
     private Intent sendIntent;
@@ -96,11 +100,12 @@ public class MusicService extends Service {
             mMediaPlayer = null;
         }
         //mSongList=Model.getInstance().getDBMananger().getSongDao().getSonglist();
-        mSongList=AppConstant.getInstance().getSongList();
+
         mMediaPlayer = new MediaPlayer();
-        /**
-         * 设置音乐播放完成时的监听器
-         */
+        /**设置音乐播放完成时的监听器
+         * */
+
+
        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 
             @Override
@@ -108,9 +113,6 @@ public class MusicService extends Service {
                 next_mode_play(isNext);
             }
         });
-
-
-
     }
 
     private void next_mode_play(boolean state) {//state判断是下一曲还是上一曲
@@ -166,6 +168,9 @@ public class MusicService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if(mSongList.isEmpty()){
+            mSongList=AppConstant.getInstance().getLocalSongList();
+        }
 
         msg = intent.getIntExtra("MSG", AppConstant.PlayerMsg.STOP_MSG);			//播放信息
         switch (msg){
@@ -198,7 +203,13 @@ public class MusicService extends Service {
                 if (newMusicPrg != -1)
                     updateMusicPrg(newMusicPrg);
                 break;
+
+            case AppConstant.PlayerMsg.CHANG_LIST:
+                setSongList((List<Song>)intent.getSerializableExtra("List"));
+               // Log.e("text",mSongList.size()+"");
+                break;
         }
+        //mSongList=AppConstant.getInstance().getCurrrentSongList();
         return super.onStartCommand(intent, flags, startId);
     }
 
