@@ -45,12 +45,10 @@ public class PlayinglistActivity extends Activity implements View.OnClickListene
         getWindow().getAttributes().gravity= Gravity.BOTTOM;
         initView();
         initEvent();
-
     }
 
     private void initEvent() {
         mPlayerUtil=new PlayerUtil(this);
-
         setOnListViewItemClickListener();
     }
 
@@ -78,12 +76,11 @@ public class PlayinglistActivity extends Activity implements View.OnClickListene
             list_playing.setVisibility(View.GONE);
             text_none_song.setVisibility(View.VISIBLE);
             divider.setVisibility(View.GONE);
-
         }else {
             list_playing.setVisibility(View.VISIBLE);
             text_none_song.setVisibility(View.GONE);
             divider.setVisibility(View.VISIBLE);
-            adapter=new PlayingListAdapter(this,isSelectedAll);
+            adapter=new PlayingListAdapter(this);
             list_playing.setAdapter(adapter);
         }
         mode_select(AppConstant.getInstance().getMode());

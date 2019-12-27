@@ -19,6 +19,7 @@ public class PlayerUtil {
         mContext.startService(intent);
         AppConstant.getInstance().setPosotion(pos);
         AppConstant.getInstance().setPlayingState(AppConstant.PlayerMsg.PLAY_MSG);
+      //  AppConstant.getInstance().setRecentSongList(AppConstant.getInstance().getCurrrentSongList().get(pos));
     }
     public void pause(){
         intent.putExtra("MSG", AppConstant.PlayerMsg.PAUSE_MSG);//停止播放

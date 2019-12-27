@@ -1,11 +1,14 @@
 package com.example.music_app.View.Fragment;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.music_app.Presenter.AppConstant;
 import com.example.music_app.R;
+import com.example.music_app.View.Activity.MainActivity;
 import com.example.music_app.View.Adapter.LocalMusicListAdapter;
 import com.example.music_app.mould.Model.Model;
 import com.example.music_app.mould.Model.bean.Song;
@@ -30,6 +34,7 @@ public class MusicListFragment extends Fragment {
 
     private LocalMusicListAdapter adapter = null;
 
+    private  LocalBroadcastManager broadcastManager;
 
     private android.widget.ListView ListView;
     private List<Song> mSongList=new ArrayList<>();
@@ -56,9 +61,13 @@ public class MusicListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        receiveAdDownload();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,13 +76,10 @@ public class MusicListFragment extends Fragment {
         initData();
         initView(v);
         ListViewEvent();
-        UpdataUI();
+
         return v;
     }
 
-    private void UpdataUI() {
-
-    }
 
     private void initData() {
         if(mSongList.size()==0){
@@ -82,17 +88,24 @@ public class MusicListFragment extends Fragment {
 
     }
 
+    /**
+     * 注册广播接收器
+     */
+    private void receiveAdDownload() {
+        getActivity().registerReceiver(mAdDownLoadReceiver, new IntentFilter(AppConstant.MessageType.UPDATE_ACTION));
+    }
+
     private void ListViewEvent() {
         adapter = new LocalMusicListAdapter(getActivity(),mSongList);
         ListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                callBackValue.SendMessageValue(mSongList.get(position),position);
                 View mView=view.findViewById(R.id.v_playing);
                 Position=position;
-                adapter.changeSelected(position);
                 Toast.makeText(getActivity(),"播放"+mSongList.get(position).getTitle(),Toast.LENGTH_LONG);
-                callBackValue.playMusic(position,mSongList.get(position));
+                AppConstant.getInstance().getPlayerUtil(getActivity()).play(position);
+               //AppConstant.getInstance().setCurrrentSongList(AppConstant.getInstance().getLocalSongList());
+
             }
 
         });
@@ -113,6 +126,30 @@ public class MusicListFragment extends Fragment {
     }
 
 
+    BroadcastReceiver mAdDownLoadReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch (intent.getAction()){
+                case AppConstant.MessageType.UPDATE_ACTION:
+                    ListView.setAdapter(adapter);
+                    Toast.makeText(getActivity(),"this",Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    };
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        //broadcastManager.unregisterReceiver(mAdDownLoadReceiver);
+        getActivity().unregisterReceiver(mAdDownLoadReceiver);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+    }
 }
 
 

@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 TextView textView = tab.getCustomView().findViewById(android.R.id.text1);
                 textView.setTextAppearance(MainActivity.this, R.style.TabLayoutTextSize);
+                //mContentPagerManager.notifyDataSetChanged();
             }
 
             @Override
@@ -170,7 +171,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.iv_play_bar_cover:
                 startActivity(new Intent(MainActivity.this, PlayViewActivity.class));
-                finish();
                 break;
         }
 
@@ -183,12 +183,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             tv_play_bar_artist.setText(song.getSinger());
         }
 
-        //Log.e("Tab position",""+mTabTl.getSelectedTabPosition());
-        //mContentPagerManager.setFragments(tabFragments);
-            if(mContentPagerManager!=null){
-            NowFg=mTabTl.getSelectedTabPosition();
-            mContentVp.setAdapter(mContentPagerManager);
-            mContentVp.setCurrentItem(NowFg);
+        NowFg=mContentVp.getCurrentItem();
+        if(mContentPagerManager!=null){
+           // mContentPagerManager.notifyDataSetChanged();
         }
 
 
@@ -258,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     UpdateUI();
                     break;
 
-                case AppConstant.MessageType.UPDATE_ACTION://更新操作
+                case AppConstant.MessageType.UPDATE_ACTION://更新操作换歌
                     System.out.println("———接受到更新广播———");
                     position = intent.getIntExtra("current", -1);
                     AppConstant.getInstance().setPosotion(position);

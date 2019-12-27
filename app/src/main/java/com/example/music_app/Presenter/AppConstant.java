@@ -1,5 +1,7 @@
 package com.example.music_app.Presenter;
 
+import android.content.Context;
+
 import com.example.music_app.mould.Model.Model;
 import com.example.music_app.mould.Model.bean.Song;
 
@@ -12,6 +14,54 @@ public class AppConstant {
 
     private int playingState=0;
     private int posotion=-1;
+    private int mode=2;
+
+    private List<Song> RecentSongList=new ArrayList<>();
+    private List<String> PersonalSongAlbum=new ArrayList<>();
+    private List<Song> CurrentSongList=new ArrayList<>();
+    private List<Song> LocalSongList=new ArrayList<>();
+
+    public List<Song> getCurrrentSongList() {
+        return CurrentSongList;
+    }
+
+    public void setCurrrentSongList(List<Song> currentSongList) {
+        CurrentSongList = currentSongList;
+    }
+
+    public List<Song> getLocalSongList() {
+        return LocalSongList;
+    }
+
+    public void setLocalSongList(List<Song> localSongList) {
+        LocalSongList = localSongList;
+    }
+
+    private PlayerUtil mPlayerUtil;
+
+    private Song playingSong;
+
+
+    public PlayerUtil getPlayerUtil(Context context){
+        mPlayerUtil=new PlayerUtil(context);
+        return mPlayerUtil;
+    }
+
+    public List<Song> getRecentSongList() {
+        return RecentSongList;
+    }
+
+    public void setRecentSongList(Song song) {
+        RecentSongList.add(song);
+    }
+
+    public List<String> getPersonalSongAlbum() {
+        return PersonalSongAlbum;
+    }
+
+    public void setPersonalSongAlbum(String album) {
+        PersonalSongAlbum .add(album);
+    }
 
     public int getMode() {
         return mode;
@@ -20,8 +70,6 @@ public class AppConstant {
     public void setMode(int mode) {
         this.mode = mode;
     }
-
-    private int mode=2;
 
 
     public int getPosotion() {
@@ -33,8 +81,7 @@ public class AppConstant {
         setPlayingSong(getSongList().get(posotion));
     }
 
-    private List<Song> mSongList=new ArrayList<>();
-    private Song playingSong;
+
 
     public Song getPlayingSong() {
         return playingSong;
@@ -61,6 +108,9 @@ public class AppConstant {
         return mAppConstant;
     }
 
+
+
+    //信息
     public class PlayerMsg{
         public static final int PLAY_MSG=1;//开始播放
         public static final int PAUSE_MSG=2;//暂停播放
@@ -80,7 +130,6 @@ public class AppConstant {
         public static final int RANDOM=3;//随机播放
     }
 
-
     public class MessageType{
         //一系列动作
         public static final String UPDATE_ACTION= "com.example.music_app.UPDATE_ACTION";		//更新动作
@@ -90,4 +139,8 @@ public class AppConstant {
         public static final String REPEAT_ACTION = "com.action.REPEAT_ACTION";		//音乐重复改变动作
         public static final String SHUFFLE_ACTION = "com.action.SHUFFLE_ACTION";	//音乐随机播放动作
     }
+
+
+
+
 }

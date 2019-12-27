@@ -71,17 +71,20 @@ public class LocalMusicListAdapter extends BaseAdapter {
             }
         });
 
-        if(AppConstant.getInstance().getPosotion()==i||i==mSelect){
-            holder.v_playing.setVisibility(View.VISIBLE);
-            AppConstant.getInstance().setPlayingSong(list.get(i));
-           holder.song.setTextColor(context.getResources().getColor(R.color.blue) );
-           holder.singer.setTextColor(context.getResources().getColor(R.color.blue));
+        if(AppConstant.getInstance().getPlayingSong()!=null){
+            if(AppConstant.getInstance().getPlayingSong().Equals(list.get(i))){
+                holder.v_playing.setVisibility(View.VISIBLE);
+                AppConstant.getInstance().setPlayingSong(list.get(i));
+                holder.song.setTextColor(context.getResources().getColor(R.color.blue) );
+                holder.singer.setTextColor(context.getResources().getColor(R.color.blue));
 
-        }else{
-            holder.v_playing.setVisibility(View.INVISIBLE);
-            holder.song.setTextColor(context.getResources().getColor(R.color.black) );
-            holder.singer.setTextColor(context.getResources().getColor(R.color.grey));
+            }else{
+                holder.v_playing.setVisibility(View.INVISIBLE);
+                holder.song.setTextColor(context.getResources().getColor(R.color.black) );
+                holder.singer.setTextColor(context.getResources().getColor(R.color.grey));
+            }
         }
+
 
         return view;
     }
@@ -92,12 +95,12 @@ public class LocalMusicListAdapter extends BaseAdapter {
         ImageView iv_more;
     }
 
-    public void changeSelected(int positon){ //刷新方法
-        if(positon != mSelect){
-            mSelect = positon;
-            notifyDataSetChanged();
-        }
-    }
+//    public void changeSelected(int positon){ //刷新方法
+//        if(positon != mSelect){
+//            mSelect = positon;
+//            notifyDataSetChanged();
+//        }
+//    }
 
 
     public void showList(View view,int position){

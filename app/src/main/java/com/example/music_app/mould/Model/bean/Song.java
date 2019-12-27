@@ -118,5 +118,18 @@ public class Song implements Serializable {
                     + size + ", fileUrl=" + fileUrl + "]";
         }
 
+
+
+    public boolean Equals(Song song) {
+        if(song==null){
+            return false;
+        }
+       if(song.getTitle().equals(this.title)&&song.getSinger().equals(this.singer)){
+           return true;
+       }
+       return false;
     }
+
+
+}
 
