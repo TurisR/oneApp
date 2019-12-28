@@ -10,13 +10,17 @@ import java.util.List;
 
 public class AppConstant {
 
-
-
     private int playingState=0;
     private int position=-1;
     private int mode=2;
 
+    private PlayerUtil mPlayerUtil;
+    private Song playingSong;
+    private SwitchSong mSwitchSong;
+    private static AppConstant mAppConstant=new AppConstant();
+
     private List<Song> RecentSongList=new ArrayList<>();
+    private List<Song> PersonCollectSongList=new ArrayList<>();
     private List<String> PersonalSongAlbum=new ArrayList<>();
     private List<Song> CurrentSongList=new ArrayList<>();
     private List<Song> LocalSongList=new ArrayList<>();
@@ -30,17 +34,39 @@ public class AppConstant {
     }
 
     public List<Song> getLocalSongList() {
-        return Model.getInstance().getDBMananger().getSongDao().getSonglist();
+        return Model.getInstance().getDBManager().getSongDao("本地歌曲").getSonglist();
     }
 
     public void setLocalSongList(List<Song> localSongList) {
         LocalSongList = localSongList;
     }
 
-    private PlayerUtil mPlayerUtil;
+    public List<Song> getPersonCollectSongList() {
+        return PersonCollectSongList;
+    }
 
-    private Song playingSong;
+    public void setPersonCollectSongList(Song song) {
+        if(!isCollect(song)){
+            PersonCollectSongList.add(song);
+        }
+       // Model.getInstance().getDBManager().getSongDao("个人收藏").addSong(song);
 
+
+    }
+    public boolean isCollect(Song song) {
+        for (Song song1:PersonCollectSongList){
+            if (song1.Equals(song)){
+                return true;
+            }
+        }
+        return  false;
+
+    }
+
+    public SwitchSong getSwitchSong() {
+        mSwitchSong=new SwitchSong();
+        return mSwitchSong;
+    }
 
     public PlayerUtil getPlayerUtil(Context context){
         mPlayerUtil=new PlayerUtil(context);
@@ -83,6 +109,13 @@ public class AppConstant {
 
 
     public int getPosition() {
+        int i=0;
+        for (Song song:getCurrentSongList()){
+            if(song.Equals(getPlayingSong())) {
+                position=i;
+            }
+            i++;
+        }
         return position;
     }
 
@@ -101,11 +134,12 @@ public class AppConstant {
         this.playingSong = playingSong;
     }
 
-    public List<Song> getSongList() {
-        return Model.getInstance().getDBMananger().getSongDao().getSonglist();
+    public List<Song> getSongList(String name) {
+        return Model.getInstance().getDBManager().getSongDao(name).getSonglist();
+
     }
 
-    private static AppConstant mAppConstant=new AppConstant();
+
     public int getPlayingState() {
         return playingState;
     }
@@ -117,6 +151,7 @@ public class AppConstant {
     public static AppConstant getInstance() {
         return mAppConstant;
     }
+
 
 
 
@@ -147,8 +182,8 @@ public class AppConstant {
         public static final String MUSIC_STATE = "com.example.music_app.MUSIC_STATE";			//播放器状态 播放|暂停
         public static final String MUSIC_CURRENT = "com.example.music_app.MUSIC_CURRENT";		//当前音乐改变动作
         public static final String MUSIC_DURATION = "com.action.MUSIC_DURATION";	//音乐时长改变动作
-        public static final String REPEAT_ACTION = "com.action.REPEAT_ACTION";		//音乐重复改变动作
-        public static final String SHUFFLE_ACTION = "com.action.SHUFFLE_ACTION";	//音乐随机播放动作
+        public static final String MUSIC_NEXT = "com.action.MUSIC_NEXT";		//音乐重复改变动作
+        public static final String MUSIC_PREVIOUS = "com.action.MUSIC_PREVIOUS";	//音乐随机播放动作
     }
 
 

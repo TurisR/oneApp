@@ -16,9 +16,10 @@ import java.util.List;
 
 public class SongDao {
     private final DBHelper mhelper;
-
-    public SongDao(DBHelper helper) {
+    private final SongTable mSongTable;
+    public SongDao(DBHelper helper ,SongTable songTable) {
         this.mhelper = helper;
+        mSongTable=songTable;
     }
 
     public void addSong(Song song){
@@ -30,23 +31,18 @@ public class SongDao {
             return;
         }
         ContentValues values=new ContentValues();
-       // values.put(SongTable.COL_ALBUM, song.getAlbum());
         values.put(SongTable.COL_DURATION, song.getDuration());
-       // values.put(SongTable.COL_FILENAME, song.getFileName());
-        //values.put(SongTable.COL_FIlESIZE, song.getSize());
         values.put(SongTable.COL_TITLE, song.getTitle());
         values.put(SongTable.COL_FILE_URL, song.getFileUrl());
-       // values.put(SongTable.COL_TYPE, song.getType());
-       // values.put(SongTable.COL_YEAR, song.getYear());
         values.put(SongTable.COL_SINGER, song.getSinger());
-        db.replace(SongTable.TABLE_NAME,null,values);
+        db.replace(mSongTable.getTableName(),null,values);
 
     }
 
     public long SongNum(){
         SQLiteDatabase db=mhelper.getReadableDatabase();
         long num=0;
-        String sql="select*from "+SongTable.TABLE_NAME;
+        String sql="select*from "+mSongTable.getTableName();
         Cursor cursor = db.rawQuery(sql, null);
         num=cursor.getCount();
         cursor.close();
@@ -73,7 +69,7 @@ public class SongDao {
 
     public List<Song> getSonglist(){
         SQLiteDatabase db=mhelper.getReadableDatabase();
-        String sql="select*from "+SongTable.TABLE_NAME;
+        String sql="select*from "+mSongTable.getTableName();
         Cursor cursor = db.rawQuery(sql, null);
         List<Song> datas=new ArrayList<>();
         while (cursor.moveToNext()){

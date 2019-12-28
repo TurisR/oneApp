@@ -31,20 +31,12 @@ public class MusicService extends Service {
     public static MediaPlayer mMediaPlayer = null;
     // 用户操作
     private int msg;             //操作信息
-    private List<Song> mSongList=new ArrayList<>();
-    private int position = -1;
     private boolean isPause; 		// 暂停状态
     private int duration;			//播放长度
-
-    public void setSongList(List<Song> songList) {
-        mSongList = songList;
-    }
-
-    private String path; 			// 音乐文件路径
-    private boolean isNext=true;
     private Intent sendIntent;
     private int currentTime;
-    private int status = 2;			//播放状态，默认为顺序播放
+
+    private Song NowSong;
 
     /**
      * handler用来接收消息，来发送广播更新播放时间
@@ -52,7 +44,7 @@ public class MusicService extends Service {
     private Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             switch (msg.what){
-                case 1:
+                case 1://进度条更新
                     if(mMediaPlayer != null) {
                         currentTime = mMediaPlayer.getCurrentPosition(); // 获取当前音乐播放的位置
                         Intent intent = new Intent();
@@ -62,26 +54,34 @@ public class MusicService extends Service {
                         handler.sendEmptyMessageDelayed(1, 1000);//每秒发送更新进度条
                     }
                     break;
-                case 2:
+                case 2://歌曲播放
                     sendIntent = new Intent(AppConstant.MessageType.MUSIC_STATE);
-                    sendIntent.putExtra("current", position);
                     sendIntent.putExtra("state",AppConstant.PlayerMsg.PLAY_MSG);
                     // 发送广播，将被Activity组件中的BroadcastReurrenceiver接收到
                     sendBroadcast(sendIntent);
                     break;
 
-                case 3:
+                case 3://歌曲暂停
                     sendIntent = new Intent(AppConstant.MessageType.MUSIC_STATE);
-                    sendIntent.putExtra("current", position);
                     sendIntent.putExtra("state",AppConstant.PlayerMsg.PAUSE_MSG);
                     // 发送广播，将被Activity组件中的BroadcastReurrenceiver接收到
                     sendBroadcast(sendIntent);
                     break;
 
-                case 4:
+                case 4://歌曲切换
                     sendIntent = new Intent(AppConstant.MessageType.UPDATE_ACTION);
-                    sendIntent.putExtra("current", position);
-                    sendIntent.putExtra("song",mSongList.get(position));
+                    sendIntent.putExtra("PlayingSong",NowSong);
+                    // 发送广播，将被Activity组件中的BroadcastReurrenceiver接收到
+                    sendBroadcast(sendIntent);
+                    break;
+
+                case 5://下一曲请求歌曲
+                    sendIntent = new Intent(AppConstant.MessageType.MUSIC_NEXT);
+                    // 发送广播，将被Activity组件中的BroadcastReurrenceiver接收到
+                    sendBroadcast(sendIntent);
+                    break;
+                case 6://上一曲请求歌曲
+                    sendIntent = new Intent(AppConstant.MessageType.MUSIC_PREVIOUS);
                     // 发送广播，将被Activity组件中的BroadcastReurrenceiver接收到
                     sendBroadcast(sendIntent);
                     break;
@@ -110,56 +110,13 @@ public class MusicService extends Service {
 
             @Override
             public void onCompletion(MediaPlayer mp) {
-                next_mode_play(isNext);
+               // next_mode_play(isNext);
+                handler.sendEmptyMessage(5);
             }
         });
     }
 
-    private void next_mode_play(boolean state) {//state判断是下一曲还是上一曲
-        switch (status){
-            case 0: mMediaPlayer.start();//单曲播放
-                    break;
-            case 1: //循环播放
-                if(state){
-                    position++;
-                    if(position > mSongList.size() - 1) {	//变为第一首的位置继续播放
-                        position = 0;
-                    }
-                }else{
-                    position--;
-                    if(position<0){
-                        position=mSongList.size()-1;
-                    }
-                }
-                path = mSongList.get(position).getFileUrl();
-                play(0);
-                break;
-            case 2://循序播放
-                if(state){
-                    next();
-                }else{
-                    previous();
-                }
-                break;
-            case 3://随机播放
-                position = getRandomIndex(mSongList.size() - 1);
-                path = mSongList.get(position).getFileUrl();
-                play(0);
-                break;
 
-        }
-       handler.sendEmptyMessage(4);
-    }
-
-    /**
-     * 获取随机位置
-     * @param end
-     * @return
-     */
-    protected int getRandomIndex(int end) {
-        int index = (int) (Math.random() * end);
-        return index;
-    }
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -168,18 +125,14 @@ public class MusicService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(mSongList.isEmpty()){
-            mSongList=AppConstant.getInstance().getLocalSongList();
-        }
 
         msg = intent.getIntExtra("MSG", AppConstant.PlayerMsg.STOP_MSG);			//播放信息
         switch (msg){
             case AppConstant.PlayerMsg.PLAY_MSG:
-                position = intent.getIntExtra("listPosition", -1);	//当前播放歌曲的位置
-                if(position!=-1){
-                    path=mSongList.get(position).getFileUrl();
-                }
-                play(0);
+               // position = intent.getIntExtra("listPosition", -1);	//当前播放歌曲的位置
+                NowSong= (Song) intent.getSerializableExtra("Song");
+                Log.e("play222",NowSong.getTitle());
+                play(0, NowSong);
                 break;
             case AppConstant.PlayerMsg.PAUSE_MSG:
                 pause();
@@ -188,13 +141,12 @@ public class MusicService extends Service {
                 resume();
                 break;
             case AppConstant.PlayerMsg.NEXT_MSG:
-                next_mode_play(isNext);
+                NowSong= (Song) intent.getSerializableExtra("NextSong");
+                play(0, NowSong);
                 break;
             case AppConstant.PlayerMsg.PREVIOUS_MSG:
-                next_mode_play(!isNext);
-                break;
-            case AppConstant.PlayerMsg.CHANG_MODE:
-                ChangeMode(intent);
+                NowSong= (Song) intent.getSerializableExtra("PreviousSong");
+                play(0, NowSong);
                 break;
 
             case AppConstant.PlayerMsg.CHANGE_PRG :
@@ -202,11 +154,7 @@ public class MusicService extends Service {
                 int newMusicPrg = intent.getIntExtra("NewMusicTime", -1);
                 if (newMusicPrg != -1)
                     updateMusicPrg(newMusicPrg);
-                break;
-
-            case AppConstant.PlayerMsg.CHANG_LIST:
-                setSongList((List<Song>)intent.getSerializableExtra("List"));
-               // Log.e("text",mSongList.size()+"");
+                    //play(0, NowSong);
                 break;
         }
         //mSongList=AppConstant.getInstance().getCurrrentSongList();
@@ -218,13 +166,13 @@ public class MusicService extends Service {
      *
      * @param
      */
-    private void play(int currentTime) {
-        if(path==null){
+    private void play(int currentTime,Song song) {
+        if(song==null){
             return;
         }
         try {
             mMediaPlayer.reset();// 把各项参数恢复到初始状态
-            mMediaPlayer.setDataSource(path);
+            mMediaPlayer.setDataSource(song.getFileUrl());
             mMediaPlayer.prepare(); // 进行缓冲
             mMediaPlayer.setOnPreparedListener(new PreparedListener(currentTime));// 注册一个监听器
             handler.sendEmptyMessage(1);
@@ -254,33 +202,7 @@ public class MusicService extends Service {
         }
     }
 
-   /**
-    *  上一首
-    */
-    private void previous() {
-        if (position > 0) {
-            position--;
-        } else {
-            position = mSongList.size() - 1;
-        }
-        path=mSongList.get(position).getFileUrl();
-        play(0);
-        sendBroadcast(sendIntent);
-    }
 
-    /**
-     * 下一首
-     */
-    private void next() {
-
-        if (position < mSongList.size()-1){
-            position++;
-        } else {
-            position = 0;
-        }
-        path=mSongList.get(position).getFileUrl();
-        play(0);
-    }
 
     /**
      * 停止音乐
@@ -322,24 +244,6 @@ public class MusicService extends Service {
         }
     }
 
-
-    private void ChangeMode(Intent intent) {
-        int control = intent.getIntExtra("Mode", 3);
-        switch (control) {
-            case 0:
-                status = 0; // 将播放状态置为1表示：单曲循环
-                break;
-            case 1:
-                status = 1;	//将播放状态置为2表示：全部循环
-                break;
-            case 2:
-                status = 2;	//将播放状态置为3表示：顺序播放
-                break;
-            case 3:
-                status = 3;	//将播放状态置为4表示：随机播放
-                break;
-        }
-    }
 
     /**
      *  改变歌曲当前的播放进度  /by：yxy

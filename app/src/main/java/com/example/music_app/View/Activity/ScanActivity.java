@@ -86,7 +86,7 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void sure() {
-        Model.getInstance().getDBMananger().getSongDao().saveSongList(mCheckedData);
+        Model.getInstance().getDBManager().getSongDao("本地歌曲").saveSongList(mCheckedData);
         Toast.makeText(ScanActivity.this, "存"+mCheckedData.size()+"音乐", Toast.LENGTH_SHORT).show();
         Intent intent=new Intent(this,MainActivity.class);
         finish();

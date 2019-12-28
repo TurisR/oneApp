@@ -2,6 +2,9 @@ package com.example.music_app.Presenter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
+
+import com.example.music_app.mould.Model.bean.Song;
 
 import java.io.Serializable;
 
@@ -13,11 +16,11 @@ public class PlayerUtil {
         mContext=context;
         intent = new Intent(mContext,MusicService.class);
     }
-    public void play(int pos){
-        intent.putExtra("listPosition", pos);
+    public void play(Song song){
+        intent.putExtra("Song", song);
         intent.putExtra("MSG", AppConstant.PlayerMsg.PLAY_MSG);//播放
         mContext.startService(intent);
-        AppConstant.getInstance().setPosition(pos);
+        Log.e("play",song.getTitle());
         AppConstant.getInstance().setPlayingState(AppConstant.PlayerMsg.PLAY_MSG);
     }
     public void pause(){
@@ -32,28 +35,24 @@ public class PlayerUtil {
     }
 
     public void next(){
+        Song song=AppConstant.getInstance().getSwitchSong().getNextSong(true);
         intent.putExtra("MSG", AppConstant.PlayerMsg.NEXT_MSG);//下一曲
-        //intent.putExtra("listPosition", AppConstant.getInstance().getPosotion());
+        intent.putExtra("NextSong", song);
+        //AppConstant.getInstance().setPlayingState(AppConstant.PlayerMsg.PLAY_MSG);
         mContext.startService(intent);
-        AppConstant.getInstance().setPlayingState(AppConstant.PlayerMsg.PLAY_MSG);
     }
     public void previous(){
+        Song song=AppConstant.getInstance().getSwitchSong().getNextSong(false);
         intent.putExtra("MSG", AppConstant.PlayerMsg.PREVIOUS_MSG);//下一曲
+        intent.putExtra("PreviousSong", song);
+       // AppConstant.getInstance().setPlayingState(AppConstant.PlayerMsg.PLAY_MSG);
         mContext.startService(intent);
-        AppConstant.getInstance().setPlayingState(AppConstant.PlayerMsg.PLAY_MSG);
     }
     public void setMode(int mode){
-        intent.putExtra("Mode",mode);
-        intent.putExtra("MSG", AppConstant.PlayerMsg.CHANG_MODE);//下一曲
         AppConstant.getInstance().setMode(mode);
-        mContext.startService(intent);
     }
 
-    public void setPlayList(){
-        intent.putExtra("MSG", AppConstant.PlayerMsg.CHANG_LIST);//换歌单
-        intent.putExtra("List", (Serializable)AppConstant.getInstance().getCurrentSongList());
-        mContext.startService(intent);
-    }
+
 
     /**
      *  更新歌曲播放进度

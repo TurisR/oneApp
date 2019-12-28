@@ -21,13 +21,13 @@ import com.example.music_app.Presenter.AppConstant;
 import com.example.music_app.Presenter.PlayerUtil;
 import com.example.music_app.R;
 import com.example.music_app.View.Adapter.PlayingListAdapter;
+import com.example.music_app.mould.Model.bean.Song;
 
 
 public class PlayinglistActivity extends Activity implements View.OnClickListener{
 
     private TextView music_text_sum;
     private ListView list_playing;
-    private boolean isSelectedAll = true;//用来控制点击全选，全选和全不选相互切换
     private PlayerUtil mPlayerUtil;
     private LinearLayout layout;
     private PlayingListAdapter adapter;
@@ -56,7 +56,9 @@ public class PlayinglistActivity extends Activity implements View.OnClickListene
         list_playing.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mPlayerUtil.play(position);
+                Song song = AppConstant.getInstance().getCurrentSongList().get(position);
+                mPlayerUtil.play(song);
+                AppConstant.getInstance().setPlayingSong(song);
                 adapter.notifyDataSetChanged();
             }
         });

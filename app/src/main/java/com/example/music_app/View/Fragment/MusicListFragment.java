@@ -80,7 +80,7 @@ public class MusicListFragment extends Fragment {
 
     private void initData() {
         if(mSongList.size()==0){
-            mSongList.addAll(Model.getInstance().getDBMananger().getSongDao().getSonglist());
+            mSongList.addAll(AppConstant.getInstance().getLocalSongList());
         }
 
     }
@@ -98,11 +98,9 @@ public class MusicListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 View mView=view.findViewById(R.id.v_playing);
-                Position=position;
                 AppConstant.getInstance().setCurrentSongList(AppConstant.getInstance().getLocalSongList());
-                Toast.makeText(getActivity(),"播放"+mSongList.get(position).getTitle(),Toast.LENGTH_LONG);
-                AppConstant.getInstance().getPlayerUtil(getActivity()).play(position);
-                AppConstant.getInstance().getPlayerUtil(getActivity()).setPlayList();
+            //    Toast.makeText(getActivity(),"播放"+AppConstant.getInstance().getCurrentSongList().get(position).getTitle(),Toast.LENGTH_LONG).show();
+                AppConstant.getInstance().getPlayerUtil(getActivity()).play(AppConstant.getInstance().getCurrentSongList().get(position));
 
             }
 
@@ -113,7 +111,7 @@ public class MusicListFragment extends Fragment {
     private void initView(View v) {
         ListView = (ListView) v.findViewById(R.id.list_item_music);
         music_text_sum=v.findViewById(R.id.music_text_sum);
-        music_text_sum.setText("共用"+Model.getInstance().getDBMananger().getSongDao().SongNum()+"首音乐");
+        music_text_sum.setText("共用"+AppConstant.getInstance().getLocalSongList().size()+"首音乐");
     }
 
 
@@ -125,7 +123,7 @@ public class MusicListFragment extends Fragment {
             switch (intent.getAction()){
                 case AppConstant.MessageType.UPDATE_ACTION:
                     ListView.setAdapter(adapter);
-                    Toast.makeText(getActivity(),"this",Toast.LENGTH_SHORT).show();
+                  //  Toast.makeText(getActivity(),"this",Toast.LENGTH_SHORT).show();
                     break;
             }
         }

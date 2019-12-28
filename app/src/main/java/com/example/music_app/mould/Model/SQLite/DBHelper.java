@@ -11,14 +11,17 @@ import com.example.music_app.mould.Model.Table.SongTable;
 
 public class DBHelper extends SQLiteOpenHelper {
     private Context mContext;
+    private String name;
     public DBHelper(Context context,String name) {
-        super(context, name, null, 1);
+        super(context, "user", null, 1);
         mContext=context;
+        this.name=name;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(SongTable.CREATE_TAB);
+        SongTable songTable=new SongTable(name);
+        db.execSQL(songTable.getCreateTab());
     }
 
     @Override

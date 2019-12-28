@@ -2,7 +2,7 @@ package com.example.music_app.mould.Model;
 
 import android.content.Context;
 
-import com.example.music_app.mould.Model.SQLite.DBMananger;
+import com.example.music_app.mould.Model.SQLite.DBManager;
 
 import java.util.concurrent.ExecutorService;
 
@@ -11,7 +11,7 @@ public class Model {
     private Context mContext;
     private ExecutorService mExecutorService;
     private static Model model = new Model();
-    private DBMananger mMananger;
+    private DBManager mManager;
 
     private Model() {
 
@@ -27,11 +27,11 @@ public class Model {
 
     public void init(Context context, String name) {
         mContext = context;
-        mMananger = new DBMananger(context, name);
+        mManager = new DBManager(context);
     }
 
-    public DBMananger getDBMananger() {
-        return mMananger;
+    public DBManager getDBManager() {
+        return mManager;
     }
 
 

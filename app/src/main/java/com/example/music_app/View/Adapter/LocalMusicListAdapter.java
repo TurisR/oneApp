@@ -22,8 +22,6 @@ public class LocalMusicListAdapter extends BaseAdapter {
     private List<Song> list;
     private AlertDialog alertDialog1; //信息框
 
-    private int mSelect=-1;
-
 
     public LocalMusicListAdapter(Context context, List<Song> list) {
         this.context = context;
@@ -95,22 +93,35 @@ public class LocalMusicListAdapter extends BaseAdapter {
         ImageView iv_more;
     }
 
-//    public void changeSelected(int positon){ //刷新方法
-//        if(positon != mSelect){
-//            mSelect = positon;
-//            notifyDataSetChanged();
-//        }
-//    }
 
 
-    public void showList(View view,int position){
-        final String[] items = {"列表1", "列表2", "列表3", "列表4"};
+    public void showList(View view, final int position){
+        String[] items = {"收藏", "删除", "加到歌单", "下一首播放"};
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
         alertBuilder.setTitle(list.get(position).getTitle());
+        if(AppConstant.getInstance().isCollect(list.get(position))){
+            items[0]="已收藏";
+        }
         alertBuilder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(context, items[i], Toast.LENGTH_SHORT).show();
+                switch (i){
+                    case 0:
+                        AppConstant.getInstance().setPersonCollectSongList(list.get(position));
+                        if(AppConstant.getInstance().isCollect(list.get(position))){
+                            Toast.makeText(context, "已收藏", Toast.LENGTH_LONG).show();
+                        }else {
+                            Toast.makeText(context, "收藏成功", Toast.LENGTH_LONG).show();
+                        }
+
+                        break;
+                    case 1:
+
+                        break;
+
+                }
+
+               // Toast.makeText(context, items[i], Toast.LENGTH_SHORT).show();
                 //alertDialog1.dismiss();
             }
         });

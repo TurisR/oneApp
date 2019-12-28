@@ -27,20 +27,14 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private TabLayout mTabTl;
     private ViewPager mContentVp;
-    private ArrayList<Fragment> tabFragments;
     private TextView tv_play_bar_title;
     private boolean isPressSeekBar = false; //判断是否在拖动拖动条
     private int duration;
-    private int NowFg=0;
     private TextView tv_play_bar_artist;
     public ImageView v_play_bar_play;
     private ContentPagerManager mContentPagerManager;
     public static SeekBar audioSeekBar = null;
-    private String tabIndicators[] = {
-            "本地歌曲", "个人歌单", "搜索", "设置",
-            };
     private Song song;
-    private int position;
     private PlayerUtil mPlayerUtil;
 
     private HomeReceiver homeReceiver;	//自定义的广播接收器
@@ -183,12 +177,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             tv_play_bar_artist.setText(song.getSinger());
         }
 
-        NowFg=mContentVp.getCurrentItem();
-        if(mContentPagerManager!=null){
-           // mContentPagerManager.notifyDataSetChanged();
-        }
-
-
         if(AppConstant.getInstance().getPlayingState()==AppConstant.PlayerMsg.PAUSE_MSG){
             v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_pause));
             tv_play_bar_title.setSelected(false);
@@ -200,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public void playMusic(int pos,Song song) {
-        mPlayerUtil.play(pos);
+        mPlayerUtil.play(song);
         v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_play));
         Log.e("sss 11",pos+"");
     }
@@ -226,7 +214,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             switch (action) {
                 case AppConstant.MessageType.MUSIC_CURRENT://音乐状态，进度条监听
                     int currentTime = intent.getIntExtra("currentTime", -1);
-                   // Log.e("time","  "+currentTime);
                     if (!isPressSeekBar&&song!=null) {
                         //当进度条未被拖动时，自动更新进度条进度
                         audioSeekBar.setProgress(audioSeekBar.getMax() * currentTime / song.getDuration());    //更新进度条
@@ -239,18 +226,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case AppConstant.MessageType.MUSIC_STATE:
                     System.out.println("———MUSIC_STATE———");
                     int state = intent.getIntExtra("state", AppConstant.PlayerMsg.PAUSE_MSG);
-                    position = intent.getIntExtra("current", -1);
                     AppConstant.getInstance().setPlayingState(state);
-                    Log.e("state","00000"+state+" "+position);
+                    Log.e("state","00000"+state);
                     UpdateUI();
                     break;
 
                 case AppConstant.MessageType.UPDATE_ACTION://更新操作换歌
                     System.out.println("———接受到更新广播———");
-                    position = intent.getIntExtra("current", -1);
-                    AppConstant.getInstance().setPosition(position);
-                    AppConstant.getInstance().setRecentSongList(AppConstant.getInstance().getCurrentSongList().get(position));
-                    Log.e("time","  "+AppConstant.getInstance().getRecentSongList().size());
+                    song=(Song) intent.getSerializableExtra("PlayingSong");
+                    AppConstant.getInstance().setPlayingSong(song);
+                    AppConstant.getInstance().setRecentSongList(song);
+                    Log.e("time","  "+AppConstant.getInstance().getRecentSongList().size()+" "+song.getTitle());
                     UpdateUI();
                     break;
             }
@@ -287,5 +273,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+
+
+
 
 }

@@ -78,13 +78,14 @@ public class PlayingListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
-        if(AppConstant.getInstance().getPosition()==position){
-            holder.mTitle.setTextColor(mContext.getResources().getColor(R.color.blue));
-            holder.mTitle.setSelected(true);
-        }else{
-            holder.mTitle.setTextColor(mContext.getResources().getColor(R.color.black));
-            holder.mTitle.setSelected(false);
+        if (mSongList!=null&&AppConstant.getInstance().getPlayingSong()!=null){
+            if(AppConstant.getInstance().getPlayingSong().Equals(mSongList.get(position))){
+                holder.mTitle.setTextColor(mContext.getResources().getColor(R.color.blue));
+                holder.mTitle.setSelected(true);
+            }else{
+                holder.mTitle.setTextColor(mContext.getResources().getColor(R.color.black));
+                holder.mTitle.setSelected(false);
+            }
         }
 
         holder.mTitle.setText(mSongList.get(position).getTitle());

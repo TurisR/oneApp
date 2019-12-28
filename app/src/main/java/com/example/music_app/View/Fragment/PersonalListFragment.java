@@ -7,10 +7,12 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -35,7 +37,7 @@ public class PersonalListFragment extends Fragment  {
     private LinearLayout recent_play_layout;
     private widgetLayout set_recent;
     private boolean isShow = false;
-    private PlayingListAdapter mPlayingListAdapter;
+    private PlayingListAdapter mRecentListAdapter,mCollectListAdapter;
     private View contentView;
     private widgetLayout personal_love,personal_songList;
 
@@ -51,7 +53,6 @@ public class PersonalListFragment extends Fragment  {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         contentView = inflater.inflate(R.layout.fragment_personal_list, null);
-
         initView();
         return contentView;
     }
@@ -69,18 +70,18 @@ public class PersonalListFragment extends Fragment  {
         personal_love = contentView.findViewById(R.id.personal_love);
         personal_songList = contentView.findViewById(R.id.personal_songList);
         set_recent.setTitle("最近播放");
-        set_recent.setNum("最近播放"+AppConstant.getInstance().getRecentSongList().size()+"首歌");
         personal_love.setTitle("个人收藏");
         personal_love.setNumVisible(true);
         personal_songList.setTitle("个人歌单");
         personal_songList.setNumVisible(true);
-        mPlayingListAdapter = new PlayingListAdapter(getActivity(),AppConstant.getInstance().getRecentSongList());
+        mRecentListAdapter = new PlayingListAdapter(getActivity(),AppConstant.getInstance().getRecentSongList());
+        mCollectListAdapter = new PlayingListAdapter(getActivity(),AppConstant.getInstance().getPersonCollectSongList());
+
 
     }
 
     private void initEvent() {
-
-
+        set_recent.setNum("最近播放"+AppConstant.getInstance().getRecentSongList().size()+"首歌");
         set_recent.setOnWidgetListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +91,8 @@ public class PersonalListFragment extends Fragment  {
                         set_recent.setListVisible(true);
                     }else {
                         set_recent.setListVisible(false);
-                        set_recent.setListView(mPlayingListAdapter);
+                        mRecentListAdapter = new PlayingListAdapter(getActivity(),AppConstant.getInstance().getRecentSongList());
+                        set_recent.setListView(mRecentListAdapter);
                     }
                     set_recent.setNumVisible(true);
                     set_recent.setMoreText("最近播放"+AppConstant.getInstance().getRecentSongList().size()+"首歌");
@@ -106,11 +108,10 @@ public class PersonalListFragment extends Fragment  {
         set_recent.setListListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(), "最近播放"+position, Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getActivity(), "最近播放"+position, Toast.LENGTH_SHORT).show();
                 AppConstant.getInstance().setCurrentSongList(AppConstant.getInstance().getRecentSongList());
-                (new PlayerUtil(getActivity())).play(position);
-                 mPlayingListAdapter.notifyDataSetChanged();
-                 AppConstant.getInstance().getPlayerUtil(getActivity()).setPlayList();
+                (new PlayerUtil(getActivity())).play(AppConstant.getInstance().getCurrentSongList().get(position));
+                mRecentListAdapter.notifyDataSetChanged();
             }
         });
 
@@ -121,19 +122,33 @@ public class PersonalListFragment extends Fragment  {
                 Toast.makeText(getActivity(), "个人收藏", Toast.LENGTH_SHORT).show();
                 personal_love.setVisible(!personal_love.getVisible());
                 if (personal_love.getVisible()) {
-                    if(AppConstant.getInstance().getPersonalSongAlbum().size()==0){
+                    if(AppConstant.getInstance().getPersonCollectSongList().size()==0){
                         personal_love.setListVisible(true);
                     }else {
                         personal_love.setListVisible(false);
+                        mCollectListAdapter = new PlayingListAdapter(getActivity(),AppConstant.getInstance().getPersonCollectSongList());
+                        personal_love.setListView(mCollectListAdapter);
                     }
                     personal_love.setNumVisible(false);
-                    personal_love.setNum("共有"+AppConstant.getInstance().getPersonalSongAlbum().size()+"个收藏");
+                    mCollectListAdapter.notifyDataSetChanged();
+                    personal_love.setNum("共有"+AppConstant.getInstance().getPersonCollectSongList().size()+"个收藏");
                    // set_recent.setListView(mPlayingListAdapter);
                    // isShow = !isShow;
                 }else {
                     personal_love.setNumVisible(true);
                 }
 
+            }
+        });
+
+
+        personal_love.setListListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Toast.makeText(getActivity(), "最近播放"+position, Toast.LENGTH_SHORT).show();
+                AppConstant.getInstance().setCurrentSongList(AppConstant.getInstance().getPersonCollectSongList());
+                (new PlayerUtil(getActivity())).play(AppConstant.getInstance().getCurrentSongList().get(position));
+                mCollectListAdapter.notifyDataSetChanged();
             }
         });
 
@@ -169,11 +184,17 @@ public class PersonalListFragment extends Fragment  {
         public void onReceive(Context context, Intent intent) {
             switch (intent.getAction()){
                 case AppConstant.MessageType.UPDATE_ACTION:
-                    mPlayingListAdapter = new PlayingListAdapter(getActivity(),AppConstant.getInstance().getRecentSongList());
-                    set_recent.setListView(mPlayingListAdapter);
-                    mPlayingListAdapter.notifyDataSetChanged();
+                   // mRecentListAdapter = new PlayingListAdapter(getActivity(),AppConstant.getInstance().getRecentSongList());
+                    //set_recent.setListView(mRecentListAdapter);
+                    if(mRecentListAdapter!=null){
+                        mRecentListAdapter.notifyDataSetChanged();
+                    }
+                    if(mCollectListAdapter!=null){
+                        mCollectListAdapter.notifyDataSetChanged();
+                    }
                     personal_songList.setNum("共有"+AppConstant.getInstance().getPersonalSongAlbum().size()+"个歌单");
                     //Toast.makeText(getActivity(),"this++++",Toast.LENGTH_SHORT).show();
+                    set_recent.setNum("最近播放"+AppConstant.getInstance().getRecentSongList().size()+"首歌");
                     break;
             }
         }
@@ -196,6 +217,24 @@ public class PersonalListFragment extends Fragment  {
         super.onStop();
         //broadcastManager.unregisterReceiver(mAdDownLoadReceiver);
         getActivity().unregisterReceiver(mAdDownLoadReceiver);
+    }
+
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //Toast.makeText(getActivity(),"刷新1",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Log.e("shuaxing","iiiii");
+        if(set_recent!=null){
+            set_recent.setMoreText("最近播放"+AppConstant.getInstance().getRecentSongList().size()+"首歌");
+        }
+
     }
 
 
