@@ -56,7 +56,6 @@ public class widgetLayout extends LinearLayout {
         set_more = (RelativeLayout) mView.findViewById(R.id.set_more);
 
         TypedArray at=context.obtainStyledAttributes(attrs,R.styleable.CustomTextView);
-        //setTitle=at.getString(R.styleable.CustomTextView);
         at.recycle();
 
     }

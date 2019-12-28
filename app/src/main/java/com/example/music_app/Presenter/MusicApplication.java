@@ -39,9 +39,12 @@ public class MusicApplication extends Application {
         AppConstant.getInstance().setPlayingState(AppConstant.PlayerMsg.PAUSE_MSG);
         //
         receiveAdDownload();
-        Boolean aBoolean1= (new DBHelper(context)).tableIsExist("本地歌曲");
-        Boolean aBoolean2= (new DBHelper(context)).tableIsExist("个人收藏");
-        Boolean aBoolean3= (new DBHelper(context)).tableIsExist("最近播放");
+        InitData initData = new InitData().invoke();
+        Boolean aBoolean1 = initData.getABoolean1();
+        Boolean aBoolean2 = initData.getABoolean2();
+        Boolean aBoolean3 = initData.getABoolean3();
+
+
         Toast.makeText(context,"音乐播放器 "+aBoolean1+" "+aBoolean2+" "+aBoolean3,Toast.LENGTH_SHORT).show();
     }
 
@@ -95,11 +98,41 @@ public class MusicApplication extends Application {
     }
 
 
+    private class InitData {
+        private Boolean mABoolean1;
+        private Boolean mABoolean2;
+        private Boolean mABoolean3;
+
+        public Boolean getABoolean1() {
+            return mABoolean1;
+        }
+
+        public Boolean getABoolean2() {
+            return mABoolean2;
+        }
+
+        public Boolean getABoolean3() {
+            return mABoolean3;
+        }
+
+        public InitData invoke() {
+            mABoolean1 = (new DBHelper(context)).tableIsExist("本地歌曲");
+            mABoolean2 = (new DBHelper(context)).tableIsExist("个人收藏");
+            mABoolean3 = (new DBHelper(context)).tableIsExist("最近播放");
 
 
+            if(mABoolean1){
+                AppConstant.getInstance().setLocalSongList(Model.getInstance().getDBManager().getSongDao("本地歌曲").getSonglist());
+            }
 
+            if(mABoolean2){
+                AppConstant.getInstance().setPersonCollectSongList(Model.getInstance().getDBManager().getSongDao("个人收藏").getSonglist());
+            }
 
-
-
-
+            if(mABoolean3){
+                AppConstant.getInstance().setRecentSongList(Model.getInstance().getDBManager().getSongDao("最近播放").getSonglist());
+            }
+            return this;
+        }
+    }
 }
