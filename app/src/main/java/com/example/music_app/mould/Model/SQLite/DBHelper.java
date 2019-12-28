@@ -12,15 +12,17 @@ import com.example.music_app.mould.Model.Table.SongTable;
 public class DBHelper extends SQLiteOpenHelper {
     private Context mContext;
     private String name;
-    public DBHelper(Context context,String name) {
+    public DBHelper(Context context) {
         super(context, "user", null, 1);
         mContext=context;
-        this.name=name;
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        SongTable songTable=new SongTable(name);
+
+        String drop_sql="DROP TABLE IF EXISTS "+"本地歌曲"+";";
+        db.execSQL(drop_sql);
+        SongTable songTable=new SongTable("本地歌曲");
         db.execSQL(songTable.getCreateTab());
     }
 

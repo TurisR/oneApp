@@ -34,7 +34,8 @@ public class AppConstant {
     }
 
     public List<Song> getLocalSongList() {
-        return Model.getInstance().getDBManager().getSongDao("本地歌曲").getSonglist();
+     return Model.getInstance().getDBManager().getSongDao("本地歌曲").getSonglist();
+        //return null;
     }
 
     public void setLocalSongList(List<Song> localSongList) {
@@ -49,7 +50,7 @@ public class AppConstant {
         if(!isCollect(song)){
             PersonCollectSongList.add(song);
         }
-       // Model.getInstance().getDBManager().getSongDao("个人收藏").addSong(song);
+        Model.getInstance().getDBManager().getSongDao("个人收藏").addSong(null);
 
 
     }

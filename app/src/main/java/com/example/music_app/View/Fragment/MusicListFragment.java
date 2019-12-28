@@ -79,8 +79,8 @@ public class MusicListFragment extends Fragment {
 
 
     private void initData() {
-        if(mSongList.size()==0){
-            mSongList.addAll(AppConstant.getInstance().getLocalSongList());
+        if(mSongList.size()==0&&AppConstant.getInstance().getLocalSongList()!=null){
+          mSongList.addAll(AppConstant.getInstance().getLocalSongList());
         }
 
     }
@@ -111,7 +111,10 @@ public class MusicListFragment extends Fragment {
     private void initView(View v) {
         ListView = (ListView) v.findViewById(R.id.list_item_music);
         music_text_sum=v.findViewById(R.id.music_text_sum);
-        music_text_sum.setText("共用"+AppConstant.getInstance().getLocalSongList().size()+"首音乐");
+        if (AppConstant.getInstance().getLocalSongList()!=null){
+            music_text_sum.setText("共用"+AppConstant.getInstance().getLocalSongList().size()+"首音乐");
+        }
+
     }
 
 

@@ -12,6 +12,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.music_app.mould.Model.Model;
+import com.example.music_app.mould.Model.SQLite.DBHelper;
 import com.example.music_app.mould.Model.bean.Song;
 
 public class MusicApplication extends Application {
@@ -36,8 +37,11 @@ public class MusicApplication extends Application {
         context=this;
         Model.getInstance().init(this,"user");
         AppConstant.getInstance().setPlayingState(AppConstant.PlayerMsg.PAUSE_MSG);
-        //Toast.makeText(context,"音乐播放器",Toast.LENGTH_SHORT).show();
+        //
         receiveAdDownload();
+        Boolean aBoolean1= (new DBHelper(context)).tableIsExist("本地歌曲");
+      //  Boolean aBoolean= (new DBHelper(context)).tableIsExist("个人收藏");
+        Toast.makeText(context,"音乐播放器 "+aBoolean1,Toast.LENGTH_SHORT).show();
     }
 
 

@@ -8,13 +8,15 @@ import com.example.music_app.mould.Model.Table.SongTable;
 
 public class DBManager {
 
+    private final DBHelper mHelper;
     private SongDao mSongDao;
     private Context mContext;
     public DBManager(Context context) {
         mContext=context;
+        mHelper=new DBHelper(mContext);
     }
     public SongDao getSongDao(String name){
-        return new SongDao(new DBHelper(mContext,name),new SongTable(name));
+        return new SongDao(mHelper,new SongTable(name));
     }
 
 

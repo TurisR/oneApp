@@ -33,7 +33,7 @@ public class SongTable {
     }
 
     public String getCreateTab(){
-        return CREATE_TAB="create table "
+        return "create table if not exists "
                 +TABLE_NAME+" ("
                 +COL_TITLE+" text primary key,"
                 +COL_SINGER+" text,"

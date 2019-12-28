@@ -14,7 +14,6 @@ public class Song implements Serializable {
         private String size;
         private String fileUrl;
 
-
     public Song(String title, String singer) {
         this.title = title;
         this.singer = singer;

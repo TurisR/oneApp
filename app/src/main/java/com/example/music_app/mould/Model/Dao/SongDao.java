@@ -42,7 +42,7 @@ public class SongDao {
     public long SongNum(){
         SQLiteDatabase db=mhelper.getReadableDatabase();
         long num=0;
-        String sql="select*from "+mSongTable.getTableName();
+        String sql="select*from "+mSongTable.getTableName().trim();
         Cursor cursor = db.rawQuery(sql, null);
         num=cursor.getCount();
         cursor.close();
@@ -58,17 +58,14 @@ public class SongDao {
         }
 
     }
-    /*public void deleteSong(String time){
-        if (time==null){
-            return;
-        }
-        SQLiteDatabase db = mHelper.getReadableDatabase();
-        db.delete(SongTable.TAB_NAME,Song.COL_TIME+"=?",new String[]{time});
-    }*/
+
 
 
     public List<Song> getSonglist(){
         SQLiteDatabase db=mhelper.getReadableDatabase();
+        if(!mhelper.tableIsExist(mSongTable.getTableName())){
+            return null;
+        }
         String sql="select*from "+mSongTable.getTableName();
         Cursor cursor = db.rawQuery(sql, null);
         List<Song> datas=new ArrayList<>();
