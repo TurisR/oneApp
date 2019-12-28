@@ -108,10 +108,10 @@ public class PersonalListFragment extends Fragment  {
         set_recent.setListListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-               // Toast.makeText(getActivity(), "最近播放"+position, Toast.LENGTH_SHORT).show();
                 AppConstant.getInstance().setCurrentSongList(AppConstant.getInstance().getRecentSongList());
                 (new PlayerUtil(getActivity())).play(AppConstant.getInstance().getCurrentSongList().get(position));
-                mRecentListAdapter.notifyDataSetChanged();
+                Toast.makeText(getActivity()," click "+position,Toast.LENGTH_LONG).show();
+              //  mRecentListAdapter.notifyDataSetChanged();
             }
         });
 
@@ -145,7 +145,6 @@ public class PersonalListFragment extends Fragment  {
         personal_love.setListListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Toast.makeText(getActivity(), "最近播放"+position, Toast.LENGTH_SHORT).show();
                 AppConstant.getInstance().setCurrentSongList(AppConstant.getInstance().getPersonCollectSongList());
                 (new PlayerUtil(getActivity())).play(AppConstant.getInstance().getCurrentSongList().get(position));
                 mCollectListAdapter.notifyDataSetChanged();
@@ -184,8 +183,6 @@ public class PersonalListFragment extends Fragment  {
         public void onReceive(Context context, Intent intent) {
             switch (intent.getAction()){
                 case AppConstant.MessageType.UPDATE_ACTION:
-                   // mRecentListAdapter = new PlayingListAdapter(getActivity(),AppConstant.getInstance().getRecentSongList());
-                    //set_recent.setListView(mRecentListAdapter);
                     if(mRecentListAdapter!=null){
                         mRecentListAdapter.notifyDataSetChanged();
                     }
@@ -231,9 +228,7 @@ public class PersonalListFragment extends Fragment  {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         Log.e("shuaxing","iiiii");
-        if(set_recent!=null){
-            set_recent.setMoreText("最近播放"+AppConstant.getInstance().getRecentSongList().size()+"首歌");
-        }
+
 
     }
 

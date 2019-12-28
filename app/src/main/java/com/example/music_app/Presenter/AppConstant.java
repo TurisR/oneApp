@@ -35,33 +35,36 @@ public class AppConstant {
 
     public List<Song> getLocalSongList() {
      return Model.getInstance().getDBManager().getSongDao("本地歌曲").getSonglist();
-        //return null;
     }
 
-    public void setLocalSongList(List<Song> localSongList) {
-        LocalSongList = localSongList;
+
+
+    public void setRecentSongList(List<Song> recentSongList) {
+        RecentSongList = recentSongList;
+    }
+
+    public void setPersonCollectSongList(List<Song> personCollectSongList) {
+        PersonCollectSongList = personCollectSongList;
+    }
+
+    public void setPersonalSongAlbum(List<String> personalSongAlbum) {
+        PersonalSongAlbum = personalSongAlbum;
     }
 
     public List<Song> getPersonCollectSongList() {
-        return PersonCollectSongList;
+        return Model.getInstance().getDBManager().getSongDao("个人收藏").getSonglist();
     }
 
-    public void setPersonCollectSongList(Song song) {
-        if(!isCollect(song)){
-            PersonCollectSongList.add(song);
-        }
-        Model.getInstance().getDBManager().getSongDao("个人收藏").addSong(null);
-
-
+    public void addPersonCollectSongList(Song song) {
+        Model.getInstance().getDBManager().getSongDao("个人收藏").addSong(song);
     }
     public boolean isCollect(Song song) {
-        for (Song song1:PersonCollectSongList){
+        for (Song song1:getPersonCollectSongList()){
             if (song1.Equals(song)){
                 return true;
             }
         }
         return  false;
-
     }
 
     public SwitchSong getSwitchSong() {
@@ -75,21 +78,11 @@ public class AppConstant {
     }
 
     public List<Song> getRecentSongList() {
-        return RecentSongList;
+        return Model.getInstance().getDBManager().getSongDao("最近播放").getSonglist();
     }
 
-    public void setRecentSongList(Song song) {
-        int i=0;
-        for(Song song1:RecentSongList){
-            if(song1.Equals(song)){
-                i=1;
-                break;
-            }
-        }
-        if(i==0){
-            RecentSongList.add(song);
-        }
-
+    public void addRecentSongList(Song song) {
+        Model.getInstance().getDBManager().getSongDao("最近播放").addSong(song);
     }
 
     public List<String> getPersonalSongAlbum() {
@@ -119,7 +112,6 @@ public class AppConstant {
         }
         return position;
     }
-
     public void setPosition(int position) {
         this.position = position;
         setPlayingSong(getCurrentSongList().get(position));

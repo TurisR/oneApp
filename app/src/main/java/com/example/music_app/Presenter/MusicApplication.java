@@ -40,8 +40,9 @@ public class MusicApplication extends Application {
         //
         receiveAdDownload();
         Boolean aBoolean1= (new DBHelper(context)).tableIsExist("本地歌曲");
-      //  Boolean aBoolean= (new DBHelper(context)).tableIsExist("个人收藏");
-        Toast.makeText(context,"音乐播放器 "+aBoolean1,Toast.LENGTH_SHORT).show();
+        Boolean aBoolean2= (new DBHelper(context)).tableIsExist("个人收藏");
+        Boolean aBoolean3= (new DBHelper(context)).tableIsExist("最近播放");
+        Toast.makeText(context,"音乐播放器 "+aBoolean1+" "+aBoolean2+" "+aBoolean3,Toast.LENGTH_SHORT).show();
     }
 
 

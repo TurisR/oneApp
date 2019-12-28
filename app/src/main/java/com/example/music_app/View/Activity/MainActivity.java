@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     System.out.println("———接受到更新广播———");
                     song=(Song) intent.getSerializableExtra("PlayingSong");
                     AppConstant.getInstance().setPlayingSong(song);
-                    AppConstant.getInstance().setRecentSongList(song);
+                    AppConstant.getInstance().addRecentSongList(song);
                     Log.e("time","  "+AppConstant.getInstance().getRecentSongList().size()+" "+song.getTitle());
                     UpdateUI();
                     break;

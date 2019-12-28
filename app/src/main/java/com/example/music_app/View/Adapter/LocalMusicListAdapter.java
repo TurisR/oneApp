@@ -107,7 +107,7 @@ public class LocalMusicListAdapter extends BaseAdapter {
             public void onClick(DialogInterface dialogInterface, int i) {
                 switch (i){
                     case 0:
-                        AppConstant.getInstance().setPersonCollectSongList(list.get(position));
+                        AppConstant.getInstance().addPersonCollectSongList(list.get(position));
                         if(AppConstant.getInstance().isCollect(list.get(position))){
                             Toast.makeText(context, "已收藏", Toast.LENGTH_LONG).show();
                         }else {
