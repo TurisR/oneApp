@@ -6,6 +6,7 @@
     >
 
     <LinearLayout
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -14,14 +15,18 @@
        <EditText
            android:layout_width="0dp"
            android:layout_weight="0.8"
+           android:shadowColor="@color/grey"
+           android:layout_gravity="center"
+           android:background="@drawable/edit_style"
            android:layout_marginLeft="10dp"
-           android:text="歌手/歌曲"
+           android:hint="歌手/歌曲"
            android:layout_height="wrap_content" />
+
         <TextView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:layout_weight="0.1"
-            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:gravity="center"
             android:layout_margin="10dp"
             android:text="搜索"
             android:textColor="@color/black"

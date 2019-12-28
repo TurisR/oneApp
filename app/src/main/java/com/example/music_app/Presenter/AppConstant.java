@@ -51,9 +51,6 @@ public class AppConstant {
         setPlayingSong(getCurrentSongList().get(position));
     }
 
-
-
-
     public List<Song> getLocalSongList() {
      return LocalSongList;
     }
@@ -94,14 +91,14 @@ public class AppConstant {
     }
 
     public void addPersonCollectSongList(Song song) {
-        if(isExist(song, PersonCollectSongList)){
+        if(!isExist(song, PersonCollectSongList)){
             PersonCollectSongList.add(song);
             Model.getInstance().getDBManager().getSongDao("个人收藏").addSong(song);
         }
 
     }
     public void addRecentSongList(Song song) {
-        if(isExist(song, RecentSongList)){
+        if(!isExist(song, RecentSongList)){
             RecentSongList.add(song);
             Model.getInstance().getDBManager().getSongDao("最近播放").addSong(song);
         }

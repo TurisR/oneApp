@@ -16,6 +16,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.music_app.Presenter.AppConstant;
+import com.example.music_app.Presenter.InitData;
 import com.example.music_app.Presenter.PlayerUtil;
 import com.example.music_app.R;
 import com.example.music_app.View.Fragment.ContentPagerManager;
@@ -193,11 +194,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.e("sss 11",pos+"");
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.e("start","2");
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e("resume","111111");
+        Log.e("resume","1");
+        InitData initData = new InitData(this);
+        initData.invoke();
         UpdateUI();
     }
 

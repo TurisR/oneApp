@@ -23,36 +23,29 @@ public class MusicApplication extends Application {
     private int size;
 
     //获取上下文
-    public static Context getAppContext(){
+    public static Context getAppContext() {
         return context.getApplicationContext();
     }
 
-    public static String[]permissionsREAD={
+    public static String[] permissionsREAD = {
             Manifest.permission.READ_EXTERNAL_STORAGE, //权限存取读取
-            Manifest.permission.WRITE_EXTERNAL_STORAGE };
+            Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     @Override
     public void onCreate() {
         super.onCreate();
-        context=this;
-        Model.getInstance().init(this,"user");
+        context = this;
+        Model.getInstance().init(this, "user");
         AppConstant.getInstance().setPlayingState(AppConstant.PlayerMsg.PAUSE_MSG);
         //
         receiveAdDownload();
-        InitData initData = new InitData().invoke();
-        Boolean aBoolean1 = initData.getABoolean1();
-        Boolean aBoolean2 = initData.getABoolean2();
-        Boolean aBoolean3 = initData.getABoolean3();
-
-
-        Toast.makeText(context,"音乐播放器 "+aBoolean1+" "+aBoolean2+" "+aBoolean3,Toast.LENGTH_SHORT).show();
+        InitData initData = new InitData(context);
+        initData.invoke();
+        Toast.makeText(context,"音乐播放器 "+initData.getABoolean1()+" "+initData.getABoolean1()+" "+initData.getABoolean1(),Toast.LENGTH_SHORT).show();
     }
 
-
     private static boolean lacksPermission(Context mContexts, String permission) {
-
-     return ContextCompat.checkSelfPermission(mContexts, permission) == PackageManager.PERMISSION_DENIED;
-
+        return ContextCompat.checkSelfPermission(mContexts, permission) == PackageManager.PERMISSION_DENIED;
     }
 
     private void receiveAdDownload() {
@@ -65,18 +58,17 @@ public class MusicApplication extends Application {
     }
 
 
-
     BroadcastReceiver mAdDownLoadReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            switch (intent.getAction()){
+            switch (intent.getAction()) {
                 case AppConstant.MessageType.MUSIC_NEXT:
-                   // Toast.makeText(context,"+音乐播放器下一首+",Toast.LENGTH_SHORT).show();
-                   song= AppConstant.getInstance().getSwitchSong().getNextSong(true);
+                    // Toast.makeText(context,"+音乐播放器下一首+",Toast.LENGTH_SHORT).show();
+                    song = AppConstant.getInstance().getSwitchSong().getNextSong(true);
                     break;
                 case AppConstant.MessageType.MUSIC_PREVIOUS:
                     //Toast.makeText(context,"+音乐播放器上一首+",Toast.LENGTH_SHORT).show();
-                   song= AppConstant.getInstance().getSwitchSong().getNextSong(true);
+                    song = AppConstant.getInstance().getSwitchSong().getNextSong(true);
                     break;
             }
             AppConstant.getInstance().getPlayerUtil(context).play(song);
@@ -84,9 +76,6 @@ public class MusicApplication extends Application {
 
 
     };
-
-
-
 
 
     @Override
@@ -98,41 +87,4 @@ public class MusicApplication extends Application {
     }
 
 
-    private class InitData {
-        private Boolean mABoolean1;
-        private Boolean mABoolean2;
-        private Boolean mABoolean3;
-
-        public Boolean getABoolean1() {
-            return mABoolean1;
-        }
-
-        public Boolean getABoolean2() {
-            return mABoolean2;
-        }
-
-        public Boolean getABoolean3() {
-            return mABoolean3;
-        }
-
-        public InitData invoke() {
-            mABoolean1 = (new DBHelper(context)).tableIsExist("本地歌曲");
-            mABoolean2 = (new DBHelper(context)).tableIsExist("个人收藏");
-            mABoolean3 = (new DBHelper(context)).tableIsExist("最近播放");
-
-
-            if(mABoolean1){
-                AppConstant.getInstance().setLocalSongList(Model.getInstance().getDBManager().getSongDao("本地歌曲").getSonglist());
-            }
-
-            if(mABoolean2){
-                AppConstant.getInstance().setPersonCollectSongList(Model.getInstance().getDBManager().getSongDao("个人收藏").getSonglist());
-            }
-
-            if(mABoolean3){
-                AppConstant.getInstance().setRecentSongList(Model.getInstance().getDBManager().getSongDao("最近播放").getSonglist());
-            }
-            return this;
-        }
-    }
 }

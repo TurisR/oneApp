@@ -81,6 +81,14 @@ public class widgetLayout extends LinearLayout {
         }
     }
 
+    public void setMoreVisible(boolean bl){
+        if(bl){
+            set_more.setVisibility(INVISIBLE);
+        }else {
+            set_more.setVisibility(GONE);
+        }
+    }
+
     public void setVisible(boolean bl){
         if(bl){
             set_list.setVisibility(VISIBLE);

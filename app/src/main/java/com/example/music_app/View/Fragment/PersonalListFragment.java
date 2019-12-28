@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +42,7 @@ public class PersonalListFragment extends Fragment  {
     private PlayingListAdapter mRecentListAdapter,mCollectListAdapter;
     private View contentView;
     private widgetLayout personal_love,personal_songList;
+    private ScrollView myScrollView;
 
     public static PersonalListFragment newInstance(String content) {
         Bundle arguments = new Bundle();
@@ -69,6 +72,7 @@ public class PersonalListFragment extends Fragment  {
         set_recent = contentView.findViewById(R.id.recent);
         personal_love = contentView.findViewById(R.id.personal_love);
         personal_songList = contentView.findViewById(R.id.personal_songList);
+        myScrollView=contentView.findViewById(R.id.myScrollView);
         set_recent.setTitle("最近播放");
         personal_love.setTitle("个人收藏");
         personal_love.setNumVisible(true);
@@ -81,6 +85,9 @@ public class PersonalListFragment extends Fragment  {
     }
 
     private void initEvent() {
+
+
+
         set_recent.setNum("最近播放"+AppConstant.getInstance().getRecentSongList().size()+"首歌");
         set_recent.setOnWidgetListener(new View.OnClickListener() {
             @Override
@@ -94,8 +101,9 @@ public class PersonalListFragment extends Fragment  {
                         mRecentListAdapter = new PlayingListAdapter(getActivity(),AppConstant.getInstance().getRecentSongList());
                         set_recent.setListView(mRecentListAdapter);
                     }
-                    set_recent.setNumVisible(true);
-                    set_recent.setMoreText("最近播放"+AppConstant.getInstance().getRecentSongList().size()+"首歌");
+                    set_recent.setNumVisible(false);
+                    //set_recent.setMoreVisible(false);
+                    //set_recent.setMoreText("最近播放"+AppConstant.getInstance().getRecentSongList().size()+"首歌");
                 }else {
                     set_recent.setNumVisible(false);
                     set_recent.setNum("最近播放"+AppConstant.getInstance().getRecentSongList().size()+"首歌");
@@ -130,6 +138,7 @@ public class PersonalListFragment extends Fragment  {
                         personal_love.setListView(mCollectListAdapter);
                     }
                     personal_love.setNumVisible(false);
+                   // personal_love.setMoreVisible(false);
                     mCollectListAdapter.notifyDataSetChanged();
                     personal_love.setNum("共有"+AppConstant.getInstance().getPersonCollectSongList().size()+"个收藏");
                    // set_recent.setListView(mPlayingListAdapter);
@@ -174,8 +183,29 @@ public class PersonalListFragment extends Fragment  {
         });
 
 
+        resolve(set_recent.getListView());
+        resolve(personal_love.getListView());
+        resolve(personal_songList.getListView());
+
+
     }
 
+    private void resolve(ListView listView) {
+        listView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Log.d("MainActivity","onTouch");
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    //点击listview里面滚动停止时，scrollview拦截listview的触屏事件，就是scrollview该滚动了
+                    myScrollView.requestDisallowInterceptTouchEvent(false);
+                } else {
+                    //当listview在滚动时，不拦截listview的滚动事件；就是listview可以滚动，
+                    myScrollView.requestDisallowInterceptTouchEvent(true);
+                }
+                return false;
+            }
+        });
+    }
 
 
     BroadcastReceiver mAdDownLoadReceiver = new BroadcastReceiver() {

@@ -96,10 +96,11 @@ public class LocalMusicListAdapter extends BaseAdapter {
 
 
     public void showList(View view, final int position){
-        String[] items = {"收藏", "删除", "加到歌单", "下一首播放"};
+        final String[] items = {"收藏", "删除", "加到歌单", "下一首播放"};
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
         alertBuilder.setTitle(list.get(position).getTitle());
-        if(AppConstant.getInstance().isCollect(list.get(position))){
+        final boolean bl=AppConstant.getInstance().isExist(list.get(position),AppConstant.getInstance().getPersonCollectSongList());
+        if(bl){
             items[0]="已收藏";
         }
         alertBuilder.setItems(items, new DialogInterface.OnClickListener() {
@@ -108,7 +109,7 @@ public class LocalMusicListAdapter extends BaseAdapter {
                 switch (i){
                     case 0:
                         AppConstant.getInstance().addPersonCollectSongList(list.get(position));
-                        if(AppConstant.getInstance().isCollect(list.get(position))){
+                        if(bl){
                             Toast.makeText(context, "已收藏", Toast.LENGTH_LONG).show();
                         }else {
                             Toast.makeText(context, "收藏成功", Toast.LENGTH_LONG).show();
