@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -89,6 +90,7 @@ public class PlayinglistActivity extends Activity implements View.OnClickListene
     }
 
 
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -141,4 +143,5 @@ public class PlayinglistActivity extends Activity implements View.OnClickListene
         super.finish();
         overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
     }
+
 }

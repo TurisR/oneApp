@@ -82,29 +82,21 @@
             android:src="@drawable/ic_play_bar_btn_playlist" />
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/bar_seek"
-        android:layout_toRightOf="@+id/iv_play_bar_cover"
-        android:layout_alignTop="@+id/iv_play_bar_cover">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="15dp"
-            android:background="#33000000"
-            />
+
         <SeekBar
             android:id="@+id/pb_play_bar"
+            android:layout_toRightOf="@+id/iv_play_bar_cover"
+            android:layout_alignTop="@+id/iv_play_bar_cover"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:layout_gravity="bottom"
-            android:progressDrawable="@drawable/progress_bar_style" />
-    </RelativeLayout>
+            android:layout_gravity="center_vertical"
+            android:progress="0"
+            android:max="255"
+            android:thumb="@drawable/seekbar_thumb"
+            android:progressDrawable="@drawable/progressbar_color" />
+
 
 
 </RelativeLayout>

@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -258,6 +259,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      *  初始化拖动条
      */
     private void initSeekBar() {
+
+
+
         //设置拖动监听
         audioSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override

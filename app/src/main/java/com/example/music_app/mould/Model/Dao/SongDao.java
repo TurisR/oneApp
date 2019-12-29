@@ -81,4 +81,54 @@ public class SongDao {
         return datas;
     }
 
+
+
+    public void deleteSong(Song song){
+            if (song==null){
+                return;
+            }
+            SQLiteDatabase db=mhelper.getWritableDatabase();
+            db.delete(mSongTable.getTableName(),SongTable.COL_TITLE+"=?",new String[]{song.getTitle()});
+    }
+
+
+
+    public void updateSongList(List<Song> data){
+        if(data==null||data.size()<=0){
+            return;
+        }
+        SQLiteDatabase db = mhelper.getWritableDatabase();
+        db.execSQL("delete from " + mSongTable.getTableName());
+        for (Song song:data){
+            addSong(song);
+        }
+
+    }
+
+
+
+    public Song getSongByTitle(Song song){
+        if(song==null){
+            return null;
+        }
+        Song data=null;
+        SQLiteDatabase db = mhelper.getWritableDatabase();
+        String sql="select*from "+mSongTable.getTableName()+" where "+SongTable.COL_TITLE+"=?";
+        Cursor cursor = db.rawQuery(sql,new String[]{song.getTitle()} );
+        if(cursor.moveToNext()){
+            data=new Song();
+            data.setTitle(cursor.getString(cursor.getColumnIndex(SongTable.COL_TITLE)));
+            data.setSinger(cursor.getString(cursor.getColumnIndex(SongTable.COL_SINGER)));
+            data.setDuration(cursor.getInt(cursor.getColumnIndex(SongTable.COL_DURATION)));
+            data.setFileUrl(cursor.getString(cursor.getColumnIndex(SongTable.COL_FILE_URL)));
+        }
+        cursor.close();
+        return  data;
+
+    }
+
+
+
+
+
 }

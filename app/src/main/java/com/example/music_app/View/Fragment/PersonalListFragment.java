@@ -23,8 +23,12 @@ import android.widget.Toast;
 import com.example.music_app.Presenter.AppConstant;
 import com.example.music_app.Presenter.PlayerUtil;
 import com.example.music_app.R;
+import com.example.music_app.View.Activity.MainActivity;
 import com.example.music_app.View.Adapter.PlayingListAdapter;
+import com.example.music_app.View.widget.CustomDialog;
 import com.example.music_app.View.widget.widgetLayout;
+import com.example.music_app.mould.Model.Model;
+import com.example.music_app.mould.Model.SQLite.DBHelper;
 
 
 /**
@@ -39,7 +43,7 @@ public class PersonalListFragment extends Fragment  {
     private LinearLayout recent_play_layout;
     private widgetLayout set_recent;
     private boolean isShow = false;
-    private PlayingListAdapter mRecentListAdapter,mCollectListAdapter;
+    private PlayingListAdapter mRecentListAdapter,mCollectListAdapter,mPersonalAlbumAdapter;
     private View contentView;
     private widgetLayout personal_love,personal_songList;
     private ScrollView myScrollView;
@@ -85,10 +89,7 @@ public class PersonalListFragment extends Fragment  {
     }
 
     private void initEvent() {
-
-
-
-        set_recent.setNum("最近播放"+AppConstant.getInstance().getRecentSongList().size()+"首歌");
+       // set_recent.setNum("最近播放"+AppConstant.getInstance().getRecentSongList().size()+"首歌");
         set_recent.setOnWidgetListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,11 +102,12 @@ public class PersonalListFragment extends Fragment  {
                         mRecentListAdapter = new PlayingListAdapter(getActivity(),AppConstant.getInstance().getRecentSongList());
                         set_recent.setListView(mRecentListAdapter);
                     }
-                    set_recent.setNumVisible(false);
-                    //set_recent.setMoreVisible(false);
-                    //set_recent.setMoreText("最近播放"+AppConstant.getInstance().getRecentSongList().size()+"首歌");
+                    set_recent.setNumVisible(true);
+                   // set_recent.setMoreVisible(false);
+                    set_recent.setMoreText("最近播放"+AppConstant.getInstance().getRecentSongList().size()+"首歌");
                 }else {
                     set_recent.setNumVisible(false);
+                    //set_recent.setListVisible(false);
                     set_recent.setNum("最近播放"+AppConstant.getInstance().getRecentSongList().size()+"首歌");
                 }
 
@@ -127,7 +129,7 @@ public class PersonalListFragment extends Fragment  {
         personal_love.setOnWidgetListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "个人收藏", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getActivity(), "个人收藏", Toast.LENGTH_SHORT).show();
                 personal_love.setVisible(!personal_love.getVisible());
                 if (personal_love.getVisible()) {
                     if(AppConstant.getInstance().getPersonCollectSongList().size()==0){
@@ -139,10 +141,9 @@ public class PersonalListFragment extends Fragment  {
                     }
                     personal_love.setNumVisible(false);
                    // personal_love.setMoreVisible(false);
-                    mCollectListAdapter.notifyDataSetChanged();
+                   // mCollectListAdapter.notifyDataSetChanged();
                     personal_love.setNum("共有"+AppConstant.getInstance().getPersonCollectSongList().size()+"个收藏");
-                   // set_recent.setListView(mPlayingListAdapter);
-                   // isShow = !isShow;
+
                 }else {
                     personal_love.setNumVisible(true);
                 }
@@ -164,13 +165,16 @@ public class PersonalListFragment extends Fragment  {
         personal_songList.setOnWidgetListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "个人歌单", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "个人歌单", Toast.LENGTH_SHORT).show();
                 personal_songList.setVisible(!personal_songList.getVisible());
                 if (personal_songList.getVisible()) {
+
                     if(AppConstant.getInstance().getPersonalSongAlbum().size()==0){
                         personal_songList.setListVisible(true);
                     }else {
                         personal_songList.setListVisible(false);
+                        mPersonalAlbumAdapter=new PlayingListAdapter(getActivity(),AppConstant.getInstance().getPersonalSongAlbum(),true);
+                        personal_songList.setListView(mPersonalAlbumAdapter);
                     }
 
                     personal_songList.setNumVisible(false);
@@ -179,6 +183,47 @@ public class PersonalListFragment extends Fragment  {
                     personal_songList.setNumVisible(true);
                 }
 
+            }
+        });
+
+
+        personal_songList.setMoreListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CustomDialog customDialog;
+                customDialog = new CustomDialog(getActivity(),R.style.CustomDialog);
+                customDialog.setType(1).setTitle("新 建 歌 单").setCancel(new CustomDialog.InOnCancelListener() {
+                    @Override
+                    public void onCancel(CustomDialog customDialog) {
+                        customDialog.dismiss();
+
+                    }
+                }).setConfirm(new CustomDialog.InOnConfirmListener() {
+                    @Override
+                    public void onConfirm(CustomDialog customDialog) {
+                        String string=customDialog.getEditText();
+                        DBHelper helper=new DBHelper(getContext());
+                        if(!helper.tableIsExist(string)){
+                            helper.dynamicCreateTable(string);
+                            if(helper.tableIsExist(string)){
+                                Toast.makeText(getActivity(), "新建歌单"+ string+"成功", Toast.LENGTH_LONG).show();
+                                AppConstant.getInstance().addPersonalSongAlbum(string);
+                                personal_songList.setNum("共有"+AppConstant.getInstance().getPersonalSongAlbum().size()+"个歌单");
+                                personal_songList.setListVisible(false);
+                                mPersonalAlbumAdapter=new PlayingListAdapter(getActivity(),AppConstant.getInstance().getPersonalSongAlbum(),true);
+                                personal_songList.setListView(mPersonalAlbumAdapter);
+                                customDialog.dismiss();
+                            }else {
+                                Toast.makeText(getActivity(), "新建歌单"+ string+"失败", Toast.LENGTH_LONG).show();
+                            }
+                        }else {
+                            Toast.makeText(getActivity(), "歌单"+ string+"已经存在", Toast.LENGTH_LONG).show();
+                        }
+
+
+
+                    }
+                }).show();
             }
         });
 

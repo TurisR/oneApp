@@ -142,5 +142,10 @@ public class widgetLayout extends LinearLayout {
     }
 
 
+    public void setMoreListener(OnClickListener listener){
+        set_more.setOnClickListener(listener);
+    }
+
+
 
 }

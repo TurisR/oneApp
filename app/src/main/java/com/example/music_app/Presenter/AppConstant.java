@@ -105,11 +105,27 @@ public class AppConstant {
     }
 
     public void addPersonalSongAlbum(String album) {
-        PersonalSongAlbum .add(album);
+        if(!isExistAlbum(album)){
+            PersonalSongAlbum .add(album);
+        }
     }
 
 
+    public Boolean isExistAlbum(String album) {
+        for (String string:PersonalSongAlbum){
+            if (string.equals(album)){
+                return true;
+            }
+        }
+        return  false;
+
+    }
+
     public boolean isExist(Song song,List<Song> songList) {
+
+        if(songList==null){
+            return false;
+        }
         for (Song song1:songList){
             if (song1.Equals(song)){
                 return true;
@@ -118,10 +134,8 @@ public class AppConstant {
         return  false;
     }
 
-
     public List<Song> getSongList(String name) {
         return Model.getInstance().getDBManager().getSongDao(name).getSonglist();
-
     }
 
     public Song getPlayingSong() {

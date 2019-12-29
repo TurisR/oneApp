@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.music_app.Presenter.AppConstant;
 import com.example.music_app.R;
+import com.example.music_app.View.widget.CustomDialog;
 import com.example.music_app.mould.Model.bean.Song;
 
 import java.util.List;
@@ -117,7 +118,20 @@ public class LocalMusicListAdapter extends BaseAdapter {
 
                         break;
                     case 1:
-
+                        CustomDialog customDialog=new CustomDialog(context,R.style.CustomDialog);
+                        customDialog.setType(0).setTitle("删 除").setContent("确认要删除“"+list.get(position).getTitle()+"”歌曲吗？").setCancel(new CustomDialog.InOnCancelListener() {
+                            @Override
+                            public void onCancel(CustomDialog customDialog) {
+                               customDialog.dismiss();
+                            }
+                        }).setConfirm(new CustomDialog.InOnConfirmListener() {
+                            @Override
+                            public void onConfirm(CustomDialog customDialog) {
+                                customDialog.dismiss();
+                                Toast.makeText(context, "删除成功", Toast.LENGTH_LONG).show();
+                                //Toast.makeText(context, "删除不成功", Toast.LENGTH_LONG).show();
+                            }
+                        }).show();
                         break;
 
                 }
