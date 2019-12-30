@@ -6,25 +6,21 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.music_app.Presenter.AppConstant;
-import com.example.music_app.Presenter.InitData;
+import com.example.music_app.Presenter.DataManager;
 import com.example.music_app.Presenter.PlayerUtil;
 import com.example.music_app.R;
 import com.example.music_app.View.Fragment.ContentPagerManager;
-import com.example.music_app.View.Fragment.MusicListFragment;
 import com.example.music_app.mould.Model.bean.Song;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private TabLayout mTabTl;
@@ -34,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int duration;
     private TextView tv_play_bar_artist;
     public ImageView v_play_bar_play;
-    private ContentPagerManager mContentPagerManager;
+    public ContentPagerManager mContentPagerManager;
     public static SeekBar audioSeekBar = null;
     private Song song;
     private PlayerUtil mPlayerUtil;
@@ -146,7 +142,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.iv_play_bar_next:
                 mPlayerUtil.next();
                 break;
-
             case R.id.iv_play_bar_play:
                 if(AppConstant.getInstance().getPlayingState()==AppConstant.PlayerMsg.PAUSE_MSG){
                   v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_play));
@@ -158,9 +153,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                    tv_play_bar_title.setSelected(false);
                 }
                 break;
-
             case R.id.v_play_bar_playlist:
-                startActivity(new Intent(MainActivity.this,PlayinglistActivity.class));
+                Intent intent =new Intent(MainActivity.this, ShowListActivity.class);
+                intent.putExtra("MUSIC_TYPE",AppConstant.DataType.CURRENT_MUSIC); // 传字符串, 更多传值方法
+                startActivity(intent);
                 overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
                 break;
 
@@ -178,6 +174,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             tv_play_bar_title.setText(song.getTitle());
             tv_play_bar_artist.setText(song.getSinger());
         }
+
+
 
         if(AppConstant.getInstance().getPlayingState()==AppConstant.PlayerMsg.PAUSE_MSG){
             v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_pause));
@@ -204,10 +202,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e("resume","1");
-        InitData initData = new InitData(this);
-        initData.invoke();
-        UpdateUI();
+        //Log.e("resume","1");
+        DataManager dataManager = new DataManager(this);
+        //dataManager.initData();
+       // UpdateUI();
+        //Toast.makeText(this,"数据更新1",Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -274,7 +273,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 isPressSeekBar = true;      //当拖动进度条时，进度条停止自动更新
                 mPlayerUtil.pause();
             }
-
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 int progress = seekBar.getProgress();   //拖动条停止位置
@@ -287,6 +285,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
-
+    @Override
+    protected void onStop() {
+        super.onStop();
+        DataManager dataManager = new DataManager(this);
+        dataManager.upDate();
+        //Toast.makeText(this,"数据更新2",Toast.LENGTH_SHORT).show();
+    }
 }

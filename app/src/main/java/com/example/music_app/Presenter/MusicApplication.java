@@ -12,7 +12,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.music_app.mould.Model.Model;
-import com.example.music_app.mould.Model.SQLite.DBHelper;
 import com.example.music_app.mould.Model.bean.Song;
 
 public class MusicApplication extends Application {
@@ -21,6 +20,7 @@ public class MusicApplication extends Application {
     private Song song;
     private int position;
     private int size;
+    private DataManager mDataManager;
 
     //获取上下文
     public static Context getAppContext() {
@@ -39,9 +39,9 @@ public class MusicApplication extends Application {
         AppConstant.getInstance().setPlayingState(AppConstant.PlayerMsg.PAUSE_MSG);
         //
         receiveAdDownload();
-        InitData initData = new InitData(context);
-        initData.invoke();
-        Toast.makeText(context,"音乐播放器 "+initData.getABoolean1()+" "+initData.getABoolean1()+" "+initData.getABoolean1(),Toast.LENGTH_SHORT).show();
+        mDataManager = new DataManager(context);
+        mDataManager.initData();
+        //Toast.makeText(context,"音乐播放器 数据刷新1",Toast.LENGTH_SHORT).show();
     }
 
     private static boolean lacksPermission(Context mContexts, String permission) {
@@ -83,7 +83,10 @@ public class MusicApplication extends Application {
         // 程序终止的时候执行
         Log.d("application", "onTerminate");
         context.unregisterReceiver(mAdDownLoadReceiver);
+        mDataManager.upDate();
+        Model.getInstance().getDBManager().close();
         super.onTerminate();
+        //Toast.makeText(context,"音乐播放器 数据更新2",Toast.LENGTH_SHORT).show();
     }
 
 

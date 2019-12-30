@@ -17,10 +17,12 @@ public class DBHelper extends SQLiteOpenHelper {
     private String name;
     private SongTable songTable;
     private String drop_sql;
+    private DBHelper mDBHelper;
 
     public DBHelper(Context context) {
         super(context, "user", null, 1);
         mContext = context;
+        mDBHelper=this;
     }
 
     @Override
@@ -71,7 +73,7 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor = null;//游标
         try {
             db = this.getReadableDatabase();
-            String sql = "select name from sqlite_master where name ='" + tablename.trim() + "' and type='table'";
+            String sql = "select name from sqlite_master where name ='" + tablename + "' and type='table'";
             cursor = db.rawQuery(sql, null);
             if (cursor.getCount() != 0) {
                 result = true;
@@ -84,7 +86,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }//
 
 
-    public List<String> getTableName() {
+    public List<String> getAllTableName() {
         List<String> stringList = new ArrayList<>();
         SQLiteDatabase db = null;
         String string;
@@ -98,7 +100,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 if(!string.equals("个人收藏")&&!string.equals("最近播放")&&!string.equals("本地歌曲")&&!string.equals("android_metadata")){
                     stringList.add(string);
                 }
-
             }
         }catch (Exception e) {
 
@@ -107,9 +108,10 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     public Boolean deleteTable(String name){//删除表
         SQLiteDatabase db = getWritableDatabase();
-        drop_sql = "DROP TABLE IF EXISTS " + name + ";";
+        songTable = new SongTable(name);
+        drop_sql = "DROP TABLE IF EXISTS " + songTable.getTableName() + ";";
         db.execSQL(drop_sql);
-        if(tableIsExist(name)){
+        if(!tableIsExist(name)){
             return true;
         }
         return false;

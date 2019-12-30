@@ -92,7 +92,6 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
         finish();
         startActivity(intent);
        // Toast.makeText(ScanActivity.this, "存音乐"+Model.getInstance().getDBMananger().getExit("table_song"), Toast.LENGTH_LONG).show();
-
     }
 
     private void delete() {
@@ -100,7 +99,6 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(ScanActivity.this, "您还没有选中任何数据！", Toast.LENGTH_SHORT).show();
             return;
         }
-
         mSongList.removeAll(mCheckedData);//删除选中数据
         setStateCheckedMap(false);//将CheckBox的所有选中状态变成未选中
         mCheckedData.clear();//清空选中数据

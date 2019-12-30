@@ -2,7 +2,6 @@ package com.example.music_app.Presenter;
 
 import android.content.Context;
 
-import com.example.music_app.View.Adapter.PlayingListAdapter;
 import com.example.music_app.mould.Model.Model;
 import com.example.music_app.mould.Model.bean.Song;
 
@@ -20,11 +19,16 @@ public class AppConstant {
     private SwitchSong mSwitchSong;
     private static AppConstant mAppConstant=new AppConstant();
 
+    private String currentListName;
+
+
     private List<Song> RecentSongList=new ArrayList<>();
+    private List<Song> RecentSearch=new ArrayList<>();
     private List<Song> PersonCollectSongList=new ArrayList<>();
     private List<String> PersonalSongAlbum=new ArrayList<>();
     private List<Song> CurrentSongList=new ArrayList<>();
     private List<Song> LocalSongList=new ArrayList<>();
+    private List<String> RecentUpdateSQL=new ArrayList<>();//最近更新SQL的表
 
 
     public void setRecentSongList(List<Song> recentSongList) {
@@ -33,8 +37,9 @@ public class AppConstant {
     public void setPersonCollectSongList(List<Song> personCollectSongList) {
         PersonCollectSongList = personCollectSongList;
     }
-    public void setCurrentSongList(List<Song> currentSongList) {
+    public void setCurrentSongList(List<Song> currentSongList,String name) {
         CurrentSongList =currentSongList;
+        currentListName=name;
     }
     public void setLocalSongList(List<Song> localSongList) {
         LocalSongList = localSongList;
@@ -63,8 +68,12 @@ public class AppConstant {
     public List<Song> getRecentSongList() {
         return RecentSongList;
     }
-    public List<String> getPersonalSongAlbum() {
+    public List<String> getPersonalAlbumName() {
         return PersonalSongAlbum;
+    }
+
+    public List<String> getRecentUpdateSQL() {
+        return RecentUpdateSQL;
     }
     public int getMode() {
         return mode;
@@ -90,17 +99,80 @@ public class AppConstant {
         return mPlayerUtil;
     }
 
-    public void addPersonCollectSongList(Song song) {
+
+
+    public boolean addCurrentSongList(Song song){
+        if(!isExist(song, CurrentSongList)){
+            CurrentSongList.add(song);
+            return true;
+        }
+        return false;
+    }
+    public void addPersonCollectSong(Song song) {
         if(!isExist(song, PersonCollectSongList)){
             PersonCollectSongList.add(song);
-            Model.getInstance().getDBManager().getSongDao("个人收藏").addSong(song);
+            RecentUpdateSQL.add(DataType.PERSONAL_COLLECT);
+        }
+    }
+
+    public Boolean addPersonCollectSongList(List<Song> songList) {
+       if(songList!=null){
+            PersonCollectSongList.addAll(songList);
+            RecentUpdateSQL.add(DataType.PERSONAL_COLLECT);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean removeSong(int position,String name){
+        if(name==null){
+            return false;
         }
 
+        switch (name){
+            case DataType.CURRENT_MUSIC://当前音乐
+                CurrentSongList.remove(position);
+                return true;
+            case DataType.LOCAL_MUSIC://本地歌曲
+                LocalSongList.remove(position);
+                if(name.equals(currentListName)){
+                    CurrentSongList.remove(position);
+                }
+                RecentUpdateSQL.add(DataType.LOCAL_MUSIC);
+                return true;
+            case DataType.PERSONAL_ALBUM_NAME://个人歌单名
+                String string=PersonalSongAlbum.get(position);
+                PersonalSongAlbum.remove(position);
+                return true;
+            case DataType.PERSONAL_COLLECT://个人收藏
+                PersonCollectSongList.remove(position);
+                if(name.equals(currentListName)){
+                    CurrentSongList.remove(position);
+                }
+                RecentUpdateSQL.add(DataType.PERSONAL_COLLECT);
+                return true;
+            case DataType.RECENT_MUSIC://最近搜索
+                RecentSongList.remove(position);
+                RecentUpdateSQL.add(DataType.RECENT_MUSIC);
+                return true;
+
+            case DataType.RECENT_SEARCH://最近播放
+                RecentSearch.remove(position);
+                if(name.equals(currentListName)){
+                    CurrentSongList.remove(position);
+                }
+                RecentUpdateSQL.add(DataType.RECENT_SEARCH);
+                return true;
+        }
+        return false;
     }
+
+
+
     public void addRecentSongList(Song song) {
         if(!isExist(song, RecentSongList)){
             RecentSongList.add(song);
-            Model.getInstance().getDBManager().getSongDao("最近播放").addSong(song);
+            RecentUpdateSQL.add(DataType.RECENT_MUSIC);
         }
     }
 
@@ -110,6 +182,17 @@ public class AppConstant {
         }
     }
 
+    public void addRecentUpdataSQL(String name) {
+        boolean i=true;
+        for (String string:RecentUpdateSQL){
+            if (string.equals(name)){
+                i=false;
+            }
+        }
+        if(i){
+            RecentUpdateSQL .add(name);
+        }
+    }
 
     public Boolean isExistAlbum(String album) {
         for (String string:PersonalSongAlbum){
@@ -184,6 +267,16 @@ public class AppConstant {
         public static final String MUSIC_PREVIOUS = "com.action.MUSIC_PREVIOUS";	//音乐上一曲
     }
 
+
+    public class DataType{
+
+        public static final String LOCAL_MUSIC= "本地歌曲";		//更新动作
+        public static final String RECENT_MUSIC = "最近播放";			//播放器状态 播放|暂停
+        public static final String PERSONAL_COLLECT = "个人收藏";		//当前音乐改变动作
+        public static final String RECENT_SEARCH = "最近搜索";	//音乐时长改变动作
+        public static final String CURRENT_MUSIC = "当前播放音乐";		//音乐下一曲
+        public static final String PERSONAL_ALBUM_NAME = "个人歌单";
+    }
 
 
 

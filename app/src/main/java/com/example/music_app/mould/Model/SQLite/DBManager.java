@@ -20,12 +20,13 @@ public class DBManager {
     }
 
 
-//    public void close() {
-//        mHelper.close();
-//    }
-//
-//    public boolean getExit(String str){
-//        return mHelper.tableIsExist(str);
-//    }
+   public void close() {
+      mHelper.close();
+  }
+
+  public DBHelper getHelper(){
+        return mHelper;
+  }
+
 
 }

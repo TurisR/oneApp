@@ -3,6 +3,7 @@ package com.example.music_app.View.Adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.music_app.Presenter.AppConstant;
 import com.example.music_app.R;
+import com.example.music_app.View.Activity.AddListActivity;
 import com.example.music_app.View.widget.CustomDialog;
 import com.example.music_app.mould.Model.bean.Song;
 
@@ -97,22 +99,24 @@ public class LocalMusicListAdapter extends BaseAdapter {
 
 
     public void showList(View view, final int position){
-        final String[] items = {"收藏", "删除", "加到歌单", "下一首播放"};
+        final String[] items = {"收藏", "删除", "加到歌单", "添加到播放列表"};
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
         alertBuilder.setTitle(list.get(position).getTitle());
         final boolean bl=AppConstant.getInstance().isExist(list.get(position),AppConstant.getInstance().getPersonCollectSongList());
         if(bl){
-            items[0]="已收藏";
+            items[0]="取消收藏";
         }
         alertBuilder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 switch (i){
                     case 0:
-                        AppConstant.getInstance().addPersonCollectSongList(list.get(position));
+
                         if(bl){
-                            Toast.makeText(context, "已收藏", Toast.LENGTH_LONG).show();
+                            AppConstant.getInstance().removeSong(position,AppConstant.DataType.PERSONAL_COLLECT);
+                            Toast.makeText(context, "取消收藏", Toast.LENGTH_LONG).show();
                         }else {
+                            AppConstant.getInstance().addPersonCollectSong(list.get(position));
                             Toast.makeText(context, "收藏成功", Toast.LENGTH_LONG).show();
                         }
 
@@ -128,13 +132,33 @@ public class LocalMusicListAdapter extends BaseAdapter {
                             @Override
                             public void onConfirm(CustomDialog customDialog) {
                                 customDialog.dismiss();
-                                Toast.makeText(context, "删除成功", Toast.LENGTH_LONG).show();
-                                //Toast.makeText(context, "删除不成功", Toast.LENGTH_LONG).show();
+                               if(AppConstant.getInstance().removeSong(position,AppConstant.DataType.LOCAL_MUSIC)) {
+                                   notifyDataSetChanged();
+                                   Toast.makeText(context, "删除成功", Toast.LENGTH_LONG).show();
+                               }else {
+                                   Toast.makeText(context, "删除失败", Toast.LENGTH_LONG).show();
+                               }
+
                             }
                         }).show();
                         break;
-
+                    case 2:
+                        Intent intent =new Intent(context, AddListActivity.class);
+                        intent.putExtra("ADD_TYPE",AppConstant.DataType.PERSONAL_ALBUM_NAME); // 传字符串, 更多传值方法
+                        intent.putExtra("ALBUM_SONG",list.get(position));
+                        context.startActivity(intent);
+                         //overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+                        break;
+                    case 3:
+                        if(AppConstant.getInstance().addCurrentSongList(list.get(position))){
+                            Toast.makeText(context, "添加成功", Toast.LENGTH_LONG).show();
+                        }else {
+                            Toast.makeText(context, "已经添加", Toast.LENGTH_LONG).show();
+                        }
+                        break;
                 }
+
+
 
                // Toast.makeText(context, items[i], Toast.LENGTH_SHORT).show();
                 //alertDialog1.dismiss();

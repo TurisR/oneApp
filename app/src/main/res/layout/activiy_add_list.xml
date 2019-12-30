@@ -30,60 +30,73 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/music_sum"
+                android:id="@+id/music_add_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_margin="10dp"
-                android:text="text"
-                android:textColor="@color/grey"
-                android:textSize="14sp" />
+                android:layout_marginLeft="10dp"
+                android:text="添加歌曲"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
 
-            <View
-                android:id="@+id/v_playing"
-                android:layout_width="3dp"
-                android:layout_height="15dp"
-                android:layout_centerVertical="true"
-                android:layout_margin="5dp"
-                android:layout_marginRight="10dp"
-                android:layout_toLeftOf="@+id/mode"
-                android:background="@color/grey"
-                android:contentDescription="@null" />
-
-            <LinearLayout
-                android:id="@+id/mode"
+            <TextView
+                android:id="@+id/album_create"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_toLeftOf="@+id/select_all_linearLayout"
+                android:layout_centerVertical="true"
+                android:layout_alignBottom="@+id/music_type"
+                android:text="新建"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+            <LinearLayout
+                android:id="@+id/select_all_linearLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="5dp"
-                android:layout_marginRight="15dp"
+                android:gravity="center"
                 android:orientation="horizontal">
 
+                <View
+                    android:id="@+id/v_playing"
+                    android:layout_width="3dp"
+                    android:layout_height="15dp"
+                    android:layout_margin="5dp"
+                    android:layout_gravity="center"
+                    android:background="@color/grey"
+                    android:contentDescription="@null" />
+
                 <TextView
-                    android:id="@+id/mode_music"
+                    android:id="@+id/select_all_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
-                    android:text="循序播放"
+                    android:layout_gravity="center"
+                    android:text="全选"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
-                <ImageView
-                    android:id="@+id/play_mode"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/order" />
+              <CheckBox
+                  android:layout_width="wrap_content"
+                  android:id="@+id/select_all_checkbox"
+                  android:layout_marginRight="13dp"
+                  android:clickable="false"
+                  android:focusable="false"
+                  android:layout_height="wrap_content" />
 
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_below="@+id/mode"
+                android:layout_below="@+id/music_add_title"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="10dp"
                 android:background="@color/grey"
                 android:contentDescription="@null" />
@@ -91,12 +104,12 @@
         </RelativeLayout>
 
         <ListView
-            android:id="@+id/list_playing"
+            android:id="@+id/list_select"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_weight="0.9"
+            android:layout_height="0dp"
             android:background="@drawable/list_select"
             android:divider="@drawable/list_divider"
-            android:visibility="gone"
             android:dividerHeight="1dp" />
 
         <View
@@ -110,15 +123,17 @@
             android:background="#33000000"
             android:contentDescription="@null" />
 
-        <TextView
+        <Button
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:id="@+id/text_none_song"
-            android:gravity="center"
             android:textSize="16sp"
-            android:text="暂无歌曲"
-            />
+            android:id="@+id/add_confirm"
+            android:layout_margin="5dp"
+            android:text="确 认"
+            android:layout_weight="0.15"
+            android:layout_height="0dp" />
+
     </LinearLayout>
+
+
 
 </LinearLayout>

@@ -75,12 +75,18 @@ public class AudioScan {
                 if (cursor.getString(9) != null) {
                     song.setFileUrl(cursor.getString(9));
                 }
-                songs.add(song);
+                if(!AppConstant.getInstance().isExist(song,AppConstant.getInstance().getLocalSongList())){
+                    songs.add(song);
+                }
             } while (cursor.moveToNext());
 
             cursor.close();
 
         }
+
+
+
+
         return songs;
     }
 

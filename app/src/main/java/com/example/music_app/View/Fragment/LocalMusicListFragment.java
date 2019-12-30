@@ -30,7 +30,7 @@ import java.util.List;
 
 
 
-public class MusicListFragment extends Fragment {
+public class LocalMusicListFragment extends Fragment {
 
     private LocalMusicListAdapter adapter = null;
 
@@ -94,18 +94,21 @@ public class MusicListFragment extends Fragment {
 
     private void ListViewEvent() {
         adapter = new LocalMusicListAdapter(getActivity(),mSongList);
+        ListView.setAdapter(adapter);
         ListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 View mView=view.findViewById(R.id.v_playing);
-                AppConstant.getInstance().setCurrentSongList(AppConstant.getInstance().getLocalSongList());
+                AppConstant.getInstance().setCurrentSongList(AppConstant.getInstance().getLocalSongList(),AppConstant.DataType.LOCAL_MUSIC);
+                adapter.notifyDataSetChanged();
             //    Toast.makeText(getActivity(),"播放"+AppConstant.getInstance().getCurrentSongList().get(position).getTitle(),Toast.LENGTH_LONG).show();
                 AppConstant.getInstance().getPlayerUtil(getActivity()).play(AppConstant.getInstance().getCurrentSongList().get(position));
 
             }
 
         });
-        ListView.setAdapter(adapter);
+        //adapter.notifyDataSetChanged();
+
     }
 
     private void initView(View v) {

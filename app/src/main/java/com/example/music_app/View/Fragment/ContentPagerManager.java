@@ -24,7 +24,7 @@ public class ContentPagerManager extends FragmentPagerAdapter {
         this.fm=fm;
         if (fragmentlist!=null){
             fragmentlist.clear();
-            fragmentlist.add(new MusicListFragment());
+            fragmentlist.add(new LocalMusicListFragment());
             fragmentlist.add(new PersonalListFragment());
             fragmentlist.add(new SearchFragment());
             fragmentlist.add(new SettingFragment());
