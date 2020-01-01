@@ -1,7 +1,12 @@
 package com.example.music_app.View.Activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseBooleanArray;
 import android.view.View;
@@ -12,9 +17,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.music_app.Presenter.AppConstant;
 import com.example.music_app.Presenter.AudioScan;
 import com.example.music_app.R;
 import com.example.music_app.View.Adapter.ScanListAdapter;
+import com.example.music_app.View.widget.CustomDialog;
 import com.example.music_app.mould.Model.Model;
 import com.example.music_app.mould.Model.bean.Song;
 
@@ -43,6 +50,7 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
         adapter = new ScanListAdapter(ScanActivity.this, mSongList, stateCheckedMap);
         lvData.setAdapter(adapter);
         setOnListViewItemClickListener();
+        requestAllPower();
         //setOnListViewItemLongClickListener();
 
     }
@@ -86,7 +94,8 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void sure() {
-        Model.getInstance().getDBManager().getSongDao("本地歌曲").saveSongList(mCheckedData);
+       // Model.getInstance().getDBManager().getSongDao("本地歌曲").saveSongList(mCheckedData);
+        AppConstant.getInstance().addLocalSongList(mCheckedData);
         Toast.makeText(ScanActivity.this, "存"+mCheckedData.size()+"音乐", Toast.LENGTH_SHORT).show();
         Intent intent=new Intent(this,MainActivity.class);
         finish();
@@ -180,5 +189,47 @@ public class ScanActivity extends AppCompatActivity implements View.OnClickListe
             stateCheckedMap.put(i, isSelectedAll);
             lvData.setItemChecked(i, isSelectedAll);
         }
+    }
+
+
+    public void requestAllPower() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                // 检查权限状态
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    //  用户彻底拒绝授予权限，一般会提示用户进入设置权限界面
+                    getAllPower();
+
+                } else {
+                    //  用户未彻底拒绝授予权限
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                    Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                    //ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                }
+            }
+        }
+    }
+
+    private void getAllPower() {
+        CustomDialog customDialog=new CustomDialog(this,R.style.CustomDialog);
+        customDialog.setType(0).setTitle("权 限 请 求").setContent("为保证程序正常运行，是否给予“存储读写”权限？").setCancel(new CustomDialog.InOnCancelListener() {
+            @Override
+            public void onCancel(CustomDialog customDialog) {
+                customDialog.dismiss();
+                Toast.makeText(ScanActivity.this, "权限请求失败，可在系统设置授权", Toast.LENGTH_LONG).show();
+
+            }
+        }).setConfirm(new CustomDialog.InOnConfirmListener() {
+            @Override
+            public void onConfirm(CustomDialog customDialog) {
+                ActivityCompat.requestPermissions(ScanActivity.this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                Toast.makeText(ScanActivity.this, "权限请求成功", Toast.LENGTH_LONG).show();
+                customDialog.dismiss();
+            }
+        }).show();
+
     }
 }

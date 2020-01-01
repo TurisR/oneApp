@@ -22,8 +22,8 @@ import java.util.List;
 
 public class ShowListAdapter extends BaseAdapter implements View.OnClickListener{
 
-    private final String Name;
-    private final Context mContext;
+    private String Name;
+    private Context mContext;
     private List<Song> mSongList=new ArrayList<>();
     private List<String> albumName=new ArrayList<>();
     private ViewHolder holder;
@@ -38,7 +38,6 @@ public class ShowListAdapter extends BaseAdapter implements View.OnClickListener
             mSongList.clear();
         }
         Name=name;
-
         switch (name){
             case AppConstant.DataType.CURRENT_MUSIC:
                 mSongList.addAll(AppConstant.getInstance().getCurrentSongList());
@@ -48,6 +47,9 @@ public class ShowListAdapter extends BaseAdapter implements View.OnClickListener
                 break;
             case AppConstant.DataType.PERSONAL_COLLECT:
                 mSongList.addAll(AppConstant.getInstance().getPersonCollectSongList());
+                break;
+            case AppConstant.DataType.RECENT_SEARCH:
+                mSongList.addAll(AppConstant.getInstance().getRecentSearchList());
                 break;
 
             case AppConstant.DataType.PERSONAL_ALBUM_NAME:
@@ -60,10 +62,16 @@ public class ShowListAdapter extends BaseAdapter implements View.OnClickListener
                 mSongList.addAll(dataManager.getPersonalAlbumSong(name));
                 break;
         }
+    }
 
-
-
-
+    public ShowListAdapter(Context context,List<Song> songList){
+        mContext=context;
+        //isShowCheckBox=isSelectedAll;
+        if(!mSongList.isEmpty()){
+            mSongList.clear();
+        }
+        Name=null;
+        mSongList.addAll(songList);
     }
 
 
@@ -97,7 +105,7 @@ public class ShowListAdapter extends BaseAdapter implements View.OnClickListener
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        if (!isTitle&&mSongList!=null&&AppConstant.getInstance().getPlayingSong()!=null){
+        if (!isTitle&&mSongList!=null&&AppConstant.getInstance().getPlayingSong()!=null&&Name!=null){
             if(AppConstant.getInstance().getPlayingSong().Equals(mSongList.get(position))){
                 holder.mTitle.setTextColor(mContext.getResources().getColor(R.color.blue));
                 holder.mTitle.setSelected(true);
@@ -114,6 +122,10 @@ public class ShowListAdapter extends BaseAdapter implements View.OnClickListener
         }else {
             holder.mTitle.setText(albumName.get(position));
         }
+        if(Name==null){
+            holder.delete.setVisibility(View.INVISIBLE);
+        }
+
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,40 +135,47 @@ public class ShowListAdapter extends BaseAdapter implements View.OnClickListener
                 }else {
                     string="确认要删除“"+mSongList.get(position).getTitle()+"”歌曲吗？";
                 }
-                CustomDialog customDialog=new CustomDialog(mContext,R.style.CustomDialog);
-                customDialog.setType(0).setTitle("删 除").setContent(string).setCancel(new CustomDialog.InOnCancelListener() {
-                    @Override
-                    public void onCancel(CustomDialog customDialog) {
-                        customDialog.dismiss();
-                    }
-                }).setConfirm(new CustomDialog.InOnConfirmListener() {
-                    @Override
-                    public void onConfirm(CustomDialog customDialog) {
-                        if(isTitle){
-                            String name=albumName.get(position);
-                            DataManager manager=new DataManager(mContext);
-                            DBHelper helper= Model.getInstance().getDBManager().getHelper();
-                            helper.deleteTable(name);
-                            if(!helper.tableIsExist(name)){
-                                Toast.makeText(mContext, "删除成功", Toast.LENGTH_LONG).show();
-                                AppConstant.getInstance().removeSong(position,Name);
-                                albumName.remove(position);
-                            }else {
-                                Toast.makeText(mContext, "删除失败", Toast.LENGTH_LONG).show();
-                            }
-                        }else{
-                            Song song=mSongList.get(position);
-                            if(AppConstant.getInstance().removeSong(position,Name)){
-                                Toast.makeText(mContext, "删除成功", Toast.LENGTH_LONG).show();
-                                mSongList.remove(position);
-                            }else {
-                                Toast.makeText(mContext, "删除失败", Toast.LENGTH_LONG).show();
-                            }
+                if(Name!=AppConstant.DataType.RECENT_SEARCH){
+                    CustomDialog customDialog=new CustomDialog(mContext,R.style.CustomDialog);
+                    customDialog.setType(0).setTitle("删 除").setContent(string).setCancel(new CustomDialog.InOnCancelListener() {
+                        @Override
+                        public void onCancel(CustomDialog customDialog) {
+                            customDialog.dismiss();
                         }
-                        notifyDataSetChanged();
-                        customDialog.dismiss();
-                    }
-                }).show();
+                    }).setConfirm(new CustomDialog.InOnConfirmListener() {
+                        @Override
+                        public void onConfirm(CustomDialog customDialog) {
+                            if(isTitle){
+                                String name=albumName.get(position);
+                                DataManager manager=new DataManager(mContext);
+                                DBHelper helper= Model.getInstance().getDBManager().getHelper();
+                                helper.deleteTable(name);
+                                if(!helper.tableIsExist(name)){
+                                    Toast.makeText(mContext, "删除成功", Toast.LENGTH_LONG).show();
+                                    AppConstant.getInstance().removeSong(position,Name);
+                                    albumName.remove(position);
+                                }else {
+                                    Toast.makeText(mContext, "删除失败", Toast.LENGTH_LONG).show();
+                                }
+                            }else{
+                                Song song=mSongList.get(position);
+                                if(AppConstant.getInstance().removeSong(position,Name)){
+                                    Toast.makeText(mContext, "删除成功", Toast.LENGTH_LONG).show();
+                                    mSongList.remove(position);
+                                }else {
+                                    Toast.makeText(mContext, "删除失败", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                            notifyDataSetChanged();
+                            customDialog.dismiss();
+                        }
+                    }).show();
+                }else {
+                    AppConstant.getInstance().removeSong(position,Name);
+                    mSongList.remove(position);
+                    notifyDataSetChanged();
+                }
+
             }
         });
         return convertView;

@@ -161,6 +161,8 @@ public class PersonalListFragment extends Fragment  {
         personal_love.setMoreListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                personal_love.setVisible(!personal_love.getVisible());
+                personal_love.setNumVisible(true);
                 Intent intent =new Intent(getActivity(), AddListActivity.class);
                 intent.putExtra("ADD_TYPE",AppConstant.DataType.PERSONAL_COLLECT); // 传字符串, 更多传值方法
                 startActivity(intent);
@@ -196,6 +198,8 @@ public class PersonalListFragment extends Fragment  {
         personal_songList.setMoreListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                personal_songList.setVisible(!personal_songList.getVisible());
+                personal_songList.setNumVisible(true);
                 CustomDialog customDialog;
                 customDialog = new CustomDialog(getActivity(),R.style.CustomDialog);
                 customDialog.setType(1).setTitle("新 建 歌 单").setCancel(new CustomDialog.InOnCancelListener() {
@@ -325,7 +329,19 @@ public class PersonalListFragment extends Fragment  {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        Log.e("刷新","personalListFragment");
+        if(!isVisibleToUser){
+            if(personal_love!=null){
+                personal_love.setVisible(false);
+                set_recent.setVisible(false);
+                personal_songList.setNumVisible(true);
+                personal_songList.setVisible(false);
+                personal_love.setNumVisible(true);
+                Log.e("刷新","personalListFragment");
+            }
+
+        }
+
+
     }
 
 

@@ -6,6 +6,7 @@ import com.example.music_app.mould.Model.Model;
 import com.example.music_app.mould.Model.bean.Song;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class AppConstant {
@@ -23,7 +24,7 @@ public class AppConstant {
 
 
     private List<Song> RecentSongList=new ArrayList<>();
-    private List<Song> RecentSearch=new ArrayList<>();
+    private List<Song> RecentSearchList=new ArrayList<>();
     private List<Song> PersonCollectSongList=new ArrayList<>();
     private List<String> PersonalSongAlbum=new ArrayList<>();
     private List<Song> CurrentSongList=new ArrayList<>();
@@ -41,6 +42,13 @@ public class AppConstant {
         CurrentSongList =currentSongList;
         currentListName=name;
     }
+
+    public void setCurrentSongList(Song song) {
+        CurrentSongList.clear();
+        CurrentSongList.add(song);
+        currentListName=DataType.RECENT_SEARCH;
+    }
+
     public void setLocalSongList(List<Song> localSongList) {
         LocalSongList = localSongList;
     }
@@ -134,10 +142,15 @@ public class AppConstant {
                 CurrentSongList.remove(position);
                 return true;
             case DataType.LOCAL_MUSIC://本地歌曲
+                Song song=LocalSongList.get(position);
                 LocalSongList.remove(position);
                 if(name.equals(currentListName)){
                     CurrentSongList.remove(position);
                 }
+                RecentSongList.remove(song);
+                PersonCollectSongList.remove(song);
+                RecentUpdateSQL.add(DataType.RECENT_SEARCH);
+                RecentUpdateSQL.add(DataType.PERSONAL_COLLECT);
                 RecentUpdateSQL.add(DataType.LOCAL_MUSIC);
                 return true;
             case DataType.PERSONAL_ALBUM_NAME://个人歌单名
@@ -157,7 +170,7 @@ public class AppConstant {
                 return true;
 
             case DataType.RECENT_SEARCH://最近播放
-                RecentSearch.remove(position);
+                RecentSearchList.remove(position);
                 if(name.equals(currentListName)){
                     CurrentSongList.remove(position);
                 }
@@ -235,6 +248,25 @@ public class AppConstant {
     }
     public static AppConstant getInstance() {
         return mAppConstant;
+    }
+
+    public void addLocalSongList(List<Song> checkedData) {
+        if(checkedData!=null){
+            LocalSongList.addAll(checkedData);
+            RecentUpdateSQL.add(DataType.LOCAL_MUSIC);
+        }
+    }
+
+    public List<Song> getRecentSearchList() {
+        return  RecentSearchList;
+
+    }
+
+    public void addRecentSearchList(Song song){
+        if(!isExist(song,RecentSearchList)){
+            RecentSearchList.add(song);
+            addRecentUpdataSQL(DataType.RECENT_SEARCH);
+        }
     }
 
 

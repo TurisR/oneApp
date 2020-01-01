@@ -24,13 +24,10 @@ public class LocalMusicListAdapter extends BaseAdapter {
     private Context context;
     private List<Song> list;
     private AlertDialog alertDialog1; //信息框
-
-
     public LocalMusicListAdapter(Context context, List<Song> list) {
         this.context = context;
         this.list = list;
     }
-
     @Override
     public int getCount() {
         return list.size();
@@ -111,7 +108,6 @@ public class LocalMusicListAdapter extends BaseAdapter {
             public void onClick(DialogInterface dialogInterface, int i) {
                 switch (i){
                     case 0:
-
                         if(bl){
                             AppConstant.getInstance().removeSong(position,AppConstant.DataType.PERSONAL_COLLECT);
                             Toast.makeText(context, "取消收藏", Toast.LENGTH_LONG).show();
@@ -131,13 +127,14 @@ public class LocalMusicListAdapter extends BaseAdapter {
                         }).setConfirm(new CustomDialog.InOnConfirmListener() {
                             @Override
                             public void onConfirm(CustomDialog customDialog) {
-                                customDialog.dismiss();
                                if(AppConstant.getInstance().removeSong(position,AppConstant.DataType.LOCAL_MUSIC)) {
+                                   list.remove(position);
                                    notifyDataSetChanged();
                                    Toast.makeText(context, "删除成功", Toast.LENGTH_LONG).show();
                                }else {
                                    Toast.makeText(context, "删除失败", Toast.LENGTH_LONG).show();
                                }
+                                customDialog.dismiss();
 
                             }
                         }).show();

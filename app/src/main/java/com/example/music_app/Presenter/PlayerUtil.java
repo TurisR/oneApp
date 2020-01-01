@@ -22,6 +22,7 @@ public class PlayerUtil {
         mContext.startService(intent);
         Log.e("play",song.getTitle());
         AppConstant.getInstance().setPlayingState(AppConstant.PlayerMsg.PLAY_MSG);
+        AppConstant.getInstance().setPlayingSong(song);
     }
     public void pause(){
         intent.putExtra("MSG", AppConstant.PlayerMsg.PAUSE_MSG);//停止播放
