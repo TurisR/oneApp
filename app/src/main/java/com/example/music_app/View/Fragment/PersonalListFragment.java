@@ -333,6 +333,7 @@ public class PersonalListFragment extends Fragment  {
             if(personal_love!=null){
                 personal_love.setVisible(false);
                 set_recent.setVisible(false);
+                set_recent.setNumVisible(false);
                 personal_songList.setNumVisible(true);
                 personal_songList.setVisible(false);
                 personal_love.setNumVisible(true);

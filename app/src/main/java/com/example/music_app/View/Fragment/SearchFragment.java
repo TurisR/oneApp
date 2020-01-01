@@ -1,5 +1,7 @@
 package com.example.music_app.View.Fragment;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -39,6 +42,7 @@ public class SearchFragment extends Fragment {
     private List<Song> mSongList;
     private int mIntIndex;
     private LinearLayout search_layout;
+    private InputMethodManager mImm;
 
     @Nullable
     @Override
@@ -65,6 +69,7 @@ public class SearchFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initEvent();
+        mImm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     private void initEvent() {
@@ -94,6 +99,9 @@ public class SearchFragment extends Fragment {
                         search_history_layout.setVisibility(View.VISIBLE);
                         historyAdpter=new ShowListAdapter(getActivity(), AppConstant.DataType.RECENT_SEARCH);
                         search_history_list.setAdapter(historyAdpter);
+                    }
+                    if (null !=  mImm && view != null) {
+                        mImm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                     }
                 }
                 });
@@ -129,6 +137,7 @@ public class SearchFragment extends Fragment {
                 AppConstant.getInstance().getPlayerUtil(getActivity()).play(searchResult.get(position));
                 AppConstant.getInstance().addRecentSearchList(searchResult.get(position));
                 edit_text.setText("");
+
                 search_result_list.setVisibility(View.GONE);
                 search_history_layout.setVisibility(View.VISIBLE);
                 historyAdpter=new ShowListAdapter(getActivity(), AppConstant.DataType.RECENT_SEARCH);
@@ -139,22 +148,29 @@ public class SearchFragment extends Fragment {
     }
 
 
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
 
-        if(!isVisibleToUser){
-            if(search_layout!=null){
+
+        if (!isVisibleToUser) {
+
+            if (search_layout != null) {
+                if (null !=  mImm && view != null) {
+                     mImm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+
                 search_layout.requestFocus();
                 edit_text.setText("");
                 search_result_list.setVisibility(View.GONE);
                 search_history_layout.setVisibility(View.VISIBLE);
-                historyAdpter=new ShowListAdapter(getActivity(), AppConstant.DataType.RECENT_SEARCH);
+                historyAdpter = new ShowListAdapter(getActivity(), AppConstant.DataType.RECENT_SEARCH);
                 search_history_list.setAdapter(historyAdpter);
-                Log.e("刷新","searchFragment");
+                Log.e("刷新", "searchFragment");
             }
         }
 
-
     }
+
 }
