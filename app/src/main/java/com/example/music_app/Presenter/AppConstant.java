@@ -5,9 +5,12 @@ import android.content.Context;
 import com.example.music_app.mould.Model.Model;
 import com.example.music_app.mould.Model.bean.Song;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AppConstant {
 
@@ -21,15 +24,23 @@ public class AppConstant {
     private static AppConstant mAppConstant=new AppConstant();
 
     private String currentListName;
+    //private DataManageUtil mDataManageUtil=new DataManageUtil()
 
 
     private List<Song> RecentSongList=new ArrayList<>();
     private List<Song> RecentSearchList=new ArrayList<>();
     private List<Song> PersonCollectSongList=new ArrayList<>();
+
     private List<String> PersonalSongAlbum=new ArrayList<>();
     private List<Song> CurrentSongList=new ArrayList<>();
     private List<Song> LocalSongList=new ArrayList<>();
     private List<String> RecentUpdateSQL=new ArrayList<>();//最近更新SQL的表
+
+
+    Map<String,List<Integer>> map=new HashMap<String,List<Integer>>();
+    List<String>  ListName=new ArrayList<>();
+    List<Integer> songNumber=new ArrayList<>();
+
 
 
     public void setRecentSongList(List<Song> recentSongList) {
@@ -79,7 +90,6 @@ public class AppConstant {
     public List<String> getPersonalAlbumName() {
         return PersonalSongAlbum;
     }
-
     public List<String> getRecentUpdateSQL() {
         return RecentUpdateSQL;
     }
@@ -116,6 +126,12 @@ public class AppConstant {
         }
         return false;
     }
+
+
+
+
+
+
     public void addPersonCollectSong(Song song) {
         if(!isExist(song, PersonCollectSongList)){
             PersonCollectSongList.add(song);
@@ -136,7 +152,6 @@ public class AppConstant {
         if(name==null){
             return false;
         }
-
         switch (name){
             case DataType.CURRENT_MUSIC://当前音乐
                 CurrentSongList.remove(position);

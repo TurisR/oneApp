@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         filter.addAction(AppConstant.MessageType.UPDATE_ACTION);
         filter.addAction(AppConstant.MessageType.MUSIC_STATE);
         filter.addAction(AppConstant.MessageType.MUSIC_DURATION);
+        filter.addAction(AppConstant.MessageType.MUSIC_NEXT);
         // 注册BroadcastReceiver
         registerReceiver(homeReceiver, filter);
 
@@ -152,13 +153,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.iv_play_bar_play:
                 if(AppConstant.getInstance().getPlayingState()==AppConstant.PlayerMsg.PAUSE_MSG){
-                  v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_play));
+
                   mPlayerUtil.resume();
-                  tv_play_bar_title.setSelected(true);
                 }else{
-                   v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_pause));
                     mPlayerUtil.pause();
-                   tv_play_bar_title.setSelected(false);
                 }
                 break;
             case R.id.v_play_bar_playlist:
@@ -167,23 +165,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
                 break;
-
-
             case R.id.iv_play_bar_cover:
                 startActivity(new Intent(MainActivity.this, PlayViewActivity.class));
                 break;
         }
-
     }
-
     private void UpdateUI() {//更新UI
         song=AppConstant.getInstance().getPlayingSong();
         if(song!=null){
             tv_play_bar_title.setText(song.getTitle());
             tv_play_bar_artist.setText(song.getSinger());
         }
-
-
 
         if(AppConstant.getInstance().getPlayingState()==AppConstant.PlayerMsg.PAUSE_MSG){
             v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_pause));
@@ -193,14 +185,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             tv_play_bar_title.setSelected(true);
         }
     }
-
-
-    public void playMusic(int pos,Song song) {
-        mPlayerUtil.play(song);
-        v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_play));
-        Log.e("sss 11",pos+"");
-    }
-
     @Override
     protected void onRestart() {
         super.onRestart();
@@ -210,11 +194,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        //Log.e("resume","1");
          requestAllPower();
-        //dataManager.initData();
-       // UpdateUI();
-        //Toast.makeText(this,"数据更新1",Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -237,24 +217,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     break;
                 case AppConstant.MessageType.MUSIC_DURATION://音乐时长，并入song
                     duration = intent.getIntExtra("duration", -1);
-                    Log.e("duration","0"+duration);
+                    Log.e("MUSIC_DURATION","0"+duration);
                     break;
                 case AppConstant.MessageType.MUSIC_STATE:
-                    System.out.println("———MUSIC_STATE———");
                     int state = intent.getIntExtra("state", AppConstant.PlayerMsg.PAUSE_MSG);
                     AppConstant.getInstance().setPlayingState(state);
-                    Log.e("state","00000"+state);
+                    Log.e("MUSIC_STATE",""+state);
                     UpdateUI();
                     break;
 
                 case AppConstant.MessageType.UPDATE_ACTION://更新操作换歌
-                    System.out.println("———接受到更新广播———");
+                    Log.e("UPDATE_ACTION","接受到更新广播");
                     song=(Song) intent.getSerializableExtra("PlayingSong");
                     AppConstant.getInstance().setPlayingSong(song);
                     AppConstant.getInstance().addRecentSongList(song);
-                    Log.e("time","  "+AppConstant.getInstance().getRecentSongList().size()+" "+song.getTitle());
                     UpdateUI();
                     break;
+
+                case AppConstant.MessageType.MUSIC_NEXT:
+                    mPlayerUtil.next();
+                    Log.e("MUSIC_NEXT","next");
+                    break;
+
             }
 
         }
@@ -281,8 +265,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -299,21 +281,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
     /**
      *  初始化拖动条
      */
     private void initSeekBar() {
-
-
-
         //设置拖动监听
         audioSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+                 if (duration==progress){
+                     mPlayerUtil.next();
+                 }
             }
-
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
                 isPressSeekBar = true;      //当拖动进度条时，进度条停止自动更新

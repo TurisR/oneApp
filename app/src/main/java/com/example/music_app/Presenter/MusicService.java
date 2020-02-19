@@ -99,21 +99,10 @@ public class MusicService extends Service {
             mMediaPlayer.release();
             mMediaPlayer = null;
         }
-        //mSongList=Model.getInstance().getDBMananger().getSongDao().getSonglist();
 
         mMediaPlayer = new MediaPlayer();
-        /**设置音乐播放完成时的监听器
-         * */
 
 
-       mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-               // next_mode_play(isNext);
-                handler.sendEmptyMessage(5);
-            }
-        });
     }
 
 
@@ -131,7 +120,6 @@ public class MusicService extends Service {
             case AppConstant.PlayerMsg.PLAY_MSG:
                // position = intent.getIntExtra("listPosition", -1);	//当前播放歌曲的位置
                 NowSong= (Song) intent.getSerializableExtra("Song");
-                Log.e("play222",NowSong.getTitle());
                 play(0, NowSong);
                 break;
             case AppConstant.PlayerMsg.PAUSE_MSG:
@@ -139,14 +127,6 @@ public class MusicService extends Service {
                 break;
             case AppConstant.PlayerMsg.CONTINUE_MSG:
                 resume();
-                break;
-            case AppConstant.PlayerMsg.NEXT_MSG:
-                NowSong= (Song) intent.getSerializableExtra("NextSong");
-                play(0, NowSong);
-                break;
-            case AppConstant.PlayerMsg.PREVIOUS_MSG:
-                NowSong= (Song) intent.getSerializableExtra("PreviousSong");
-                play(0, NowSong);
                 break;
 
             case AppConstant.PlayerMsg.CHANGE_PRG :
@@ -157,7 +137,14 @@ public class MusicService extends Service {
                     //play(0, NowSong);
                 break;
         }
-        //mSongList=AppConstant.getInstance().getCurrrentSongList();
+        /**设置音乐播放完成时的监听器
+         */
+        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                handler.sendEmptyMessage(5);
+            }
+        });
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -184,7 +171,7 @@ public class MusicService extends Service {
     }
 
     /**
-     * 暂停音乐
+     * 暂停播放音乐
      */
     private void pause() {
         if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
@@ -194,6 +181,9 @@ public class MusicService extends Service {
         }
     }
 
+    /**
+     * 继续播放音乐
+     */
     private void resume() {
         if (isPause) {
             mMediaPlayer.start();

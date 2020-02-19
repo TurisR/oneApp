@@ -38,8 +38,6 @@ public class SwitchSong {
                     }
                 }
                 mSong=mSongList.get(position);
-
-                //  play(0);
                 break;
             case 2://循序播放
                 if(bl){
@@ -60,7 +58,6 @@ public class SwitchSong {
             case 3://随机播放
                 position = getRandomIndex(size - 1);
                 mSong=mSongList.get(position);
-                //  play(0);
                 break;
 
         }

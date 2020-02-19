@@ -20,9 +20,7 @@ public class PlayerUtil {
         intent.putExtra("Song", song);
         intent.putExtra("MSG", AppConstant.PlayerMsg.PLAY_MSG);//播放
         mContext.startService(intent);
-        Log.e("play",song.getTitle());
-        AppConstant.getInstance().setPlayingState(AppConstant.PlayerMsg.PLAY_MSG);
-        AppConstant.getInstance().setPlayingSong(song);
+        Log.e("play_music",song.getTitle());
     }
     public void pause(){
         intent.putExtra("MSG", AppConstant.PlayerMsg.PAUSE_MSG);//停止播放
@@ -37,17 +35,11 @@ public class PlayerUtil {
 
     public void next(){
         Song song=AppConstant.getInstance().getSwitchSong().getNextSong(true);
-        intent.putExtra("MSG", AppConstant.PlayerMsg.NEXT_MSG);//下一曲
-        intent.putExtra("NextSong", song);
-        //AppConstant.getInstance().setPlayingState(AppConstant.PlayerMsg.PLAY_MSG);
-        mContext.startService(intent);
+        play(song);
     }
     public void previous(){
         Song song=AppConstant.getInstance().getSwitchSong().getNextSong(false);
-        intent.putExtra("MSG", AppConstant.PlayerMsg.PREVIOUS_MSG);//下一曲
-        intent.putExtra("PreviousSong", song);
-       // AppConstant.getInstance().setPlayingState(AppConstant.PlayerMsg.PLAY_MSG);
-        mContext.startService(intent);
+        play(song);
     }
     public void setMode(int mode){
         AppConstant.getInstance().setMode(mode);

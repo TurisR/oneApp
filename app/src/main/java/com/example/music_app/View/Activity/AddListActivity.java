@@ -85,17 +85,17 @@ public class AddListActivity extends Activity implements View.OnClickListener{
 
             case AppConstant.DataType.PERSONAL_COLLECT:
                 album_create.setVisibility(View.INVISIBLE);
-                AppConstant appConstant=AppConstant.getInstance();
-                if(appConstant.getPersonCollectSongList()!=null&&appConstant.getPersonCollectSongList().size()>0){
-                    for (Song song:appConstant.getLocalSongList()){
-                        if(!appConstant.isExist(song,appConstant.getPersonCollectSongList())){
-                            mSongList.add(song);
-                        }
-                    }
-                }else {
-                    mSongList.addAll(AppConstant.getInstance().getLocalSongList());
-                }
-                //mSongList.addAll(AppConstant.getInstance().getLocalSongList());
+//                AppConstant appConstant=AppConstant.getInstance();
+//                if(appConstant.getPersonCollectSongList()!=null&&appConstant.getPersonCollectSongList().size()>0){
+//                    for (Song song:appConstant.getLocalSongList()){
+//                        if(!appConstant.isExist(song,appConstant.getPersonCollectSongList())){
+//                            mSongList.add(song);
+//                        }
+//                    }
+//                }else {
+//                    mSongList.addAll(AppConstant.getInstance().getLocalSongList());
+//                }
+                mSongList.addAll(AppConstant.getInstance().getLocalSongList());
                 break;
 
             default:
@@ -195,8 +195,6 @@ public class AddListActivity extends Activity implements View.OnClickListener{
             overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
         }
         finish();
-
-
     }
 
 

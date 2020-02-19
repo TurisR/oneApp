@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.music_app.Presenter.AppConstant;
+import com.example.music_app.Presenter.Data;
 import com.example.music_app.R;
 import com.example.music_app.View.Activity.MainActivity;
 import com.example.music_app.View.Adapter.LocalMusicListAdapter;
@@ -100,15 +101,16 @@ public class LocalMusicListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 View mView=view.findViewById(R.id.v_playing);
                 AppConstant.getInstance().setCurrentSongList(AppConstant.getInstance().getLocalSongList(),AppConstant.DataType.LOCAL_MUSIC);
+                Data mData=new Data(getActivity());
+               // mData.addListAll(AppConstant.DataType.CURRENT_MUSIC,AppConstant.DataType.LOCAL_MUSIC);
                 adapter.notifyDataSetChanged();
-            //    Toast.makeText(getActivity(),"播放"+AppConstant.getInstance().getCurrentSongList().get(position).getTitle(),Toast.LENGTH_LONG).show();
+            //  Toast.makeText(getActivity(),"播放"+AppConstant.getInstance().getCurrentSongList().get(position).getTitle(),Toast.LENGTH_LONG).show();
                 AppConstant.getInstance().getPlayerUtil(getActivity()).play(AppConstant.getInstance().getCurrentSongList().get(position));
 
             }
 
         });
         //adapter.notifyDataSetChanged();
-
     }
 
     private void initView(View v) {
@@ -129,7 +131,6 @@ public class LocalMusicListFragment extends Fragment {
             switch (intent.getAction()){
                 case AppConstant.MessageType.UPDATE_ACTION:
                     ListView.setAdapter(adapter);
-                  //  Toast.makeText(getActivity(),"this",Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -138,7 +139,6 @@ public class LocalMusicListFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        //broadcastManager.unregisterReceiver(mAdDownLoadReceiver);
         getActivity().unregisterReceiver(mAdDownLoadReceiver);
     }
 

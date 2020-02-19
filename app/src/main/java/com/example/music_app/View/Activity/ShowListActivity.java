@@ -132,7 +132,7 @@ public class ShowListActivity extends Activity implements View.OnClickListener{
             case R.id.text_none_song:
               //  Toast.makeText(this,"点击添加",Toast.LENGTH_LONG).show();
                 Intent intent =new Intent(this, AddListActivity.class);
-                intent.putExtra("ADD_TYPE",AppConstant.DataType.CURRENT_MUSIC); // 传字符串, 更多传值方法
+                intent.putExtra("ADD_TYPE",mMusicType); // 传字符串, 更多传值方法
                 startActivity(intent);
                 overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
                 finish();

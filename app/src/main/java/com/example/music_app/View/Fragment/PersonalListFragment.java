@@ -339,10 +339,7 @@ public class PersonalListFragment extends Fragment  {
                 personal_love.setNumVisible(true);
                 Log.e("刷新","personalListFragment");
             }
-
         }
-
-
     }
 
 
