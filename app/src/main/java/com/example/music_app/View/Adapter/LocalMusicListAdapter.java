@@ -99,7 +99,7 @@ public class LocalMusicListAdapter extends BaseAdapter {
         final String[] items = {"收藏", "删除", "加到歌单", "添加到播放列表"};
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
         alertBuilder.setTitle(list.get(position).getTitle());
-        final boolean bl=AppConstant.getInstance().isExist(list.get(position),AppConstant.getInstance().getPersonCollectSongList());
+        final boolean bl=AppConstant.getInstance().isExist(AppConstant.DataType.PERSONAL_COLLECT,list.get(position));
         if(bl){
             items[0]="取消收藏";
         }
@@ -109,35 +109,35 @@ public class LocalMusicListAdapter extends BaseAdapter {
                 switch (i){
                     case 0:
                         if(bl){
-                            AppConstant.getInstance().removeSong(position,AppConstant.DataType.PERSONAL_COLLECT);
+                            AppConstant.getInstance().removeListSongByIndex(AppConstant.DataType.PERSONAL_COLLECT,position);
                             Toast.makeText(context, "取消收藏", Toast.LENGTH_LONG).show();
                         }else {
-                            AppConstant.getInstance().addPersonCollectSong(list.get(position));
+                            AppConstant.getInstance().addListSongByIndex(AppConstant.DataType.PERSONAL_COLLECT,position);
                             Toast.makeText(context, "收藏成功", Toast.LENGTH_LONG).show();
                         }
-
                         break;
                     case 1:
-                        CustomDialog customDialog=new CustomDialog(context,R.style.CustomDialog);
-                        customDialog.setType(0).setTitle("删 除").setContent("确认要删除“"+list.get(position).getTitle()+"”歌曲吗？").setCancel(new CustomDialog.InOnCancelListener() {
-                            @Override
-                            public void onCancel(CustomDialog customDialog) {
-                               customDialog.dismiss();
-                            }
-                        }).setConfirm(new CustomDialog.InOnConfirmListener() {
-                            @Override
-                            public void onConfirm(CustomDialog customDialog) {
-                               if(AppConstant.getInstance().removeSong(position,AppConstant.DataType.LOCAL_MUSIC)) {
-                                   list.remove(position);
-                                   notifyDataSetChanged();
-                                   Toast.makeText(context, "删除成功", Toast.LENGTH_LONG).show();
-                               }else {
-                                   Toast.makeText(context, "删除失败", Toast.LENGTH_LONG).show();
-                               }
-                                customDialog.dismiss();
+                        if(AppConstant.getInstance().getPlayingSong().Equals(list.get(position))){
+                            Toast.makeText(context, "歌曲正在播放中 暂时不能删除", Toast.LENGTH_LONG).show();
+                        }else {
+                            CustomDialog customDialog=new CustomDialog(context,R.style.CustomDialog);
+                            customDialog.setType(0).setTitle("删 除").setContent("确认要删除“"+list.get(position).getTitle()+"”歌曲吗？").setCancel(new CustomDialog.InOnCancelListener() {
+                                @Override
+                                public void onCancel(CustomDialog customDialog) {
+                                    customDialog.dismiss();
+                                }
+                            }).setConfirm(new CustomDialog.InOnConfirmListener() {
+                                @Override
+                                public void onConfirm(CustomDialog customDialog) {
+                                    AppConstant.getInstance().removeLocalList(position);
+                                    list.remove(position);
+                                    notifyDataSetChanged();
+                                    Toast.makeText(context, "删除成功", Toast.LENGTH_LONG).show();
+                                    customDialog.dismiss();
+                                }
+                            }).show();
+                        }
 
-                            }
-                        }).show();
                         break;
                     case 2:
                         Intent intent =new Intent(context, AddListActivity.class);
@@ -154,11 +154,6 @@ public class LocalMusicListAdapter extends BaseAdapter {
                         }
                         break;
                 }
-
-
-
-               // Toast.makeText(context, items[i], Toast.LENGTH_SHORT).show();
-                //alertDialog1.dismiss();
             }
         });
         alertDialog1 = alertBuilder.create();

@@ -1,29 +1,22 @@
 package com.example.music_app.View.Fragment;
 
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.music_app.Presenter.AppConstant;
-import com.example.music_app.Presenter.Data;
 import com.example.music_app.R;
-import com.example.music_app.View.Activity.MainActivity;
 import com.example.music_app.View.Adapter.LocalMusicListAdapter;
-import com.example.music_app.mould.Model.Model;
 import com.example.music_app.mould.Model.bean.Song;
 
 import java.util.ArrayList;
@@ -100,17 +93,13 @@ public class LocalMusicListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 View mView=view.findViewById(R.id.v_playing);
-                AppConstant.getInstance().setCurrentSongList(AppConstant.getInstance().getLocalSongList(),AppConstant.DataType.LOCAL_MUSIC);
-                Data mData=new Data(getActivity());
-               // mData.addListAll(AppConstant.DataType.CURRENT_MUSIC,AppConstant.DataType.LOCAL_MUSIC);
+                AppConstant.getInstance().setCurrentSongList(AppConstant.getInstance().getLocalSongList());
                 adapter.notifyDataSetChanged();
-            //  Toast.makeText(getActivity(),"播放"+AppConstant.getInstance().getCurrentSongList().get(position).getTitle(),Toast.LENGTH_LONG).show();
                 AppConstant.getInstance().getPlayerUtil(getActivity()).play(AppConstant.getInstance().getCurrentSongList().get(position));
 
             }
 
         });
-        //adapter.notifyDataSetChanged();
     }
 
     private void initView(View v) {

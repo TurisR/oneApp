@@ -3,7 +3,7 @@
 
     <!-- 上下滑入式 -->
         <translate
-            android:duration="200"
+            android:duration="400"
             android:fromYDelta="100%"
             android:toYDelta="0"
             />

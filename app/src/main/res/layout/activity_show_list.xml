@@ -53,25 +53,40 @@
                 android:textColor="@color/grey"
                 android:textSize="14sp" />
             <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal"
+                android:layout_centerInParent="true"
+                android:layout_alignParentRight="true"
+                android:id="@+id/add_more"
+                android:layout_alignBottom="@id/music_type"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:layout_marginRight="5dp"
+                    android:textSize="14sp"
+                    android:text="添加"/>
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/add_icon"/>
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
                 android:id="@+id/set_mode_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="invisible"
-                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
                 android:gravity="center"
-                android:layout_marginRight="15dp"
+                android:layout_toLeftOf="@id/add_more"
                 android:orientation="horizontal">
-
-                <View
-                    android:id="@+id/v_playing"
-                    android:layout_width="3dp"
-                    android:layout_height="15dp"
-                    android:layout_margin="5dp"
-                    android:layout_gravity="center"
-                    android:background="@color/grey"
-                    android:contentDescription="@null" />
 
                 <TextView
                     android:id="@+id/mode_music"
@@ -79,7 +94,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
                     android:layout_gravity="center"
-                    android:text="循序播放"
+                    android:text="循序"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
@@ -89,13 +104,21 @@
                     android:layout_gravity="center"
                     android:layout_height="20dp"
                     android:src="@drawable/order" />
+                <View
+                    android:id="@+id/v_playing"
+                    android:layout_width="3dp"
+                    android:layout_height="15dp"
+                    android:layout_margin="5dp"
+                    android:layout_gravity="center"
+                    android:background="@color/grey"
+                    android:contentDescription="@null" />
 
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_below="@+id/set_mode_layout"
+                android:layout_below="@+id/music_type"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="10dp"

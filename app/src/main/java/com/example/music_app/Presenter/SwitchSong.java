@@ -13,9 +13,9 @@ public class SwitchSong {
     private int size;
 
     public SwitchSong() {
-        position=AppConstant.getInstance().getPosition();
         mSongList=AppConstant.getInstance().getCurrentSongList();
         mSong=AppConstant.getInstance().getPlayingSong();
+        position=AppConstant.getInstance().getPosition(mSong);
         mode=AppConstant.getInstance().getMode();
         size=mSongList.size();
     }
@@ -59,7 +59,6 @@ public class SwitchSong {
                 position = getRandomIndex(size - 1);
                 mSong=mSongList.get(position);
                 break;
-
         }
         return mSong;
     }
@@ -68,5 +67,4 @@ public class SwitchSong {
         int index = (int) (Math.random() * end);
         return index;
     }
-
 }

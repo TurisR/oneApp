@@ -1,120 +1,70 @@
 package com.example.music_app.Presenter;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.music_app.mould.Model.Model;
 import com.example.music_app.mould.Model.SQLite.DBHelper;
 import com.example.music_app.mould.Model.bean.Song;
+import com.google.gson.Gson;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DataManager {
 
-    private Boolean mABoolean;
-    private Context mContext;
-    private DBHelper helper;
+    private DataManageUtil mDataManageUtil;
 
     public DataManager(Context context) {
-        mContext=context;
-        helper=Model.getInstance().getDBManager().getHelper();
-    }
-
-
-
-    public void invoke(String name) {
-
-        mABoolean = helper.tableIsExist(name);
-        switch (name){
-            case AppConstant.DataType.LOCAL_MUSIC:
-                if(mABoolean){
-                    AppConstant.getInstance().setLocalSongList(Model.getInstance().getDBManager().getSongDao("本地歌曲").getSonglist());
-                }
-                break;
-
-            case  AppConstant.DataType.PERSONAL_COLLECT:
-                if(mABoolean){
-                    AppConstant.getInstance().setPersonCollectSongList(Model.getInstance().getDBManager().getSongDao("个人收藏").getSonglist());
-                }
-                break;
-            case  AppConstant.DataType.RECENT_MUSIC:
-                if(mABoolean){
-                    AppConstant.getInstance().setRecentSongList(Model.getInstance().getDBManager().getSongDao("最近播放").getSonglist());
-                }
-                break;
-        }
+        mDataManageUtil = new DataManageUtil(context);
     }
 
     public void initData(){
-        invoke(AppConstant.DataType.LOCAL_MUSIC);
-        invoke(AppConstant.DataType.PERSONAL_COLLECT);
-        invoke(AppConstant.DataType.RECENT_MUSIC);
+        Map<String,List<Integer>> mapNumber=new HashMap<String,List<Integer>>();
+        List<String> ListName=mDataManageUtil.getData("listName");
 
-        if(helper.getAllTableName()!=null){
-            AppConstant.getInstance().setPersonalSongAlbum(helper.getAllTableName());
+        AppConstant.getInstance().setMode(mDataManageUtil.getMode());
+        AppConstant.getInstance().setLocalSongList(Model.getInstance().getDBManager().getSongDao("本地歌曲").getSonglist());
+        AppConstant.getInstance().setListName(ListName);
+        if(ListName.isEmpty()){
+            Log.e("1","one");
+            return;
         }
+        Gson gson=new Gson();
+        AppConstant appConstant=AppConstant.getInstance();
+        for(String name:ListName){
+            List<Integer> songNumber=mDataManageUtil.getDataNumber(name);
+            mapNumber.put(name,songNumber);
+            String str=gson.toJson(mapNumber.get(name));
+            Log.e(name," "+str);
+            //songNumber.clear();
+        }
+        AppConstant.getInstance().setMapNumber(mapNumber);
+        for(String name:ListName){
+            String str=gson.toJson(mapNumber.get(name));
+            Log.e("2"+name, " "+str);
+        }
+       //
     }
 
-    public void upDate(){
-        for(String name:AppConstant.getInstance().getRecentUpdateSQL()){
-            upDateSQL(name);
-        }
-    }
-
-    private void upDateSQL(String name) {
-        mABoolean = helper.tableIsExist(name);
-        switch (name){
-            case AppConstant.DataType.LOCAL_MUSIC:
-                if(mABoolean){
-                    Model.getInstance().getDBManager().getSongDao("本地歌曲").updateSongList(AppConstant.getInstance().getLocalSongList());
-                }
-                break;
-
-            case  AppConstant.DataType.PERSONAL_COLLECT:
-                if(mABoolean){
-                    Model.getInstance().getDBManager().getSongDao("个人收藏").updateSongList(AppConstant.getInstance().getPersonCollectSongList());
-                }
-                break;
-            case  AppConstant.DataType.RECENT_MUSIC:
-                if(mABoolean){
-                    Model.getInstance().getDBManager().getSongDao("最近播放").updateSongList(AppConstant.getInstance().getRecentSongList());
-                }
-                break;
-        }
-    }
-
-
-    public List<Song> getPersonalAlbumSong(String name){
-        mABoolean = helper.tableIsExist(name);
-        if(!mABoolean){
-            return null;
-        }
-        return Model.getInstance().getDBManager().getSongDao(name).getSonglist();
-    }
-
-    public void upDatePersonalAlbum(String name,List<Song> songList){
-        mABoolean = helper.tableIsExist(name);
-        if(mABoolean){
-            Model.getInstance().getDBManager().getSongDao(name).updateSongList(songList);
+    public void upDate() {
+        mDataManageUtil.setMode(AppConstant.getInstance().getMode());
+        mDataManageUtil.saveData("listName",AppConstant.getInstance().getListName());
+         Model.getInstance().getDBManager().getSongDao("本地歌曲").updateSongList(AppConstant.getInstance().getLocalSongList());
+        List<String> stringList=AppConstant.getInstance().getUpdateList();
+        if (stringList.isEmpty()){
+            return;
+        }else {
+            for(String name:stringList){
+                mDataManageUtil.saveData(name,AppConstant.getInstance().getListNumber(name));
+            }
         }
 
     }
 
-
-    public void AddPersonalAlbumSong(String name,Song song){
-        mABoolean = helper.tableIsExist(name);
-        if(mABoolean){
-            Model.getInstance().getDBManager().getSongDao(name).addSong(song);
-        }
-
+    public String getListName(String listName) {
+        return mDataManageUtil.getListName("listName");
     }
-
-    public boolean dropPersonalTable(String name){
-      return helper.deleteTable(name);
-    }
-
-    public Boolean isExistTable(String name){
-        return helper.tableIsExist(name);
-    }
-
 }
 

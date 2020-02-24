@@ -38,7 +38,7 @@ public class ShowListActivity extends Activity implements View.OnClickListener{
     private int mMode;
     private TextView text_none_song;
     private View divider;
-    private LinearLayout set_mode_layout;
+    private LinearLayout set_mode_layout,add_more;
     private TextView music_type;
     private String mMusicType;
     private List<Song> mMList=new ArrayList<>();
@@ -65,6 +65,7 @@ public class ShowListActivity extends Activity implements View.OnClickListener{
         list_playing.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                AppConstant.getInstance().setCurrentSongList(AppConstant.getInstance().getList(mMusicType));
                 Song song = AppConstant.getInstance().getCurrentSongList().get(position);
                 mPlayerUtil.play(song);
                 AppConstant.getInstance().setPlayingSong(song);
@@ -74,6 +75,7 @@ public class ShowListActivity extends Activity implements View.OnClickListener{
     }
     private void initView() {
         music_text_sum=findViewById(R.id.music_sum);
+        add_more=findViewById(R.id.add_more);
         music_type=findViewById(R.id.music_type);
         mode_music = findViewById(R.id.mode_music);
         play_mode=findViewById(R.id.play_mode);
@@ -83,21 +85,13 @@ public class ShowListActivity extends Activity implements View.OnClickListener{
         divider=findViewById(R.id.divider);
         layout=(LinearLayout)findViewById(R.id.pop_layout);
         layout.setOnClickListener(this);
+        add_more.setOnClickListener(this);
         findViewById(R.id.set_mode_layout).setOnClickListener(this);
-
         music_type.setText(mMusicType);
-
-        switch (mMusicType){
-            case AppConstant.DataType.CURRENT_MUSIC:
-                mMList.addAll(AppConstant.getInstance().getCurrentSongList());
-                set_mode_layout.setVisibility(View.VISIBLE);
-                break;
-            default:
-                DataManager manager=new DataManager(this);
-                mMList.addAll(manager.getPersonalAlbumSong(mMusicType));
-               // set_mode_layout.setVerticalGravity(View.INVISIBLE);
-                break;
+        if(mMusicType.equals(AppConstant.DataType.CURRENT_MUSIC)){
+            set_mode_layout.setVisibility(View.VISIBLE);
         }
+        mMList.addAll(AppConstant.getInstance().getList( mMusicType));
         music_text_sum.setText("共用"+ mMList.size() +"首音乐");
         if(mMList.size()==0){
             list_playing.setVisibility(View.GONE);
@@ -130,34 +124,40 @@ public class ShowListActivity extends Activity implements View.OnClickListener{
                 AppConstant.getInstance().setMode(mMode %4);
                 break;
             case R.id.text_none_song:
-              //  Toast.makeText(this,"点击添加",Toast.LENGTH_LONG).show();
-                Intent intent =new Intent(this, AddListActivity.class);
-                intent.putExtra("ADD_TYPE",mMusicType); // 传字符串, 更多传值方法
-                startActivity(intent);
-                overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
-                finish();
+                addFuncation();
+                break;
+            case R.id.add_more:
+                addFuncation();
                 break;
         }
 
+    }
+
+    private void addFuncation() {
+        Intent intent =new Intent(this, AddListActivity.class);
+        intent.putExtra("ADD_TYPE",mMusicType); // 传字符串, 更多传值方法
+        startActivity(intent);
+        overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
+        finish();
     }
 
     private void mode_select(int mode) {
         switch (mode){
             case 0:
                 play_mode.setImageResource(R.drawable.single_loop);
-                mode_music.setText("单曲播放");
+                mode_music.setText("单曲");
                 break;
             case 1:
                 play_mode.setImageResource(R.drawable.loop);
-                mode_music.setText("循环播放");
+                mode_music.setText("循环");
                 break;
             case 2:
                 play_mode.setImageResource(R.drawable.order);
-                mode_music.setText("循序播放");
+                mode_music.setText("循序");
                 break;
             case 3:
                 play_mode.setImageResource(R.drawable.random);
-                mode_music.setText("随机播放");
+                mode_music.setText("随机");
                 break;
 
         }
@@ -172,7 +172,6 @@ public class ShowListActivity extends Activity implements View.OnClickListener{
     //实现onTouchEvent触屏函数但点击屏幕时销毁本Activity
     @Override
     public boolean onTouchEvent(MotionEvent event){
-        //startActivity(new Intent(this,MainActivity.class));
         finish();
         return true;
     }

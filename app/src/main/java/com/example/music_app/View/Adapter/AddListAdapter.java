@@ -34,32 +34,16 @@ public class AddListAdapter extends BaseAdapter {
             mSongList.clear();
         }
         Name=name;
-
         switch (name){
             case AppConstant.DataType.PERSONAL_ALBUM_NAME:
                 isTitle=true;
-                albumName.addAll(AppConstant.getInstance().getPersonalAlbumName());
+                albumName.addAll(AppConstant.getInstance().getAlbumList());
                 break;
-            case AppConstant.DataType.CURRENT_MUSIC:
-                mSongList.addAll(AppConstant.getInstance().getLocalSongList());
-                break;
-            case AppConstant.DataType.PERSONAL_COLLECT:
-                AppConstant appConstant=AppConstant.getInstance();
-                if(appConstant.getPersonCollectSongList()!=null&&appConstant.getPersonCollectSongList().size()>0){
-                    for (Song song:appConstant.getLocalSongList()){
-                        if(!appConstant.isExist(song,appConstant.getPersonCollectSongList())){
-                            mSongList.add(song);
-                        }
-                    }
-                }else {
-                    mSongList.addAll(AppConstant.getInstance().getLocalSongList());
-                }
-                break;
+            default:
+                mSongList.addAll(AppConstant.getInstance().getAddSongList(name));
+
         }
-
         this.stateCheckedMap = stateCheckedMap;
-
-
     }
 
     @Override
@@ -89,16 +73,12 @@ public class AddListAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
-
         if(!isTitle){
             holder.mTitle.setText(mSongList.get(position).getTitle());
         }else {
             holder.mTitle.setText(albumName.get(position));
         }
 
-       // showAndHideCheckBox();//控制CheckBox的那个的框显示与隐藏
-        //holder.mTitle.setText(mSongList.get(position).getTitle());
         holder.checkBox.setChecked(stateCheckedMap.get(position));//设置CheckBox是否选中
         return convertView;
     }
@@ -108,20 +88,7 @@ public class AddListAdapter extends BaseAdapter {
         public CheckBox checkBox;
     }
 
-    private void showAndHideCheckBox() {
-        if (isShowCheckBox) {
-            holder.checkBox.setVisibility(View.VISIBLE);
-        } else {
-            holder.checkBox.setVisibility(View.GONE);
-        }
-    }
 
 
-    public boolean isShowCheckBox() {
-        return isShowCheckBox;
-    }
 
-    public void setShowCheckBox(boolean showCheckBox) {
-        isShowCheckBox = showCheckBox;
-    }
 }

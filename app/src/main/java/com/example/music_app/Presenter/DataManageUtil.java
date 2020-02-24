@@ -14,7 +14,7 @@ public class DataManageUtil {
     private SharedPreferences.Editor editor;
 
     public DataManageUtil(Context mContext) {
-        preferences = mContext.getSharedPreferences("Data", Context.MODE_PRIVATE);
+        preferences = mContext.getSharedPreferences("Data", Context.MODE_MULTI_PROCESS);
         editor = preferences.edit();
     }
 
@@ -29,10 +29,12 @@ public class DataManageUtil {
         Gson gson = new Gson();
         //转换成json数据，再保存
         String strJson = gson.toJson(dataList);
-        editor.clear();
+        //editor.clear();
         editor.putString(tag, strJson);
         editor.commit();
     }
+
+
 
     /**
      * 获取List
@@ -51,17 +53,33 @@ public class DataManageUtil {
         return dataList;
     }
 
+    public List getDataNumber(String tag) {
+        List<Integer> dataList=new ArrayList<>();
+        String strJson = preferences.getString(tag, null);
+        if (null == strJson) {
+            return dataList;
+        }
+        Gson gson = new Gson();
+        dataList = gson.fromJson(strJson, new TypeToken<List<Integer>>() {}.getType());
+        return dataList;
+    }
+
 
     public int getMode(){
         return preferences.getInt("MODE",1);
     }
 
     public void setMode(int mode){
-        editor.clear();
+        //editor.clear();
         editor.putInt("MODE",mode);
         editor.commit();
     }
 
+
+
+    public String getListName(String string){
+        return preferences.getString(string,"hhhhh");
+    }
 
 
 }

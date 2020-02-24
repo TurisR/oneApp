@@ -41,7 +41,6 @@ public class SettingFragment extends Fragment {
                 // TODO Auto-generated method stub
                 Intent intent=new Intent(getActivity(), ScanActivity.class);
                 startActivity(intent);
-                //Toast.makeText(getActivity(), "success", Toast.LENGTH_LONG).show();
             }
         });
 

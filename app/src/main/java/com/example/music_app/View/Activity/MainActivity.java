@@ -21,12 +21,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.music_app.Presenter.AppConstant;
+import com.example.music_app.Presenter.DataManageUtil;
 import com.example.music_app.Presenter.DataManager;
 import com.example.music_app.Presenter.PlayerUtil;
 import com.example.music_app.R;
 import com.example.music_app.View.Fragment.ContentPagerManager;
 import com.example.music_app.View.widget.CustomDialog;
 import com.example.music_app.mould.Model.bean.Song;
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
@@ -42,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static SeekBar audioSeekBar = null;
     private Song song;
     private PlayerUtil mPlayerUtil;
+    private DataManager dataManager;
+    private DataManageUtil manageUtil;
 
     private HomeReceiver homeReceiver;	//自定义的广播接收器
     private ImageView iv_play_bar_cover;
@@ -79,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mContentPagerManager=new ContentPagerManager(getSupportFragmentManager());
         mContentVp.setAdapter(mContentPagerManager);
 
-
+       //Toast.makeText(this,dataManager.getListName("listName"),Toast.LENGTH_SHORT).show();
     }
 
     private void initView() {
@@ -106,6 +115,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }else {
             v_play_bar_play.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_bar_btn_play));
         }
+
+        dataManager = new DataManager(this);
+        dataManager.initData();
+        manageUtil=new DataManageUtil(this);
+
     }
 
     private void initTab() {
@@ -153,10 +167,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.iv_play_bar_play:
                 if(AppConstant.getInstance().getPlayingState()==AppConstant.PlayerMsg.PAUSE_MSG){
-
                   mPlayerUtil.resume();
                 }else{
-                    mPlayerUtil.pause();
+                  mPlayerUtil.pause();
                 }
                 break;
             case R.id.v_play_bar_playlist:
@@ -230,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Log.e("UPDATE_ACTION","接受到更新广播");
                     song=(Song) intent.getSerializableExtra("PlayingSong");
                     AppConstant.getInstance().setPlayingSong(song);
-                    AppConstant.getInstance().addRecentSongList(song);
+                    AppConstant.getInstance().addListSong(AppConstant.DataType.RECENT_MUSIC,song);
                     UpdateUI();
                     break;
 
@@ -238,7 +251,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mPlayerUtil.next();
                     Log.e("MUSIC_NEXT","next");
                     break;
-
             }
 
         }
@@ -313,9 +325,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStop() {
         super.onStop();
-        DataManager dataManager = new DataManager(this);
         dataManager.upDate();
-        //Toast.makeText(this,"数据更新2",Toast.LENGTH_SHORT).show();
+
+        Gson gson = new Gson();
+        //转换成json数据，再保存
+        String strJson1 = gson.toJson(AppConstant.getInstance().getListNumber(AppConstant.DataType.RECENT_MUSIC));
+        Toast.makeText(this,"stop"+strJson1,Toast.LENGTH_LONG).show();
+        //manageUtil.saveData(AppConstant.DataType.RECENT_MUSIC,AppConstant.getInstance().getListNumber(AppConstant.DataType.RECENT_MUSIC));
+
+
     }
 
     private void getAllPower() {

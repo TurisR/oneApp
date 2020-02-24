@@ -77,8 +77,10 @@ public class SearchFragment extends Fragment {
         search_history_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                AppConstant.getInstance().getPlayerUtil(getActivity()).play(AppConstant.getInstance().getRecentSearchList().get(position));
-                AppConstant.getInstance().setCurrentSongList(AppConstant.getInstance().getRecentSearchList().get(position));
+                Song song=(Song)AppConstant.getInstance().getList(AppConstant.DataType.RECENT_SEARCH).get(position);
+                AppConstant.getInstance().getPlayerUtil(getActivity()).play(song);
+                AppConstant.getInstance().addCurrentSongList(song);
+                //AppConstant.getInstance().setCurrentSongList(AppConstant.getInstance().getList(AppConstant.DataType.RECENT_SEARCH).get(position));
             }
         });
 
@@ -113,11 +115,11 @@ public class SearchFragment extends Fragment {
         searchResult.clear();
         for (Song song: mSongList){
             mIntIndex = song.getTitle().indexOf(mSearch);
-            if(mIntIndex != -1&&!AppConstant.getInstance().isExist(song,searchResult)){
+            if(mIntIndex != -1&&!AppConstant.getInstance().isExist(searchResult,song)){
                 searchResult.add(song);
             }
             mIntIndex = song.getSinger().indexOf(mSearch);
-            if(mIntIndex != -1&&!AppConstant.getInstance().isExist(song,searchResult)){
+            if(mIntIndex != -1&&!AppConstant.getInstance().isExist(searchResult,song)){
                 searchResult.add(song);
             }
         }
@@ -135,7 +137,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 AppConstant.getInstance().getPlayerUtil(getActivity()).play(searchResult.get(position));
-                AppConstant.getInstance().addRecentSearchList(searchResult.get(position));
+                AppConstant.getInstance().addListSong(AppConstant.DataType.RECENT_SEARCH,searchResult.get(position));
                 edit_text.setText("");
 
                 search_result_list.setVisibility(View.GONE);

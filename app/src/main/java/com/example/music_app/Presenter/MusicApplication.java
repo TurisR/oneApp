@@ -16,6 +16,8 @@ import android.widget.Toast;
 import com.example.music_app.mould.Model.Model;
 import com.example.music_app.mould.Model.bean.Song;
 
+import java.util.List;
+
 public class MusicApplication extends Application {
 
     private static Context context;
@@ -23,7 +25,6 @@ public class MusicApplication extends Application {
     private int position;
     private int size;
     private DataManager mDataManager;
-    private Data mData;
 
     @Override
     public void onCreate() {
@@ -31,10 +32,9 @@ public class MusicApplication extends Application {
         context = this;
         Model.getInstance().init(this, "user");
         AppConstant.getInstance().setPlayingState(AppConstant.PlayerMsg.PAUSE_MSG);
-        mData=new Data(context);
-        mData.initData();
-        mDataManager = new DataManager(context);
-        mDataManager.initData();
+//        mDataManager = new DataManager(this);
+//        mDataManager.initData();
+        //Toast.makeText(context,"Created",Toast.LENGTH_SHORT).show();
     }
 
 
@@ -43,10 +43,13 @@ public class MusicApplication extends Application {
     public void onTerminate() {
         // 程序终止的时候执行
         Log.d("application", "onTerminate");
+        Toast.makeText(context,"Terminate",Toast.LENGTH_LONG).show();
         mDataManager.upDate();
         Model.getInstance().getDBManager().close();
         super.onTerminate();
     }
+
+
 
 
 }
