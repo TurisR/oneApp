@@ -15,7 +15,7 @@ public class SwitchSong {
     public SwitchSong() {
         mSongList=AppConstant.getInstance().getCurrentSongList();
         mSong=AppConstant.getInstance().getPlayingSong();
-        position=AppConstant.getInstance().getPosition(mSong);
+        position=AppConstant.getInstance().getPosition(mSong,AppConstant.DataType.CURRENT_MUSIC);
         mode=AppConstant.getInstance().getMode();
         size=mSongList.size();
     }

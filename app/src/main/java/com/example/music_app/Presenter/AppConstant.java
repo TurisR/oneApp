@@ -90,11 +90,11 @@ public class AppConstant {
         List<Integer> list=new ArrayList<>();
         if(!ListName.contains(name)){
             ListName.add(name);
-            list.add(getPosition(song));
+            list.add(getPosition(song,DataType.LOCAL_MUSIC));
             mapNumber.put(name,list);
             return;
         }
-        int num=getPosition(song);
+        int num=getPosition(song,DataType.LOCAL_MUSIC);
         if(!mapNumber.get(name).contains(num)){
             mapNumber.get(name).add(num);
         }
@@ -126,7 +126,7 @@ public class AppConstant {
     }
 
     public void removeListSong(String name,Song song){
-        mapNumber.get(name).remove(getPosition(song));
+        mapNumber.get(name).remove(getPosition(song,DataType.LOCAL_MUSIC));
         updateList.add(name);
     }
 
@@ -152,12 +152,18 @@ public class AppConstant {
     }
 
 
-    public int getPosition(Song song){
+    public int getPosition(Song song,String name){
         int i=0;
-        if(song==null){
+        if(song==null||getList(name)==null){
             return -1;
         }
-        for (Song song1:LocalSongList){
+        List<Song> songList;
+        if(name.equals(DataType.LOCAL_MUSIC)){
+            songList=LocalSongList;
+        }else {
+            songList=getList(name);
+        }
+        for (Song song1:songList){
             if (song.Equals(song1)){
                 return i;
             }
@@ -248,7 +254,7 @@ public class AppConstant {
         if(mapNumber.get(string)==null){
             return false;
         }
-        if(mapNumber.get(string).contains(getPosition(song))){
+        if(mapNumber.get(string).contains(getPosition(song,DataType.LOCAL_MUSIC))){
             return true;
         }
         return false;

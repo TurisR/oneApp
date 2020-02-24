@@ -163,6 +163,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.iv_play_bar_next:
+                Song song=AppConstant.getInstance().getSwitchSong().getNextSong(true);
+                Log.e("next",song.getTitle()+" "+AppConstant.getInstance().getMode());
                 mPlayerUtil.next();
                 break;
             case R.id.iv_play_bar_play:
@@ -326,11 +328,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStop() {
         super.onStop();
         dataManager.upDate();
-
         Gson gson = new Gson();
         //转换成json数据，再保存
         String strJson1 = gson.toJson(AppConstant.getInstance().getListNumber(AppConstant.DataType.RECENT_MUSIC));
-        Toast.makeText(this,"stop"+strJson1,Toast.LENGTH_LONG).show();
+       // Toast.makeText(this,"stop"+strJson1,Toast.LENGTH_LONG).show();
         //manageUtil.saveData(AppConstant.DataType.RECENT_MUSIC,AppConstant.getInstance().getListNumber(AppConstant.DataType.RECENT_MUSIC));
 
 
