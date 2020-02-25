@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="60dp">
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/iv_cover"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/default_cover"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:id="@+id/iv_title"
+        android:layout_toRightOf="@+id/iv_cover"
+        android:text="无音乐"/>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@color/grey"
+        android:layout_margin="5dp"
+        android:layout_toRightOf="@+id/iv_cover"
+        android:id="@+id/iv_view"
+        android:layout_below="@+id/iv_title"/>
+
+    <ImageView
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="50dp"
+        android:layout_below="@+id/iv_view"
+        android:id="@+id/iv_previous"
+        android:layout_toRightOf="@+id/iv_cover"
+        android:src="@drawable/previous"/>
+
+    <ImageView
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/iv_view"
+        android:id="@+id/iv_play"
+        android:layout_toRightOf="@+id/iv_previous"
+        android:src="@drawable/play"/>
+
+    <ImageView
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="50dp"
+        android:layout_below="@+id/iv_view"
+        android:layout_toRightOf="@+id/iv_play"
+        android:id="@+id/iv_next"
+        android:src="@drawable/next"/>
+
+</RelativeLayout>

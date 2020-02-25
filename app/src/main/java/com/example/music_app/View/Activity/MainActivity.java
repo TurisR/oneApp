@@ -1,21 +1,32 @@
 package com.example.music_app.View.Activity;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RemoteViews;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +50,9 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private TabLayout mTabTl;
+    private Notification notification;
+
+    private RemoteViews contentView;
     private ViewPager mContentVp;
     private TextView tv_play_bar_title;
     private boolean isPressSeekBar = false; //判断是否在拖动拖动条
@@ -46,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView tv_play_bar_artist;
     public ImageView v_play_bar_play;
     public ContentPagerManager mContentPagerManager;
+    private static NotificationManager notificationManager;
     public static SeekBar audioSeekBar = null;
     private Song song;
     private PlayerUtil mPlayerUtil;
@@ -55,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private HomeReceiver homeReceiver;	//自定义的广播接收器
     private ImageView iv_play_bar_cover;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +79,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initData();
 
       // requestAllPower();
+        initNotificationBar();
     }
+
 
     private void initData() {
         //song = (Song) getIntent().getSerializableExtra("songInfo");//获得歌曲信息
@@ -357,4 +375,49 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }).show();
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void initNotificationBar() {
+        contentView=new RemoteViews(getPackageName(),R.layout.layout_notification);
+        String string=createNotificationChannel(this);
+        NotificationCompat.Builder notificationCompatBuilder = new NotificationCompat.Builder(getApplicationContext(), string);
+        contentView.setImageViewResource(R.id.iv_cover,R.drawable.default_cover);
+        contentView.setImageViewResource(R.id.iv_next,R.drawable.next);
+        contentView.setTextViewText(R.id.iv_title,"通知");
+
+
+        notification = notificationCompatBuilder
+            .setSmallIcon(R.mipmap.app_icon)
+            .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+            .setCustomBigContentView(contentView)
+            .setCustomHeadsUpContentView(contentView)
+            .build();
+        NotificationManagerCompat.from(getApplicationContext()).notify(1,notification);
+
+    }
+
+    public static String createNotificationChannel(Context context) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channelId = "channelId";
+            CharSequence channelName = "channelName";
+            int channelImportance = NotificationManager.IMPORTANCE_HIGH;
+
+            NotificationChannel notificationChannel = new NotificationChannel(channelId, channelName, channelImportance);
+            // 设置描述 最长30字符
+
+            notificationChannel.enableVibration(true);
+            // 设置显示模式
+            notificationChannel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(notificationChannel);
+            return channelId;
+        } else {
+            return null;
+        }
+    }
+
+
+
+
 }
