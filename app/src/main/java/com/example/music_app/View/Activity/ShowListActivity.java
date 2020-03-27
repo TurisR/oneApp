@@ -68,8 +68,11 @@ public class ShowListActivity extends Activity implements View.OnClickListener{
                 AppConstant.getInstance().setCurrentSongList(AppConstant.getInstance().getList(mMusicType));
                 Song song = AppConstant.getInstance().getCurrentSongList().get(position);
                 mPlayerUtil.play(song);
+                AppConstant.getInstance().setPlayingSong(song);
                 //AppConstant.getInstance().setPlayingSong(song);
+                list_playing.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
+
             }
         });
     }

@@ -32,7 +32,6 @@ public class PlayerUtil {
         mContext.startService(intent);
         AppConstant.getInstance().setPlayingState(AppConstant.PlayerMsg.PLAY_MSG);
     }
-
     public void next(){
         Song song=AppConstant.getInstance().getSwitchSong().getNextSong(true);
         play(song);
@@ -44,9 +43,6 @@ public class PlayerUtil {
     public void setMode(int mode){
         AppConstant.getInstance().setMode(mode);
     }
-
-
-
     /**
      *  更新歌曲播放进度
      *  by:yxy
@@ -56,6 +52,4 @@ public class PlayerUtil {
         intent.putExtra("MSG", AppConstant.PlayerMsg.CHANGE_PRG);
         mContext.startService(intent);
     }
-
-
 }

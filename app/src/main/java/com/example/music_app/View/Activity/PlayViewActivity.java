@@ -119,6 +119,10 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
 
             case R.id.activity_play_list :
                 //播放列表
+                Intent intent =new Intent(PlayViewActivity.this, ShowListActivity.class);
+                intent.putExtra("MUSIC_TYPE",AppConstant.DataType.CURRENT_MUSIC); // 传字符串, 更多传值方法
+                startActivity(intent);
+                overridePendingTransition(R.anim.push_bottom_in,R.anim.push_bottom_out);
                 break;
 
             case R.id.activity_play_start :
