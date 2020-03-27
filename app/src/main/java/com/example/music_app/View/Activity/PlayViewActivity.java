@@ -140,11 +140,13 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
             case R.id.activity_play_last :
                 //上一曲
                 mPlayerUtil.previous();
+                UpdateUI();
                 break;
 
             case R.id.activity_play_next :
                 //下一曲
                 mPlayerUtil.next();
+                UpdateUI();
                 break;
         }
     }
