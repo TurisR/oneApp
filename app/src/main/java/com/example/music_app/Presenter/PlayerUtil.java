@@ -35,10 +35,12 @@ public class PlayerUtil {
     public void next(){
         Song song=AppConstant.getInstance().getSwitchSong().getNextSong(true);
         play(song);
+        AppConstant.getInstance().setPlayingSong(song);
     }
     public void previous(){
         Song song=AppConstant.getInstance().getSwitchSong().getNextSong(false);
         play(song);
+        AppConstant.getInstance().setPlayingSong(song);
     }
     public void setMode(int mode){
         AppConstant.getInstance().setMode(mode);
