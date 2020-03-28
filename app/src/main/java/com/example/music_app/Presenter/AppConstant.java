@@ -28,11 +28,14 @@ public class AppConstant {
     private Map<String,List<Integer>> mapNumber=new HashMap<String,List<Integer>>();
     private List<String>  ListName=new ArrayList<>();//个人歌单名称
 
+    private boolean sensorState = false;
 
 //    public Map<String, List<Integer>> getMapNumber() {
 //        return mapNumber;
 //    }
 
+    public void setSensorState(boolean value){ sensorState = value;}
+    public boolean getSensorState() { return sensorState;}
 
 
     public void setMapNumber(Map<String, List<Integer>> map) {
@@ -314,6 +317,8 @@ public class AppConstant {
         public static final int NEXT_MSG=6;//下一曲播放
         public static final int CHANG_MODE = 7 ;//模式改变
         public static final int CHANGE_PRG = 8; //歌曲进度改变 /by：yxy
+        public static final int SENSOR_OPN = 9; //开启摇摇切歌
+        public static final int SENSOR_CLS = 10; //关闭摇摇切歌
     }
 
     public class Mode{

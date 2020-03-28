@@ -54,4 +54,18 @@ public class PlayerUtil {
         intent.putExtra("MSG", AppConstant.PlayerMsg.CHANGE_PRG);
         mContext.startService(intent);
     }
+
+    //开启摇摇切歌
+    public void openSensor() {
+        intent.putExtra("MSG", AppConstant.PlayerMsg.SENSOR_OPN);
+        mContext.startService(intent);
+        AppConstant.getInstance().setSensorState(true);
+    }
+
+    //关闭摇摇切歌
+    public void closeSensor() {
+        intent.putExtra("MSG", AppConstant.PlayerMsg.SENSOR_CLS);
+        mContext.startService(intent);
+        AppConstant.getInstance().setSensorState(false);
+    }
 }

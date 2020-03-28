@@ -36,7 +36,7 @@
         <activity android:name=".View.Activity.ShowListActivity" android:theme="@style/MyDialogStyleBottom"/>
         <activity android:name=".View.Activity.PlayViewActivity"/>
         <activity android:name=".View.Activity.AddListActivity" android:theme="@style/MyDialogStyleBottom"/>
-
+        <activity android:name=".View.Activity.SensorActivity"/>
 
     </application>
 

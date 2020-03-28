@@ -5,6 +5,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Binder;
@@ -37,6 +41,11 @@ public class MusicService extends Service {
     private int currentTime;
 
     private Song NowSong;
+
+    //定义系统的Sensor管理器  by:yxy
+    private SensorManager sensorManager;
+    private int sCount; //左右摇晃的次数
+    private long lastTime;  //上一次切歌的时间
 
     /**
      * handler用来接收消息，来发送广播更新播放时间
@@ -105,8 +114,6 @@ public class MusicService extends Service {
 
     }
 
-
-
     @Override
     public IBinder onBind(Intent arg0) {
         return null;
@@ -135,6 +142,21 @@ public class MusicService extends Service {
                 if (newMusicPrg != -1)
                     updateMusicPrg(newMusicPrg);
                     //play(0, NowSong);
+                break;
+            case AppConstant.PlayerMsg.SENSOR_OPN :
+                //开启线性传感器
+                //获取传感器服务 by:yxy
+                sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+                Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+                sensorManager.registerListener(mySensorListener, sensor, SensorManager.SENSOR_DELAY_GAME);
+                sCount = 0;
+                lastTime = 0;
+                break;
+            case AppConstant.PlayerMsg.SENSOR_CLS :
+                //关闭线性传感器
+                if (sensorManager != null){
+                    sensorManager.unregisterListener(mySensorListener);
+                }
                 break;
         }
         /**设置音乐播放完成时的监听器
@@ -263,6 +285,36 @@ public class MusicService extends Service {
         }
 
         System.out.println("service onDestroy");
+
+        if (sensorManager != null){
+            sensorManager.unregisterListener(mySensorListener);
+            mySensorListener = null;
+        }
     }
 
+    private SensorEventListener mySensorListener = new SensorEventListener() {
+       // @Override
+        public void onSensorChanged(SensorEvent event) {
+            synchronized (this){
+                long currentTime = System.currentTimeMillis();
+                if (currentTime - lastTime < 2000)
+                    return;
+                float[] values = event.values;
+                Log.e("TAG", "onSensorChanged: dfdfdfdf",null);
+                if (mMediaPlayer.isPlaying() && (values[0] < -30.0 || values[0] > 30.0))
+                    ++sCount;
+                if (mMediaPlayer.isPlaying() && sCount > 4)
+                {
+                    handler.sendEmptyMessage(5);
+                    sCount = 0;
+                    lastTime = System.currentTimeMillis();
+                }
+            }
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
+    };
 }

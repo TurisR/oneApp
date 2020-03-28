@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.music_app.R;
 import com.example.music_app.View.Activity.ScanActivity;
+import com.example.music_app.View.Activity.SensorActivity;
 
 import java.util.zip.Inflater;
 
@@ -21,6 +22,7 @@ public class SettingFragment extends Fragment {
 
     private View view;
     private RelativeLayout btn;
+    private RelativeLayout btn2;
 
     @Nullable
     @Override
@@ -28,6 +30,7 @@ public class SettingFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragement_setting, null);
         btn=(RelativeLayout) view.findViewById(R.id.scan_btn);
+        btn2 = (RelativeLayout) view.findViewById(R.id.sensor_btn);
         return view;
     }
 
@@ -44,5 +47,12 @@ public class SettingFragment extends Fragment {
             }
         });
 
+        btn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SensorActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }
