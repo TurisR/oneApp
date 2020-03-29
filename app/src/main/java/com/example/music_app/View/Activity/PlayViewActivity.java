@@ -135,11 +135,7 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
         String lrcText = getLrcText(filePath);
 
         lrcList = LrcEntity.parseLrc(lrcText);
-        Log.e("TAG", "initView: list1.size = " + lrcList.size(), null);
-        for (int i = 0; i < lrcList.size(); i++)
-        {
-            System.out.println(lrcList.get(i).getTimeLong() + " " + lrcList.get(i).text);
-        }
+
     }
 
     /**
@@ -267,11 +263,14 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
                         //当进度条未被拖动时，自动更新进度条进度
                         seekBar.setProgress(seekBar.getMax() * currentTime / song.getDuration());    //更新进度条
                     }
-                    //歌词显示
-                    if(lrcSite < lrcList.size()-1 && lrcList.get(lrcSite).getTimeLong()-50 <= currentTime && currentTime < lrcList.get(lrcSite+1).getTimeLong()-50)
-                        lrcText.setText(lrcList.get(lrcSite).text);
-                    else if (lrcSite < lrcList.size()-1 && currentTime >= lrcList.get(lrcSite).getTimeLong() - 50)
-                        lrcText.setText(lrcList.get(++lrcSite).text);
+                    if (lrcList!=null){
+                        //歌词显示
+                        if(lrcSite < lrcList.size()-1 && lrcList.get(lrcSite).getTimeLong()-50 <= currentTime && currentTime < lrcList.get(lrcSite+1).getTimeLong()-50)
+                            lrcText.setText(lrcList.get(lrcSite).text);
+                        else if (lrcSite < lrcList.size()-1 && currentTime >= lrcList.get(lrcSite).getTimeLong() - 50)
+                            lrcText.setText(lrcList.get(++lrcSite).text);
+                    }
+
                     break;
 
                 case AppConstant.MessageType.UPDATE_ACTION :

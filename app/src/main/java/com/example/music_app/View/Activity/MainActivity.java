@@ -41,18 +41,12 @@ import com.example.music_app.View.widget.CustomDialog;
 import com.example.music_app.mould.Model.bean.Song;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private TabLayout mTabTl;
-    private Notification notification;
-
-    private RemoteViews contentView;
     private ViewPager mContentVp;
     private TextView tv_play_bar_title;
     private boolean isPressSeekBar = false; //判断是否在拖动拖动条
@@ -379,10 +373,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }).show();
     }
-
-
-
-
-
-
 }
