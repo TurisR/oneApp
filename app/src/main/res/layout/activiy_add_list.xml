@@ -108,7 +108,6 @@
             android:layout_width="match_parent"
             android:layout_weight="0.9"
             android:layout_height="0dp"
-            android:background="@drawable/list_select"
             android:divider="@drawable/list_divider"
             android:dividerHeight="1dp" />
 

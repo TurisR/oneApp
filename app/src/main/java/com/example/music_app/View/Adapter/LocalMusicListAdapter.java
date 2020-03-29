@@ -117,7 +117,7 @@ public class LocalMusicListAdapter extends BaseAdapter {
                         }
                         break;
                     case 1:
-                        if(AppConstant.getInstance().getPlayingSong().Equals(list.get(position))){
+                        if(AppConstant.getInstance().getPlayingSong()!=null&&AppConstant.getInstance().getPlayingSong().Equals(list.get(position))){
                             Toast.makeText(context, "歌曲正在播放中 暂时不能删除", Toast.LENGTH_LONG).show();
                         }else {
                             CustomDialog customDialog=new CustomDialog(context,R.style.CustomDialog);

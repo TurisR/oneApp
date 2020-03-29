@@ -32,10 +32,10 @@ public class MusicApplication extends Application {
         context = this;
         Model.getInstance().init(this, "user");
         AppConstant.getInstance().setPlayingState(AppConstant.PlayerMsg.PAUSE_MSG);
-//        mDataManager = new DataManager(this);
-//        mDataManager.initData();
-        //Toast.makeText(context,"Created",Toast.LENGTH_SHORT).show();
     }
+
+
+
 
 
 

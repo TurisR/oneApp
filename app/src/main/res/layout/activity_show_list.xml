@@ -131,7 +131,7 @@
             android:id="@+id/list_playing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/list_select"
+
             android:divider="@drawable/list_divider"
             android:visibility="gone"
             android:dividerHeight="1dp" />

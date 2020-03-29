@@ -21,6 +21,7 @@ public class AppConstant {
     private Song playingSong;
     private SwitchSong mSwitchSong;
     private static AppConstant mAppConstant=new AppConstant();
+    private String clockTime;
 
     private List<Song> CurrentSongList=new ArrayList<>();//当前播放音乐列表
     private List<Song> LocalSongList=new ArrayList<>();//本地音乐列表
@@ -33,6 +34,13 @@ public class AppConstant {
 //    public Map<String, List<Integer>> getMapNumber() {
 //        return mapNumber;
 //    }
+    public void setClockTime(String string){
+        clockTime = string;
+    }
+
+    public String getClockTime(){
+        return clockTime;
+    }
 
     public void setSensorState(boolean value){ sensorState = value;}
     public boolean getSensorState() { return sensorState;}
@@ -43,7 +51,9 @@ public class AppConstant {
     }
 
     public void setCurrentSongList(List<Song> currentSongList) {
-        CurrentSongList =currentSongList;
+        if (currentSongList == CurrentSongList) return;
+        CurrentSongList .clear();
+        CurrentSongList.addAll(currentSongList);
     }
     public void setCurrentSongList(Song currentSongList) {
         CurrentSongList .clear();
@@ -147,6 +157,10 @@ public class AppConstant {
     }
 
     public void removeListSongByIndex(String name,int position){
+        if(name.equals(DataType.CURRENT_MUSIC)){
+            CurrentSongList.remove(position);
+            return;
+        }
         if(mapNumber.get(name)==null){
             return;
         }
@@ -340,7 +354,6 @@ public class AppConstant {
 
 
     public class DataType{
-
         public static final String LOCAL_MUSIC= "本地歌曲";		//更新动作
         public static final String RECENT_MUSIC = "最近播放";			//播放器状态 播放|暂停
         public static final String PERSONAL_COLLECT = "个人收藏";		//当前音乐改变动作
