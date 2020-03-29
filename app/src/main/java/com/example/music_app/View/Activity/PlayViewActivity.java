@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.renderscript.ScriptGroup;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -17,7 +18,18 @@ import com.example.music_app.Presenter.AppConstant;
 import com.example.music_app.Presenter.MusicService;
 import com.example.music_app.Presenter.PlayerUtil;
 import com.example.music_app.R;
+import com.example.music_app.mould.Model.bean.LrcEntity;
 import com.example.music_app.mould.Model.bean.Song;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *  內容：播放界面Activity
@@ -32,7 +44,7 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
 
     private TextView songNameText;  //歌曲名称显示
     private TextView singerText;    //歌手名字显示
-    private TextView lyricText;     //歌词显示
+    private TextView lrcText;     //歌词显示
 
     private TextView prgTime;       //歌曲进度时间
     private TextView wholeTime;     //歌曲总时长
@@ -43,6 +55,9 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
     private boolean isPressSeekBar = false; //判断是否在拖动拖动条
 
     private ServiceReceiver serviceReceiver;
+
+    private List<LrcEntity> lrcList;  //歌词列表
+    private int lrcSite = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +86,7 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
     private void initView() {
         songNameText = findViewById(R.id.activity_play_song_name);  //顶部歌名显示
         singerText = findViewById(R.id.activity_play_song_singer);  //顶部歌手显示
-        lyricText = findViewById(R.id.activity_play_lyric);         //歌词显示
+        lrcText = findViewById(R.id.activity_play_lyric);         //歌词显示
         prgTime = findViewById(R.id.activity_play_progress_time);   //歌曲播放进度时间
         wholeTime = findViewById(R.id.activity_play_song_time);     //歌曲总时间
 
@@ -83,6 +98,25 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
             singerText.setText("- " + song.getSinger() + " -");
             //显示歌曲总时长
             wholeTime.setText(transformTime(song.getDuration()));
+
+            lrcInit();
+        }
+    }
+
+    /**
+     * 歌词文件查找
+     */
+    private void lrcInit() {
+        //从.lrc文件中获取歌词
+        String[] test = song.getFileUrl().split("mp3");
+        String filePath = test[0] + "lyric/" + song.getTitle() + "_" + song.getSinger() + ".lrc";
+        String lrcText = getLrcText(filePath);
+
+        lrcList = LrcEntity.parseLrc(lrcText);
+        Log.e("TAG", "initView: list1.size = " + lrcList.size(), null);
+        for (int i = 0; i < lrcList.size(); i++)
+        {
+            System.out.println(lrcList.get(i).getTimeLong() + " " + lrcList.get(i).text);
         }
     }
 
@@ -204,13 +238,18 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
 
             switch (action) {
                 case AppConstant.MessageType.MUSIC_CURRENT :
-                    //音乐状态，进度条监听
+                    //音乐状态，进度条监听 以及 更新歌词
                     int currentTime = intent.getIntExtra("currentTime", -1);   //获取从MusicService传来的歌曲进度时间
                    // Log.e("time",currentTime+"");
                     if (!isPressSeekBar) {
                         //当进度条未被拖动时，自动更新进度条进度
                         seekBar.setProgress(seekBar.getMax() * currentTime / song.getDuration());    //更新进度条
                     }
+                    //歌词显示
+                    if(lrcSite < lrcList.size()-1 && lrcList.get(lrcSite).getTimeLong()-50 <= currentTime && currentTime < lrcList.get(lrcSite+1).getTimeLong()-50)
+                        lrcText.setText(lrcList.get(lrcSite).text);
+                    else if (lrcSite < lrcList.size()-1 && currentTime >= lrcList.get(lrcSite).getTimeLong() - 50)
+                        lrcText.setText(lrcList.get(++lrcSite).text);
                     break;
 
                 case AppConstant.MessageType.UPDATE_ACTION :
@@ -218,6 +257,7 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
                     //int position = intent.getIntExtra("current", -1);    //获取当前正在播放的歌曲
                     System.out.println("---播放界面收到广播---");
                     UpdateUI();       //更新UI界面的歌曲信息
+                    lrcSite = 0;
                     break;
             }
         }
@@ -232,6 +272,7 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
             songNameText.setText(song.getTitle());      //更新歌名
             singerText.setText("- " + song.getSinger() + " -");       //更新歌手
             wholeTime.setText(transformTime(song.getDuration()));   //更新歌曲总时长
+            lrcInit();
         }
 
         //更新播放按键显示
@@ -260,6 +301,29 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
         t = t + tt;
 
         return t;
+    }
+
+
+    /**
+     * 正则表达式  读取歌词文件
+     */
+    private String getLrcText(String filename) {
+        File file = new File(filename);
+        String lrcText = null;
+        try{
+            InputStream inputStream = new FileInputStream(file);
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String line = "";
+            while ((line = bufferedReader.readLine()) != null) {
+                lrcText += line + "\n";
+            }
+            inputStream.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return lrcText;
     }
 
 }
