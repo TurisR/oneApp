@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initData();
 
       // requestAllPower();
-        initNotificationBar();
     }
 
 
@@ -94,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         filter.addAction(AppConstant.MessageType.MUSIC_STATE);
         filter.addAction(AppConstant.MessageType.MUSIC_DURATION);
         filter.addAction(AppConstant.MessageType.MUSIC_NEXT);
+//        filter.addAction(AppConstant.MessageTimeType.TIME_COUNT);
         // 注册BroadcastReceiver
         registerReceiver(homeReceiver, filter);
 
@@ -271,6 +271,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mPlayerUtil.next();
                     Log.e("MUSIC_NEXT","next");
                     break;
+
             }
 
         }
@@ -376,46 +377,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }).show();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void initNotificationBar() {
-        contentView=new RemoteViews(getPackageName(),R.layout.layout_notification);
-        String string=createNotificationChannel(this);
-        NotificationCompat.Builder notificationCompatBuilder = new NotificationCompat.Builder(getApplicationContext(), string);
-        contentView.setImageViewResource(R.id.iv_cover,R.drawable.default_cover);
-        contentView.setImageViewResource(R.id.iv_next,R.drawable.next);
-        contentView.setTextViewText(R.id.iv_title,"通知");
 
-
-        notification = notificationCompatBuilder
-            .setSmallIcon(R.mipmap.app_icon)
-            .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
-            .setCustomBigContentView(contentView)
-            .setCustomHeadsUpContentView(contentView)
-            .build();
-        NotificationManagerCompat.from(getApplicationContext()).notify(1,notification);
-
-    }
-
-    public static String createNotificationChannel(Context context) {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String channelId = "channelId";
-            CharSequence channelName = "channelName";
-            int channelImportance = NotificationManager.IMPORTANCE_HIGH;
-
-            NotificationChannel notificationChannel = new NotificationChannel(channelId, channelName, channelImportance);
-            // 设置描述 最长30字符
-
-            notificationChannel.enableVibration(true);
-            // 设置显示模式
-            notificationChannel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.createNotificationChannel(notificationChannel);
-            return channelId;
-        } else {
-            return null;
-        }
-    }
 
 
 

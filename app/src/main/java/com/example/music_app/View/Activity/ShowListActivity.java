@@ -3,6 +3,7 @@ package com.example.music_app.View.Activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -69,6 +70,7 @@ public class ShowListActivity extends Activity implements View.OnClickListener{
                 Song song = AppConstant.getInstance().getCurrentSongList().get(position);
                 mPlayerUtil.play(song);
                 AppConstant.getInstance().setPlayingSong(song);
+                Log.e("点击",""+position);
                 //AppConstant.getInstance().setPlayingSong(song);
                 list_playing.setAdapter(adapter);
                 adapter.notifyDataSetChanged();

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent">
@@ -9,194 +9,124 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:id="@+id/layout_01"
-        android:orientation="horizontal"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        android:background="@drawable/style"
        >
 
         <RelativeLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
+            android:background="@drawable/press_selector"
             android:layout_weight="0.5"
-            android:layout_height="wrap_content"
-            android:background="@drawable/style"
+            android:layout_height="0dp"
             android:id="@+id/scan_btn"
             android:layout_gravity="center">
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_margin="10dp"
-                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:id="@+id/pic_scan"
                 android:src="@drawable/scan" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/pic_scan"
-                android:layout_centerHorizontal="true"
+                android:layout_toRightOf="@+id/pic_scan"
+                android:layout_centerVertical="true"
                 android:layout_margin="10dp"
                 android:text="扫描歌曲"
                 android:textSize="16sp"/>
 
         </RelativeLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:background="@color/grey"
+            android:layout_height="1dp"/>
         <RelativeLayout
             android:id="@+id/sensor_btn"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
+            android:background="@drawable/press_selector"
             android:layout_weight="0.5"
-            android:layout_height="wrap_content"
-            android:background="@drawable/style"
+            android:layout_height="0dp"
             android:layout_gravity="center">
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_margin="10dp"
-                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:id="@+id/pic_sway"
                 android:src="@drawable/sway" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/pic_sway"
+                android:layout_toRightOf="@+id/pic_sway"
                 android:layout_margin="10dp"
-                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:text="摇摇切歌"
                 android:textSize="16sp"/>
-        </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_weight="0.5"
-            android:layout_height="wrap_content"
-            android:background="@drawable/style"
-            android:layout_gravity="center">
-
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_margin="10dp"
-                android:layout_centerHorizontal="true"
-                android:id="@+id/pic_lyrics"
-                android:src="@drawable/lyrics" />
-
-            <TextView
-                android:layout_width="wrap_content"
+            <Switch
+                android:id="@+id/sensor_switch_btn"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/pic_lyrics"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="10dp"
-                android:text="歌词显示"
-                android:textSize="16sp"/>
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginHorizontal="12dp"/>
         </RelativeLayout>
 
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:id="@+id/layout_02"
-        android:layout_below="@+id/layout_01"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="10dp"
-       >
+        <View
+            android:layout_width="match_parent"
+            android:background="@color/grey"
+            android:layout_height="1dp"/>
 
         <RelativeLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_weight="0.5"
-            android:layout_height="wrap_content"
-            android:background="@drawable/style"
-            android:id="@+id/theme_btn"
+            android:layout_height="0dp"
+            android:focusable="true"
+            android:background="@drawable/press_selector"
+            android:id="@+id/time_clock"
             android:layout_gravity="center">
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_margin="10dp"
-                android:layout_centerHorizontal="true"
-                android:id="@+id/pic_theme"
-                android:src="@drawable/theme" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/pic_theme"
-                android:layout_margin="10dp"
-                android:layout_centerHorizontal="true"
-                android:text="主题设置"
-                android:textSize="16sp"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_weight="0.5"
-            android:layout_height="wrap_content"
-            android:background="@drawable/style"
-            android:layout_gravity="center">
-
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_margin="10dp"
-                android:layout_centerHorizontal="true"
-                android:id="@+id/pic_earphone"
-                android:src="@drawable/earphone_set" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/pic_earphone"
-                android:layout_margin="10dp"
-                android:layout_centerHorizontal="true"
-                android:text="耳机线控"
-                android:textSize="16sp"/>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_weight="0.5"
-            android:layout_height="wrap_content"
-            android:background="@drawable/style"
-            android:layout_gravity="center">
-
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_margin="10dp"
-                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:id="@+id/pic_time"
                 android:src="@drawable/time" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/pic_time"
+                android:layout_toRightOf="@+id/pic_time"
                 android:layout_margin="10dp"
-                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:text="定时睡眠"
                 android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:id="@+id/clock_time"
+                android:layout_marginRight="20dp"
+                android:layout_centerVertical="true"
+                android:text="定时"
+                android:textStyle="bold"
+                android:textSize="16sp"/>
+
         </RelativeLayout>
 
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/layout_02"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="200dp"
-        android:text="MusicPlayer V1.00"
-        android:textColor="@color/grey"
-        android:textSize="16sp" />
 
 
-</RelativeLayout>
+
+
+</LinearLayout>

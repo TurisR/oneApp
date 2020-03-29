@@ -11,6 +11,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AppConstant {
 
@@ -21,6 +23,7 @@ public class AppConstant {
     private Song playingSong;
     private SwitchSong mSwitchSong;
     private static AppConstant mAppConstant=new AppConstant();
+    private String clockTime;
 
     private List<Song> CurrentSongList=new ArrayList<>();//当前播放音乐列表
     private List<Song> LocalSongList=new ArrayList<>();//本地音乐列表
@@ -33,6 +36,13 @@ public class AppConstant {
 //    public Map<String, List<Integer>> getMapNumber() {
 //        return mapNumber;
 //    }
+    public void setClockTime(String string){
+        clockTime = string;
+    }
+
+    public String getClockTime(){
+        return clockTime;
+    }
 
     public void setSensorState(boolean value){ sensorState = value;}
     public boolean getSensorState() { return sensorState;}
@@ -43,7 +53,9 @@ public class AppConstant {
     }
 
     public void setCurrentSongList(List<Song> currentSongList) {
-        CurrentSongList =currentSongList;
+        if (currentSongList == CurrentSongList) return;
+        CurrentSongList .clear();
+        CurrentSongList.addAll(currentSongList);
     }
     public void setCurrentSongList(Song currentSongList) {
         CurrentSongList .clear();
@@ -147,6 +159,10 @@ public class AppConstant {
     }
 
     public void removeListSongByIndex(String name,int position){
+        if(name.equals(DataType.CURRENT_MUSIC)){
+            CurrentSongList.remove(position);
+            return;
+        }
         if(mapNumber.get(name)==null){
             return;
         }
@@ -307,6 +323,18 @@ public class AppConstant {
         return songList;
     }
 
+    public int getClockIntTime() {
+        if (clockTime == null) return 0;
+        clockTime = clockTime.trim();
+        Pattern pattern = Pattern.compile("\\d+");
+        Matcher matcher = pattern.matcher(clockTime);
+        if(matcher.find()){
+            return Integer.parseInt(matcher.group())*60000;
+        }
+        return 0;
+
+    }
+
     //信息
     public class PlayerMsg{
         public static final int PLAY_MSG=1;//开始播放
@@ -340,7 +368,6 @@ public class AppConstant {
 
 
     public class DataType{
-
         public static final String LOCAL_MUSIC= "本地歌曲";		//更新动作
         public static final String RECENT_MUSIC = "最近播放";			//播放器状态 播放|暂停
         public static final String PERSONAL_COLLECT = "个人收藏";		//当前音乐改变动作
@@ -349,6 +376,11 @@ public class AppConstant {
         public static final String PERSONAL_ALBUM_NAME = "个人歌单";
     }
 
+    public class MessageTimeType{
+        public static final String TIME_COUNT= "com.example.music_app.TIME_COUNT";		//更新动作
+        public static final String TIME_UPDATE = "com.example.music_app.TIME_UPDATE";
+        public static final String TIME_STOP = "com.example.music_app.STOP";
+    }
 
 
 }
