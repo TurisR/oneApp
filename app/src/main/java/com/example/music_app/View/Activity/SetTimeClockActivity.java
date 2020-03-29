@@ -3,6 +3,7 @@ package com.example.music_app.View.Activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.example.music_app.Presenter.AppConstant;
+import com.example.music_app.Presenter.MusicApplication;
 import com.example.music_app.R;
 import com.example.music_app.View.widget.WheelView;
 
@@ -38,6 +40,7 @@ public class SetTimeClockActivity extends Activity implements View.OnClickListen
         if(AppConstant.getInstance().getClockTime()!= null){
             timePick.add("关闭定时");
         }
+        timePick.add("1  分钟");
         timePick.add("5  分钟");
         timePick.add("10 分钟");
         timePick.add("15 分钟");
@@ -53,7 +56,6 @@ public class SetTimeClockActivity extends Activity implements View.OnClickListen
             @Override
             public void onSelected(int selectedIndex, String item) {
                 time = item;
-//                Toast.makeText(getApplicationContext(),"定时"+ item,Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -78,6 +80,16 @@ public class SetTimeClockActivity extends Activity implements View.OnClickListen
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.push_bottom_in, R.anim.push_bottom_out);
+
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
+        thread.start();
+
     }
 
     @Override
@@ -89,10 +101,11 @@ public class SetTimeClockActivity extends Activity implements View.OnClickListen
             case R.id.setClock_confirm:
                 if(time.equals("关闭定时")){
                     AppConstant.getInstance().setClockTime(null);
+                    MusicApplication.TimeClock(AppConstant.getInstance().getClockIntTime()).cancel();
                 }else {
                     AppConstant.getInstance().setClockTime(time);
+                    MusicApplication.TimeClock(AppConstant.getInstance().getClockIntTime()).start();
                 }
-//              Toast.makeText(getApplicationContext(),"定时"+ time,Toast.LENGTH_SHORT).show();
                 finish();
                 break;
         }

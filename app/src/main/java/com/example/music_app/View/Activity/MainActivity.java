@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         filter.addAction(AppConstant.MessageType.MUSIC_STATE);
         filter.addAction(AppConstant.MessageType.MUSIC_DURATION);
         filter.addAction(AppConstant.MessageType.MUSIC_NEXT);
+//        filter.addAction(AppConstant.MessageTimeType.TIME_COUNT);
         // 注册BroadcastReceiver
         registerReceiver(homeReceiver, filter);
 
@@ -270,6 +271,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mPlayerUtil.next();
                     Log.e("MUSIC_NEXT","next");
                     break;
+
             }
 
         }

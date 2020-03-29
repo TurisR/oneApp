@@ -11,6 +11,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AppConstant {
 
@@ -321,6 +323,18 @@ public class AppConstant {
         return songList;
     }
 
+    public int getClockIntTime() {
+        if (clockTime == null) return 0;
+        clockTime = clockTime.trim();
+        Pattern pattern = Pattern.compile("\\d+");
+        Matcher matcher = pattern.matcher(clockTime);
+        if(matcher.find()){
+            return Integer.parseInt(matcher.group())*60000;
+        }
+        return 0;
+
+    }
+
     //信息
     public class PlayerMsg{
         public static final int PLAY_MSG=1;//开始播放
@@ -362,6 +376,11 @@ public class AppConstant {
         public static final String PERSONAL_ALBUM_NAME = "个人歌单";
     }
 
+    public class MessageTimeType{
+        public static final String TIME_COUNT= "com.example.music_app.TIME_COUNT";		//更新动作
+        public static final String TIME_UPDATE = "com.example.music_app.TIME_UPDATE";
+        public static final String TIME_STOP = "com.example.music_app.STOP";
+    }
 
 
 }

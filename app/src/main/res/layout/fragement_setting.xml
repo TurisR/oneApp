@@ -114,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:id="@+id/clock_time"
-                android:layout_margin="10dp"
+                android:layout_marginRight="20dp"
                 android:layout_centerVertical="true"
                 android:text="定时"
                 android:textStyle="bold"
