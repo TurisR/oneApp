@@ -364,6 +364,7 @@ public class AppConstant {
         public static final String MUSIC_DURATION = "com.action.MUSIC_DURATION";	//音乐时长改变动作
         public static final String MUSIC_NEXT = "com.action.MUSIC_NEXT";		//音乐下一曲
         public static final String MUSIC_PREVIOUS = "com.action.MUSIC_PREVIOUS";	//音乐上一曲
+        public static final String MUSIC_NEXT_SENSOR = "com.action.MUSIC_NEXT_SENSOR";
     }
 
 

@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         filter.addAction(AppConstant.MessageType.MUSIC_STATE);
         filter.addAction(AppConstant.MessageType.MUSIC_DURATION);
         filter.addAction(AppConstant.MessageType.MUSIC_NEXT);
-//        filter.addAction(AppConstant.MessageTimeType.TIME_COUNT);
+        filter.addAction(AppConstant.MessageType.MUSIC_NEXT_SENSOR);
         // 注册BroadcastReceiver
         registerReceiver(homeReceiver, filter);
 
@@ -270,6 +270,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case AppConstant.MessageType.MUSIC_NEXT:
                     mPlayerUtil.next();
                     Log.e("MUSIC_NEXT","next");
+                    break;
+                case AppConstant.MessageType.MUSIC_NEXT_SENSOR:
+                    Toast.makeText(getApplicationContext(),"摇一摇切换歌曲",Toast.LENGTH_SHORT).show();
                     break;
 
             }

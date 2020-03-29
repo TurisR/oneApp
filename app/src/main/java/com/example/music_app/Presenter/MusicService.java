@@ -94,6 +94,11 @@ public class MusicService extends Service {
                     // 发送广播，将被Activity组件中的BroadcastReurrenceiver接收到
                     sendBroadcast(sendIntent);
                     break;
+                case 7://上一曲请求歌曲
+                    sendIntent = new Intent(AppConstant.MessageType.MUSIC_NEXT_SENSOR);
+                    // 发送广播，将被Activity组件中的BroadcastReurrenceiver接收到
+                    sendBroadcast(sendIntent);
+                    break;
             }
         };
     };
@@ -306,6 +311,7 @@ public class MusicService extends Service {
                 if (mMediaPlayer.isPlaying() && sCount > 4)
                 {
                     handler.sendEmptyMessage(5);
+                    handler.sendEmptyMessage(7);
                     sCount = 0;
                     lastTime = System.currentTimeMillis();
                 }
