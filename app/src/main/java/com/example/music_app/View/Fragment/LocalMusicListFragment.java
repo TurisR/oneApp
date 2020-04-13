@@ -23,6 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * @description:本地歌曲展示fragment
+ * @author:JiangJiaHui
+ * @createDate: 2019/11/10
+ * @Modified By：
+ * @version: 1.0
+ */
 
 public class LocalMusicListFragment extends Fragment {
 

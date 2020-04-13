@@ -30,7 +30,13 @@ import com.example.music_app.mould.Model.bean.Song;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * @description:歌曲添加页面，添加歌曲到自定义的或者当前播放列表、收藏列表
+ * @author: JiangJiaHui
+ * @createDate: 2019/11/10
+ * @Modified By：
+ * @version: 1.0
+ */
 public class AddListActivity extends Activity implements View.OnClickListener{
 
     private String addType;

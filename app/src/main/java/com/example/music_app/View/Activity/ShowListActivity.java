@@ -26,7 +26,13 @@ import com.example.music_app.mould.Model.bean.Song;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * @description:歌曲展示列表页面
+ * @author:
+ * @createDate: 2019/11/10
+ * @Modified By：
+ * @version: 1.0
+ */
 public class ShowListActivity extends Activity implements View.OnClickListener{
 
     private TextView music_text_sum;

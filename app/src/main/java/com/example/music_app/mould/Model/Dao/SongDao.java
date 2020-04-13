@@ -13,6 +13,13 @@ import com.example.music_app.mould.Model.bean.Song;
 
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * @description:SQLite操作类，从SQLite获取歌曲、添加歌曲、删除歌曲和更新歌曲
+ * @author: JiangJiaHui
+ * @createDate: 2019/12/9
+ * @Modified By：
+ * @version: 1.0
+ */
 
 public class SongDao {
     private final DBHelper mhelper;

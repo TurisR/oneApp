@@ -33,9 +33,13 @@ import com.example.music_app.mould.Model.Model;
 import com.example.music_app.mould.Model.SQLite.DBHelper;
 
 
+
 /**
- * Created by yifeng on 16/8/3.
- *
+ * @description:个人歌曲的listAdapter
+ * @author:JiangJiaHui
+ * @createDate: 2019/11/10
+ * @Modified By：
+ * @version: 1.0
  */
 public class PersonalListFragment extends Fragment  {
 

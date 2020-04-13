@@ -18,6 +18,13 @@ import com.example.music_app.View.widget.CustomDialog;
 import com.example.music_app.mould.Model.bean.Song;
 
 import java.util.List;
+/**
+ * @description:本地歌曲的listAdapter
+ * @author:JiangJiaHui
+ * @createDate: 2019/11/10
+ * @Modified By：
+ * @version: 1.0
+ */
 
 public class LocalMusicListAdapter extends BaseAdapter {
 

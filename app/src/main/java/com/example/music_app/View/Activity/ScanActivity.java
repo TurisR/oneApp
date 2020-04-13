@@ -27,9 +27,15 @@ import com.example.music_app.mould.Model.bean.Song;
 
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * @description:扫描歌曲页面，获取扫描结果歌曲列表展示
+ * @author:JiangJiaHui
+ * @createDate: 2019/11/10
+ * @Modified By：
+ * @version: 1.0
+ */
 
 public class ScanActivity extends AppCompatActivity implements View.OnClickListener {
-
 
     private ListView lvData;
     private LinearLayout mLlEditBar;//控制下方那一行的显示与隐藏

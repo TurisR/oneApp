@@ -25,6 +25,13 @@ import com.example.music_app.R;
 import com.example.music_app.View.Activity.ScanActivity;
 import com.example.music_app.View.Activity.SetTimeClockActivity;
 
+/**
+ * @description:设置的listAdapter
+ * @author:JiangJiaHui
+ * @createDate: 2019/11/10
+ * @Modified By：
+ * @version: 1.0
+ */
 public class SettingFragment extends Fragment {
 
     private View view;

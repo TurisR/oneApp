@@ -23,6 +23,13 @@ import com.example.music_app.R;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @description:定时歌曲暂停的时间轮转控件
+ * @author:JiangJiaHui
+ * @createDate: 2019/11/10
+ * @Modified By：
+ * @version: 1.0
+ */
 public class WheelView extends ScrollView {
     public static final String TAG = WheelView.class.getSimpleName();
 

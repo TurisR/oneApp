@@ -12,6 +12,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @description:歌词实体类，根据歌名在文件中获取歌词，并对歌词进行解析
+ * @author:
+ * @createDate: 2019/12/7
+ * @Modified By：
+ * @version: 1.0
+ */
+
 public class LrcEntity implements Comparable<LrcEntity>{
     public String time;
     public long timeLong;

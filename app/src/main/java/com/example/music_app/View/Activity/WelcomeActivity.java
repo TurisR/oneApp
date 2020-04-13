@@ -17,18 +17,17 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-
 /**
- * Created by jinpei chen on 2017/5/25.
+ * @description:欢迎页面
+ * @author:JiangJiaHui
+ * @createDate: 2020/3/10
+ * @Modified By：
+ * @version: 1.0
  */
-
 public class WelcomeActivity extends Activity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*
-        * ****隐藏标题栏****
-        * */
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_welcome);

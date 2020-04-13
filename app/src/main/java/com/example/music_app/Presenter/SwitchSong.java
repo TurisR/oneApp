@@ -3,15 +3,20 @@ package com.example.music_app.Presenter;
 import com.example.music_app.mould.Model.bean.Song;
 
 import java.util.List;
+/**
+ * @description:歌曲切换，为PlayerUtil类提供在播放模式下下一曲和上一曲的歌曲
+ * @author: JiangJiaHui
+ * @createDate: 2019/11/25
+ * @Modified By：
+ * @version: 1.0
+ */
 
 public class SwitchSong {
-
     private Song mSong;
     private int position;
     private List<Song> mSongList;
     private int mode;
     private int size;
-
     public SwitchSong() {
         mSongList=AppConstant.getInstance().getCurrentSongList();
         mSong=AppConstant.getInstance().getPlayingSong();

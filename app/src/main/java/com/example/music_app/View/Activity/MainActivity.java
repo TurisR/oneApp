@@ -1,38 +1,29 @@
 package com.example.music_app.View.Activity;
 
 import android.Manifest;
-import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RemoteViews;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.music_app.Presenter.AppConstant;
-import com.example.music_app.Presenter.DataManageUtil;
+import com.example.music_app.mould.Model.SharePreferenceSave;
 import com.example.music_app.Presenter.DataManager;
 import com.example.music_app.Presenter.PlayerUtil;
 import com.example.music_app.R;
@@ -44,7 +35,13 @@ import com.google.gson.Gson;
 
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-
+/**
+ * @description:主页面，用四个fragment+ tabLayout实现页面滑动，fragment有当前播放列表、个人歌单、搜索、设置
+ * @author: JiangJiaHui
+ * @createDate: 2019/11/10
+ * @Modified By：
+ * @version: 1.0
+ */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private TabLayout mTabTl;
     private ViewPager mContentVp;
@@ -59,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Song song;
     private PlayerUtil mPlayerUtil;
     private DataManager dataManager;
-    private DataManageUtil manageUtil;
+    private SharePreferenceSave manageUtil;
 
     private HomeReceiver homeReceiver;	//自定义的广播接收器
     private ImageView iv_play_bar_cover;
@@ -130,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         dataManager = new DataManager(this);
         dataManager.initData();
-        manageUtil=new DataManageUtil(this);
+        manageUtil=new SharePreferenceSave(this);
 
     }
 

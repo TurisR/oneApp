@@ -18,6 +18,13 @@ import com.example.music_app.View.widget.WheelView;
 
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * @description:歌曲定时暂停页面
+ * @author:JiangJiaHui
+ * @createDate: 2019/11/12
+ * @Modified By：
+ * @version: 1.0
+ */
 
 public class SetTimeClockActivity extends Activity implements View.OnClickListener{
 

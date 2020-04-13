@@ -13,7 +13,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+/**
+ * @description:APP运行时的常量存储和获取，例如当前播放歌曲，个人定义歌单、MadiaPlay的状态信息，广播的action等
+ * @author: JiangJiaHui
+ * @createDate: 2019/10/24
+ * @Modified By：
+ * @version: 1.0
+ */
 public class AppConstant {
 
     private int playingState=0;
@@ -33,9 +39,6 @@ public class AppConstant {
 
     private boolean sensorState = false;
 
-//    public Map<String, List<Integer>> getMapNumber() {
-//        return mapNumber;
-//    }
     public void setClockTime(String string){
         clockTime = string;
     }

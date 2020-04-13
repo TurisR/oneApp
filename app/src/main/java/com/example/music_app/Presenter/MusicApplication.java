@@ -18,9 +18,14 @@ import android.widget.Toast;
 import com.example.music_app.mould.Model.Model;
 import com.example.music_app.mould.Model.bean.Song;
 
-import java.util.List;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
+
+/**
+ * @description:App类，负责软件启动的数据初始化
+ * @author: JiangJiaHui
+ * @createDate: 2019/11/25
+ * @Modified By：
+ * @version: 1.0
+ */
 
 public class MusicApplication extends Application {
 
@@ -39,10 +44,7 @@ public class MusicApplication extends Application {
         context = this;
         Model.getInstance().init(this, "user");
         AppConstant.getInstance().setPlayingState(AppConstant.PlayerMsg.PAUSE_MSG);
-//        TimeClock(1000);
     }
-
-
 
     public static CountDownTimer TimeClock(final int clockTime) {
         if(timer != null){

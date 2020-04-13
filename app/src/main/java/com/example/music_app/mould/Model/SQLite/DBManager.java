@@ -4,8 +4,13 @@ import android.content.Context;
 
 import com.example.music_app.mould.Model.Dao.SongDao;
 import com.example.music_app.mould.Model.Table.SongTable;
-
-
+/**
+ * @description:SQLite管理类单例模式
+ * @author: JiangJiaHui
+ * @createDate: 2019/12/9
+ * @Modified By：
+ * @version: 1.0
+ */
 public class DBManager {
 
     private final DBHelper mHelper;
@@ -19,7 +24,6 @@ public class DBManager {
         return new SongDao(mHelper,new SongTable(name));
     }
 
-
    public void close() {
       mHelper.close();
   }
@@ -27,6 +31,5 @@ public class DBManager {
   public DBHelper getHelper(){
         return mHelper;
   }
-
 
 }

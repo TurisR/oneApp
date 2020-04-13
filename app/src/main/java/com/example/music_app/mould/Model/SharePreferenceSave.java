@@ -1,4 +1,4 @@
-package com.example.music_app.Presenter;
+package com.example.music_app.mould.Model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,12 +8,18 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
-
-public class DataManageUtil {
+/**
+ * @description:采用sharePreferce存储自定义歌单，通过存储本地歌单的索引，需要用到json
+ * @author: JiangJiaHui
+ * @createDate: 2019/12/9
+ * @Modified By：
+ * @version: 1.0
+ */
+public class SharePreferenceSave {
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
 
-    public DataManageUtil(Context mContext) {
+    public SharePreferenceSave(Context mContext) {
         preferences = mContext.getSharedPreferences("Data", Context.MODE_MULTI_PROCESS);
         editor = preferences.edit();
     }

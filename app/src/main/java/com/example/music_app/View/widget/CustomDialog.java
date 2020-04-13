@@ -14,6 +14,13 @@ import android.widget.TextView;
 
 import com.example.music_app.R;
 
+/**
+ * @description:对话框
+ * @author:JiangJiaHui
+ * @createDate: 2019/11/12
+ * @Modified By：
+ * @version: 1.0
+ */
 public class CustomDialog extends Dialog implements View.OnClickListener{
     private TextView  mTitle,mContent,mCancel,mConfirm;
     private EditText mEditText;

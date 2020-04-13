@@ -10,6 +10,13 @@ import android.support.v4.app.FragmentTransaction;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @description:管理fragment类
+ * @author:JiangJiaHui
+ * @createDate: 2019/11/8
+ * @Modified By：
+ * @version: 1.0
+ */
 
 public class ContentPagerManager extends FragmentPagerAdapter {
 

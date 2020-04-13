@@ -1,6 +1,13 @@
 package com.example.music_app.mould.Model.bean;
 
 import java.io.Serializable;
+/**
+ * @description:歌曲实体类，定义歌曲相关属性
+ * @author: JiangJiaHui
+ * @createDate: 2019/12/7
+ * @Modified By：
+ * @version: 1.0
+ */
 
 public class Song implements Serializable {
 

@@ -17,6 +17,13 @@ import android.widget.Toast;
 
 import com.example.music_app.R;
 
+/**
+ * @description:自定义控件
+ * @author:JiangJiaHui
+ * @createDate: 2019/11/8
+ * @Modified By：
+ * @version: 1.0
+ */
 public class widgetLayout extends LinearLayout {
     private  RelativeLayout set_more;
     private  TextView set_num;

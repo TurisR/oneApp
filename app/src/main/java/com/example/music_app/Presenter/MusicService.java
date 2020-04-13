@@ -28,6 +28,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+/**
+ * @description:MusicServic类，将MediaPlayer封装在Service,通过startCommand启动，通过广播与View层部分UI控件的通信
+ * @author: JiangJiaHui
+ * @createDate: 2019/10/10
+ * @Modified By：
+ * @version: 1.0
+ */
+
 
 public class MusicService extends Service {
 

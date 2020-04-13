@@ -7,6 +7,13 @@ import android.provider.MediaStore;
 import com.example.music_app.mould.Model.bean.Song;
 
 import java.util.ArrayList;
+/**
+ * @description:歌曲扫描类，利用contentProvider扫描本地文件获取数据
+ * @author: JiangJiaHui
+ * @createDate: 2019/11/10
+ * @Modified By：
+ * @version: 1.0
+ */
 
 public class AudioScan {
     /**
@@ -16,7 +23,6 @@ public class AudioScan {
      * @throws Exception
      */
     public static ArrayList<Song> getAllSongs(Context context) {
-
         ArrayList<Song> songs = null;
         Cursor cursor = context.getContentResolver().query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -44,12 +50,29 @@ public class AudioScan {
                 song = new Song();
                 // 文件名
                 song.setFileName(cursor.getString(1));
-                // 歌曲名
-                song.setTitle(cursor.getString(2));
                 // 时长
                 song.setDuration(cursor.getInt(3));
                 // 歌手名
-                song.setSinger(cursor.getString(4));
+                String string =cursor.getString(4);
+                if(string.equals("<unknown>")){
+                    string = cursor.getString(2);
+                    if(string.indexOf('-')==-1){
+                        song.setTitle(string);
+                        song.setSinger("未知");
+                    }else {
+                        song.setTitle(string.substring(string.indexOf('-')+1).trim());
+                        song.setSinger(string.substring(0,string.indexOf('-')).trim());
+                    }
+
+
+                }else {
+                    song.setTitle(cursor.getString(2).trim());
+                    song.setSinger(cursor.getString(4).trim());
+                }
+
+
+
+
                 // 专辑名
                 song.setAlbum(cursor.getString(5));
                 // 年代

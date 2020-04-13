@@ -10,7 +10,13 @@ import com.example.music_app.mould.Model.Table.SongTable;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * @description:SQLite管理类，对本地歌曲建表
+ * @author: JiangJiaHui
+ * @createDate: 2019/12/9
+ * @Modified By：
+ * @version: 1.0
+ */
 
 public class DBHelper extends SQLiteOpenHelper {
     private Context mContext;
@@ -27,18 +33,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
         songTable = new SongTable("本地歌曲");
-        drop_sql = "DROP TABLE IF EXISTS " + songTable.getTableName() + ";";
-        db.execSQL(drop_sql);
-        db.execSQL(songTable.getCreateTab());
-
-        songTable = new SongTable("最近播放");
-        drop_sql = "DROP TABLE IF EXISTS " + songTable.getTableName() + ";";
-        db.execSQL(drop_sql);
-        db.execSQL(songTable.getCreateTab());
-
-        songTable = new SongTable("个人收藏");
         drop_sql = "DROP TABLE IF EXISTS " + songTable.getTableName() + ";";
         db.execSQL(drop_sql);
         db.execSQL(songTable.getCreateTab());

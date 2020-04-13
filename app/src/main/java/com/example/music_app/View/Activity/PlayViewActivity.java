@@ -35,12 +35,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *  內容：播放界面Activity
- *  编写：yxy
- *  版本: 1.0
- *  时间：2019/11/15
+ * @description:歌曲详细播放页面，歌曲歌词的展示
+ * @author:
+ * @createDate: 2019/11/15
+ * @Modified By：
+ * @version: 1.0
  */
-
 public class PlayViewActivity extends Activity implements View.OnClickListener {
     private Song song;
     private PlayerUtil mPlayerUtil;

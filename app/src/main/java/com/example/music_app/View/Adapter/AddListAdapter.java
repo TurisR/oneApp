@@ -15,6 +15,13 @@ import com.example.music_app.mould.Model.bean.Song;
 
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * @description:添加歌曲的listAdapter
+ * @author:JiangJiaHui
+ * @createDate: 2019/11/10
+ * @Modified By：
+ * @version: 1.0
+ */
 
 public class AddListAdapter extends BaseAdapter {
 
