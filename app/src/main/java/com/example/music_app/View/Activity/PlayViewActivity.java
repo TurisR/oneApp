@@ -135,7 +135,7 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
         String lrcText = getLrcText(filePath);
 
         lrcList = LrcEntity.parseLrc(lrcText);
-
+        
     }
 
     /**
@@ -192,13 +192,13 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
             case R.id.activity_play_last :
                 //上一曲
                 mPlayerUtil.previous();
-                UpdateUI();
+                //UpdateUI();
                 break;
 
             case R.id.activity_play_next :
                 //下一曲
                 mPlayerUtil.next();
-                UpdateUI();
+                //UpdateUI();
                 break;
         }
     }
@@ -263,14 +263,15 @@ public class PlayViewActivity extends Activity implements View.OnClickListener {
                         //当进度条未被拖动时，自动更新进度条进度
                         seekBar.setProgress(seekBar.getMax() * currentTime / song.getDuration());    //更新进度条
                     }
-                    if (lrcList!=null){
-                        //歌词显示
-                        if(lrcSite < lrcList.size()-1 && lrcList.get(lrcSite).getTimeLong()-50 <= currentTime && currentTime < lrcList.get(lrcSite+1).getTimeLong()-50)
-                            lrcText.setText(lrcList.get(lrcSite).text);
-                        else if (lrcSite < lrcList.size()-1 && currentTime >= lrcList.get(lrcSite).getTimeLong() - 50)
-                            lrcText.setText(lrcList.get(++lrcSite).text);
+                    if (lrcList != null)
+                    {
+                        while (lrcSite < lrcList.size()-1 && currentTime > lrcList.get(lrcSite).getTimeLong() - 100)
+                            lrcSite++;
+                        if (lrcSite > 0) lrcSite--;
+                        while (lrcSite > 0 && currentTime < lrcList.get(lrcSite).getTimeLong() - 100)
+                            lrcSite--;
+                        lrcText.setText(lrcList.get(lrcSite).text);
                     }
-
                     break;
 
                 case AppConstant.MessageType.UPDATE_ACTION :
